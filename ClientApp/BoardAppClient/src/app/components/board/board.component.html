@@ -1,0 +1,46 @@
+<div class="board-container">
+  <div class="board-header">
+    <div class="board-title">
+      <h1>Канбан Доска</h1>
+      <p>Управление задачами и проектами</p>
+    </div>
+
+    <div class="board-stats">
+      <div class="stat-item">
+        <span class="stat-label">Всего задач:</span>
+        <span class="stat-value">{{ getTaskCount() }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Завершено:</span>
+        <span class="stat-value">{{ getCompletedTaskCount() }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Прогресс:</span>
+        <span class="stat-value">{{ getProgressPercentage() }}%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="board-content">
+    <div class="board-columns">
+      <app-board-column
+        *ngFor="let status of taskStatuses"
+        [status]="status"
+        [tasks]="getTasksByStatus(status)"
+        [allTasks]="tasks"
+        (addTask)="onAddTask($event)"
+        (editTask)="onEditTask($event)"
+        (deleteTask)="onDeleteTask($event)"
+        (moveTask)="onMoveTask($event)"
+        (dropTask)="onDropTask($event)">
+      </app-board-column>
+    </div>
+  </div>
+
+  <app-task-modal
+    [isOpen]="isModalOpen"
+    [task]="editingTask"
+    (saveTask)="onSaveTask($event)"
+    (closeModal)="closeModal()">
+  </app-task-modal>
+</div>
