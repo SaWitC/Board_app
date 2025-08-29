@@ -1,0 +1,94 @@
+@mixin dark-theme {
+  --background: rgb(10, 10, 10);
+  --background-secondary: rgb(35, 35, 35);
+  --background-secondary-alpha: rgb(255, 255, 255);
+  --background-tertiary: rgb(29, 29, 29);
+  --background-content: rgb(26, 26, 26);
+  --background-modal: rgb(45, 45, 45);
+  --background-modal-inverse: rgb(255, 255, 255);
+  --background-over-alpha: rgb(29, 29, 29);
+  --background-accent: rgb(51, 146, 248);
+  --background-accent-themed: rgb(102, 174, 249);
+  --background-accent-tint: rgb(153, 200, 253);
+  --field-background: rgb(242, 244, 245);
+  --background-positive: rgb(50, 208, 88);
+  --background-negative: rgb(204, 54, 48);
+  --background-negative-tint: rgb(255, 199, 194);
+  --background-warning: rgb(154, 89, 1);
+  --text-color: #e2e7f7;
+
+  /* Dark theme scrollbar styles */
+  --scrollbar-bg: #333;
+  /* Dark track background */
+  --scrollbar-thumb: #888686;
+  /* Dark thumb color */
+  --scrollbar-thumb-hover: #696969;
+  /* Thumb hover color */
+
+  --bs-custom-btn-color: #e2e7f7 !important;
+  --bs-custom-btn-bg: #da7b3c !important;
+  --bs-custom-btn-border-color: #da8248 !important;
+  --bs-custom-btn-hover-bg: #d88d5a !important;
+  --bs-custom-btn-hover-border-color: #d88d5a;
+  --bs-border-color: #666666;
+
+  .btn-primary {
+    --bs-btn-color: var(--bs-custom-btn-color) !important;
+    --bs-btn-bg: var(--bs-custom-btn-bg) !important;
+    --bs-btn-border-color: var(--bs-custom-btn-border-color) !important;
+    --bs-btn-hover-bg: var(--bs-custom-btn-hover-bg) !important;
+    --bs-btn-hover-border-color: var(--bs-custom-btn-hover-border-color);
+  }
+
+  .mat-mdc-option {
+    color: black;
+  }
+
+  --input-background: rgb(43, 42, 42);
+  --input-border-active: rgb(51, 146, 248);
+  --input-text: #e2e7f7;
+  --input-bg-active: rgb(35, 35, 35);
+  /* Slightly lighter */
+
+  --ng-select-background: rgb(43, 42, 42);
+  ;
+  /* Very dark gray background */
+  --ng-select-text-color: #e2e7f7;
+  /* White text */
+  --ng-select-border-color: var(--bs-border-color);
+  /* Dark gray border */
+  --ng-select-hover-background: #333333;
+  /* Darker gray for hover effect */
+  --ng-select-option-background: #282828;
+  /* Default background for options */
+  --ng-select-option-hover-background: #444444;
+  /* Darker gray for option hover */
+  --ng-select-disabled-option-color: #666666;
+  /* Disabled options in medium gray */
+  --ng-select-placeholder-color: #b0b0b0;
+  /* Light gray for placeholder text */
+
+
+  --side-menu-active: #df8346;
+
+  --mat-standard-button-toggle-divider-color: #444444;
+  --mat-standard-button-toggle-selected-state-text-color: #e2e7f7;
+
+  --mat-table-background-color: rgb(29, 29, 29);
+  --mat-table-row-item-label-text-color: #e2e7f7;
+
+  --mat-table-row-item-outline-color: var(--ng-select-border-color);
+  --mat-table-header-headline-color: var(--text-color);
+
+  --mat-paginator-container-background-color: #1f1d1d;
+  --mat-paginator-container-text-color:var(--text-color);
+  --mat-sys-on-surface: var(--text-color);
+
+  --mdc-dialog-container-color: #222121;
+
+  --mdc-text-button-label-text-color: #d2cb5c;
+
+  --mat-select-panel-background-color: #444;
+  --mat-option-selected-state-label-text-color: var(--text-color);
+  --mat-option-selected-state-layer-color: #333;
+}
