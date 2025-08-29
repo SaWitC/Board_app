@@ -1,10 +1,14 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Task, TaskStatus, TASK_STATUS_CONFIG, DragDropEvent } from '../../models/task.model';
+import { TaskCardComponent } from '../task-card/task-card.component';
 
 @Component({
-  selector: 'app-board-column',
-  templateUrl: './board-column.component.html',
-  styleUrls: ['./board-column.component.scss']
+    selector: 'app-board-column',
+    templateUrl: './board-column.component.html',
+    styleUrls: ['./board-column.component.scss'],
+    standalone: true,
+    imports: [CommonModule, TaskCardComponent]
 })
 export class BoardColumnComponent {
   @Input() status!: TaskStatus;

@@ -1,11 +1,14 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Task, TaskPriority, TASK_STATUS_CONFIG } from '../../models/task.model';
 import { TaskStatus } from '../../enums/task-status.enum';
 
 @Component({
-  selector: 'app-task-card',
-  templateUrl: './task-card.component.html',
-  styleUrls: ['./task-card.component.scss']
+    selector: 'app-task-card',
+    templateUrl: './task-card.component.html',
+    styleUrls: ['./task-card.component.scss'],
+    standalone: true,
+    imports: [CommonModule]
 })
 export class TaskCardComponent {
   @Input() task!: Task;

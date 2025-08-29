@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Task, TaskStatus, DragDropEvent } from '../../models/task.model';
 import { TaskService } from '../../services/task.service';
+import { BoardColumnComponent } from '../board-column/board-column.component';
+import { TaskModalComponent } from '../task-modal/task-modal.component';
 
 @Component({
-  selector: 'app-board',
-  templateUrl: './board.component.html',
-  styleUrls: ['./board.component.scss']
+    selector: 'app-board',
+    templateUrl: './board.component.html',
+    styleUrls: ['./board.component.scss'],
+    standalone: true,
+    imports: [CommonModule, BoardColumnComponent, TaskModalComponent]
 })
 export class BoardComponent implements OnInit {
   tasks: Task[] = [];

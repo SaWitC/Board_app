@@ -1,11 +1,14 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task, TaskStatus, TaskPriority } from '../../models/task.model';
 
 @Component({
-  selector: 'app-task-modal',
-  templateUrl: './task-modal.component.html',
-  styleUrls: ['./task-modal.component.scss']
+    selector: 'app-task-modal',
+    templateUrl: './task-modal.component.html',
+    styleUrls: ['./task-modal.component.scss'],
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule]
 })
 export class TaskModalComponent implements OnInit {
   @Input() task?: Task;
