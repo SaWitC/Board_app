@@ -1,0 +1,18 @@
+services:
+  boardappapi:
+    image: ${DOCKER_REGISTRY-}boardappapi
+    build:
+      context: .
+      dockerfile: BoardAppApi/Dockerfile
+
+
+  mssqlserver:
+    restart: always
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "u7s8BkDq8lbDS3tCRPA5"
+    ports:
+      - 1435:1433
+    volumes:
+      - D:\BackUp\:/backup
