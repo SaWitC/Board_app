@@ -2,14 +2,27 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BoardComponent } from './components/board/board.component';
 import { NavigationComponent } from './components/main/navigation/navigation.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     standalone: true,
-    imports: [CommonModule, BoardComponent, NavigationComponent]
+    imports: [CommonModule, BoardComponent, NavigationComponent, SidebarComponent, RouterOutlet]
 })
 export class AppComponent {
   title = 'BoardAppClient';
+  sidebarOpen = false;
+
+  onOpenSidebar(): void {
+    console.log('Opening sidebar, current state:', this.sidebarOpen);
+    this.sidebarOpen = true;
+    console.log('Sidebar state after opening:', this.sidebarOpen);
+  }
+
+  onCloseSidebar(): void {
+    this.sidebarOpen = false;
+  }
 }

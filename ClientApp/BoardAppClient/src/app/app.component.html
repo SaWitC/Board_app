@@ -1,2 +1,20 @@
-<navigation></navigation>
-<app-board></app-board>
+<navigation (openSidebar)="onOpenSidebar()"></navigation>
+
+<div
+  *ngIf="sidebarOpen"
+  class="sidebar-overlay"
+  (click)="onCloseSidebar()">
+</div>
+
+<app-sidebar
+  [class.open]="sidebarOpen"
+  (closeSidebar)="onCloseSidebar()"
+  (openSidebar)="onOpenSidebar()"
+  [isOpen]="sidebarOpen">
+</app-sidebar>
+
+<div class="custom-container">
+  <div class="content ps-3 pe-3" [class.content-compact]="sidebarOpen">
+    <router-outlet></router-outlet>
+  </div>
+</div>

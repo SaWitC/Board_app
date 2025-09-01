@@ -1,0 +1,43 @@
+app-sidebar.open {
+  transform: translateX(0) !important;
+}
+
+app-sidebar {
+  position: fixed;
+  top: 8vh;
+  left: 0;
+  width: 280px;
+  height: 92vh;
+  background-color: var(--background-secondary) !important;
+  border: 1px solid var(--background);
+  color: var(--text-color);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  transform: translateX(-80%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.content {
+  flex-basis: calc(100% - 85px);
+  margin-top: 10px;
+  height: 100%;
+  margin-right: 1%;
+  border-radius: 4px;
+  background-color: var(--background-secondary);
+  box-shadow: 1px 1px 5px var(--box-shadow-color-primary);
+  transition: flex-basis 0.3s ease-in-out;
+}
+
+.content.content-compact{
+  flex-basis: calc(100% - 310px);
+  transition: flex-basis 0.3s ease-in-out;
+
+}
+
+.custom-container {
+  flex-direction: row-reverse;
+  background-color: var(--background);
+  height: 88vh;
+  display: flex;
+  transition: all 0.2s ease-in-out;
+}

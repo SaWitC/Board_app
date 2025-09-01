@@ -1,13 +1,59 @@
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.width-70px {
+  width: 70px !important;
+}
+
+.invisible {
+  opacity: 0;
+}
+
 .navbar {
-  background-color: var(--background);
+  background-color: var(--background-secondary);
   height: 8vh;
   width: 100%;
+  border-bottom: var(--border-color) solid 1px;
+  box-shadow: 1px 1px 7px var(--box-shadow-color-secondary);
 }
 
 .logo-title {
-  color: var(--background-overlay-alpha)
+  color: var(--text-color);
+  cursor: pointer;
+  opacity: 1;
 }
 
-ng-select{
+ng-select {
   min-width: 150px;
+}
+
+.letter-fill {
+  fill: var(--header-letter) !important;
+}
+
+.exit-button {
+  cursor: pointer;
+
+  &:hover {
+    color: var(--background-negative);
+  }
+
+  i,
+  i:hover {
+    transition: color 0.2s ease;
+  }
+}
+.border-right-1px {
+  position: relative;
+}
+
+.border-right-1px::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 10%;
+  height: 80%;
+  width: 1px;
+  background-color: var(--bs-border-color);
 }

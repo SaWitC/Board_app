@@ -1,4 +1,4 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, PLATFORM_ID, Output, EventEmitter } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -15,6 +15,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
   styleUrls: ['./navigation.component.scss'],
 })
 export class NavigationComponent {
+  //  @Output() openSidebar = new EventEmitter<void>();
+
   public selectedLanguage = 'en';
   public theme: string = 'light';
   public languages = [
@@ -55,6 +57,10 @@ export class NavigationComponent {
       }
     }
   }
+
+  // public onOpenSidebar(): void {
+  //    this.openSidebar.emit();
+  // }
 
   // public onLanguageChange(language: any) {
   //   this.translateService.use(language.code);
