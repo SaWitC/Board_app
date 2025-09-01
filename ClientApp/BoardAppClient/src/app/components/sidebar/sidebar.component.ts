@@ -25,12 +25,12 @@ export class SidebarComponent {
   onMyProjectsClick(): void {
     this.router.navigate(['/boards']);
 
-    this.closeSidebar.emit();
+    // this.closeSidebar.emit();
   }
 
   onInfoClick(): void {
     this.router.navigate(['/info']);
-    this.closeSidebar.emit();
+    // this.closeSidebar.emit();
   }
 
   onCloseClick(): void {

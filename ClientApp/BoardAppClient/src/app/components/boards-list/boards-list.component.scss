@@ -13,7 +13,7 @@
     margin: 0;
     font-size: 2.5rem;
     font-weight: 700;
-    color: #2c3e50;
+    color: var(--text-color);
   }
 }
 
@@ -23,7 +23,7 @@
   gap: 8px;
   padding: 12px 24px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  color: var(--text-color);
   border: none;
   border-radius: 8px;
   font-size: 1rem;
@@ -68,7 +68,7 @@
   }
 
   p {
-    color: #7f8c8d;
+    color: var(--text-color);
     font-size: 1.1rem;
   }
 }
@@ -91,7 +91,7 @@
   .retry-btn {
     padding: 10px 20px;
     background: #e74c3c;
-    color: white;
+    color: var(--text-color);
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -114,13 +114,13 @@
   }
 
   h3 {
-    color: #2c3e50;
+    color: var(--text-color);
     font-size: 1.8rem;
     margin-bottom: 12px;
   }
 
   p {
-    color: #7f8c8d;
+    color: var(--text-color);
     font-size: 1.1rem;
     margin-bottom: 32px;
   }
@@ -133,7 +133,7 @@
 }
 
 .board-card {
-  background: white;
+  background: var(--background-content);
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -157,7 +157,7 @@
     margin: 0;
     font-size: 1.4rem;
     font-weight: 600;
-    color: #2c3e50;
+    color: var(--text-color);
     flex: 1;
   }
 
@@ -166,14 +166,14 @@
       background: none;
       border: none;
       font-size: 1.2rem;
-      color: #95a5a6;
+      color: var(--text-color);
       cursor: pointer;
       padding: 4px;
       border-radius: 4px;
 
       &:hover {
         background: #f8f9fa;
-        color: #7f8c8d;
+        color: var(--text-color);
       }
     }
   }

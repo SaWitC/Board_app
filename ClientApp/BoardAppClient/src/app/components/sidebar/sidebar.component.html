@@ -14,13 +14,13 @@
     <ul class="nav-list">
       <li class="nav-item">
         <button class="nav-btn" (click)="onMyProjectsClick()">
-          <span class="nav-icon">📋</span>
+          <span class="nav-icon"[class.compact]="!isOpen"><i class="lar la-folder"></i></span>
           My Projects
         </button>
       </li>
       <li class="nav-item">
         <button class="nav-btn" (click)="onInfoClick()">
-          <span class="nav-icon">ℹ️</span>
+          <span class="nav-icon"[class.compact]="!isOpen"><i class="las la-info-circle"></i></span>
           Info
         </button>
       </li>
