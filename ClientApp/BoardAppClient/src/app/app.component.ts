@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BoardComponent } from './components/board/board.component';
-import { NavigationComponent } from './components/main/navigation/navigation.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { BoardComponent } from './components/pages/board/board.component';
+import { NavigationComponent } from './components/core/navigation/navigation.component';
+import { SidebarComponent } from './components/core/sidebar/sidebar.component';
 import { RouterOutlet } from '@angular/router';
 
 @Component({

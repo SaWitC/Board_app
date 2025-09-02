@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Task, TaskPriority, TASK_STATUS_CONFIG } from '../../models/task.model';
-import { TaskStatus } from '../../enums/task-status.enum';
+import { Task, TASK_STATUS_CONFIG, TaskPriority, TaskStatus } from 'src/app/models';
 
 @Component({
     selector: 'app-task-card',

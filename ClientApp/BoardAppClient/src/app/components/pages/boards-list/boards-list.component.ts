@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { BoardApiService } from '../../services/api-services';
-import { BoardLookupDTO } from '../../models';
+import { BoardApiService } from '../../../services/api-services';
+import { BoardLookupDTO } from '../../../models';
 
 @Component({
   selector: 'app-boards-list',

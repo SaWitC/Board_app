@@ -1,10 +1,10 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Task, TaskStatus, TASK_STATUS_CONFIG, DragDropEvent } from '../../models/task.model';
-import { TaskCardComponent } from '../task-card/task-card.component';
-import { BoardColumnApiService } from '../../services/api-services';
-import { BoardColumnDetailsDTO } from '../../models';
+import { Task, TaskStatus, TASK_STATUS_CONFIG, DragDropEvent } from '../../../models/task.model';
+import { BoardColumnApiService } from '../../../services/api-services';
+import { BoardColumnDetailsDTO } from '../../../models';
 import { Subscription } from 'rxjs';
+import { TaskCardComponent } from '../task-card/task-card.component';
 
 @Component({
     selector: 'app-board-column',
