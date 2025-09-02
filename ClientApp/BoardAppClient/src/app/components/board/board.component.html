@@ -1,8 +1,7 @@
 <div class="board-container">
   <div class="board-header">
     <div class="board-title">
-      <h1>Канбан Доска</h1>
-      <p>Управление задачами и проектами</p>
+      <h1>PROJECT TITLE</h1>
     </div>
 
     <div class="board-stats">
@@ -22,11 +21,13 @@
   </div>
 
   <div class="board-content">
-    <div class="board-columns">
+    <div class="board-columns ">
       <app-board-column
-        *ngFor="let status of taskStatuses"
-        [status]="status"
-        [tasks]="getTasksByStatus(status)"
+        *ngFor="let column of columns"
+        [status]="getStatusFromColumn(column)"
+        [customTitle]="column.title"
+        [customDescription]="column.description"
+        [tasks]="getTasksByStatus(getStatusFromColumn(column))"
         [allTasks]="tasks"
         (addTask)="onAddTask($event)"
         (editTask)="onEditTask($event)"

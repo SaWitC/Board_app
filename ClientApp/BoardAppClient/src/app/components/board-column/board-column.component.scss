@@ -1,11 +1,18 @@
+
+:host {
+  display: block;
+  height: auto;
+}
+
 .board-column {
+  width: 300px;
+  min-height: 100%;
   background: var(--background-content);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  min-height: 500px;
   display: flex;
   flex-direction: column;
-  border-top: 4px solid;
+  border-top: 2px solid var(--bs-border-color);
   transition: all 0.2s ease;
 
   &.drag-over {
@@ -14,7 +21,7 @@
   }
 
   .column-header {
-    padding: 16px;
+    padding: 8px;
     border-bottom: 1px solid var(--bs-border-color);
     display: flex;
     justify-content: space-between;
@@ -76,7 +83,8 @@
 
   .column-content {
     flex: 1;
-    padding: 16px;
+    padding: 8px;
+    height: 100%;
     overflow-y: auto;
 
     .tasks-container {
@@ -89,8 +97,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 240px;
+
       justify-content: center;
-      padding: 40px 20px;
       text-align: center;
       color: var(--text-color);
       opacity: 0.5;
@@ -128,7 +137,7 @@
 // Responsive design
 @media (max-width: 768px) {
   .board-column {
-    min-height: 400px;
+    height: 100%;
 
     .column-header {
       padding: 12px;

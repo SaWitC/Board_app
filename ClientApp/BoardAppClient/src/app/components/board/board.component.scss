@@ -1,13 +1,20 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
 .board-container {
-  min-height: 100vh;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .board-header {
+  height: 10%;
   background: var(--background-content);
   border-radius: 12px;
   padding: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
@@ -16,8 +23,8 @@
   .board-title {
     h1 {
       margin: 0 0 8px 0;
-      font-size: 28px;
-      font-weight: 700;
+      font-size: 20px;
+      font-weight: 600;
       color: var(--text-color);
     }
 
@@ -31,11 +38,11 @@
 
   .board-stats {
     display: flex;
-    gap: 24px;
+    gap: 12px;
 
     .stat-item {
       text-align: center;
-      padding: 12px 20px;
+      padding: 6px 10px;
       background: var(--background-secondary);
       border-radius: 8px;
       border-left: 4px solid var(--background-accent);
@@ -52,8 +59,8 @@
 
       .stat-value {
         display: block;
-        font-size: 24px;
-        font-weight: 700;
+        font-size: 20px;
+        font-weight: 600;
         color: var(--text-color);
       }
     }
@@ -61,90 +68,29 @@
 }
 
 .board-content {
+  overflow-x: auto;
+  overflow-y: scroll; // вертикальный скролл убираем, пусть тянется
+  flex: 1;            // занимает всё доступное пространство
+  display: flex;
+
   .board-columns {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 24px;
-    align-items: start;
+    display: flex;
+    gap: 8px;
+    height: fit-content;
+    align-items: stretch; // ключевой момент
+    // background-color: red;
   }
+
+  // .board-columns > * {
+  //   flex: 1 1 0;
+  //   display: flex;
+  //   background-color: red;
+  //   flex-direction: column; // чтобы внутрянка не ломалась
+  // }
 }
 
-// Responsive design
-@media (max-width: 1200px) {
-  .board-container {
-    padding: 16px;
-  }
 
-  .board-header {
-    padding: 20px;
-    margin-bottom: 20px;
-    flex-direction: column;
-    gap: 20px;
-    text-align: center;
-
-    .board-stats {
-      gap: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
-
-      .stat-item {
-        padding: 10px 16px;
-        min-width: 100px;
-
-        .stat-value {
-          font-size: 20px;
-        }
-      }
-    }
-  }
-
-  .board-content {
-    .board-columns {
-      grid-template-columns: 1fr;
-      gap: 20px;
-    }
-  }
+app-board{
+  height: 100%;
 }
 
-@media (max-width: 768px) {
-  .board-container {
-    padding: 12px;
-  }
-
-  .board-header {
-    padding: 16px;
-    margin-bottom: 16px;
-
-    .board-title {
-      h1 {
-        font-size: 24px;
-      }
-
-      p {
-        font-size: 14px;
-      }
-    }
-
-    .board-stats {
-      gap: 12px;
-
-      .stat-item {
-        padding: 8px 12px;
-
-        .stat-label {
-          font-size: 11px;
-        }
-
-        .stat-value {
-          font-size: 18px;
-        }
-      }
-    }
-  }
-
-  .board-content {
-    .board-columns {
-      gap: 16px;
-    }
-  }
-}

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Task, TaskStatus, DragDropEvent } from '../../models/task.model';
 import { TaskService } from '../../services/task.service';
+import { BoardColumnApiService } from '../../services/api-services/board-column-api-service';
+import { BoardColumnLookupDTO } from '../../models/board-column/board-column-lookup-DTO.interface';
 import { BoardColumnComponent } from '../board-column/board-column.component';
 import { TaskModalComponent } from '../task-modal/task-modal.component';
 
@@ -14,17 +16,41 @@ import { TaskModalComponent } from '../task-modal/task-modal.component';
 })
 export class BoardComponent implements OnInit {
   tasks: Task[] = [];
+  columns: BoardColumnLookupDTO[] = [];
   isModalOpen = false;
   editingTask?: Task;
   creatingForStatus?: TaskStatus;
-  taskStatuses = Object.values(TaskStatus);
 
-  constructor(private taskService: TaskService) {}
+  constructor(
+    private taskService: TaskService,
+    private boardColumnService: BoardColumnApiService
+  ) {}
 
   ngOnInit(): void {
+    this.loadColumns();
     this.taskService.tasks$.subscribe(tasks => {
       this.tasks = tasks;
     });
+  }
+
+  private loadColumns(): void {
+    // Используем ID доски по умолчанию для демонстрации
+    const boardId = 'default-board';
+    this.boardColumnService.getBoardColumns(boardId).subscribe(columns => {
+      this.columns = columns;
+    });
+  }
+
+  getStatusFromColumn(column: BoardColumnLookupDTO): TaskStatus {
+    // Сопоставляем заголовки колонок со статусами задач
+    const titleMapping: { [key: string]: TaskStatus } = {
+      'К выполнению': TaskStatus.TODO,
+      'В работе': TaskStatus.IN_PROGRESS,
+      'На проверке': TaskStatus.REVIEW,
+      'Завершено': TaskStatus.DONE
+    };
+
+    return titleMapping[column.title] || TaskStatus.TODO;
   }
 
   getTasksByStatus(status: TaskStatus): Task[] {
