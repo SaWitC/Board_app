@@ -1,4 +1,5 @@
 ﻿using BoardAppApi.Data.Entities.Abstractions;
+using BoardAppApi.DataStructures.Enums;
 
 namespace BoardAppApi.Data.Entities
 {
@@ -11,5 +12,10 @@ namespace BoardAppApi.Data.Entities
         public BoardColumn BoardColumn { get; set; }
         public Guid BoardColumnId { get; set; }
         public DateTimeOffset ModificationDate { get; set; }
+        public BoardItemPriorityEnum Priority { get; set; }
+        public Guid AssigneeId { get; set; }
+        public DateTime DueDate { get; set; }
+        public DateTime CreatedTime { get; set; }
+        public ICollection<BoardItem> SubItems { get; set; }
     }
 }

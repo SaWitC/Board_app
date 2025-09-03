@@ -8,6 +8,5 @@ namespace BoardAppApi.Data.Entities
         public required string Title { get; set; }
         public required string Description { get; set; }
         public ICollection<BoardItem> Elements { get; set; }
-
     }
 }

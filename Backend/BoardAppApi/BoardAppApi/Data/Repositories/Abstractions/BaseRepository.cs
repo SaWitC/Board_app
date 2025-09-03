@@ -4,7 +4,7 @@ namespace BoardAppApi.Data.Repositories.Abstractions
 {
     public abstract class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
     {
-        private readonly BoardAppDbContext context;
+        protected readonly BoardAppDbContext context;
         public BaseRepository(BoardAppDbContext context)
         {
             this.context = context;
