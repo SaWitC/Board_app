@@ -15,7 +15,6 @@ export class SidebarComponent {
   @Input() isOpen = false;
 
   constructor(private router: Router) {
-    console.log('Sidebar component initialized');
   }
 
   onOpenSidebar(): void {

@@ -1,10 +1,11 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Task, TaskStatus, TASK_STATUS_CONFIG, DragDropEvent } from '../../../models/task.model';
+import { Task, DragDropEvent } from '../../../models/task.model';
 import { BoardColumnApiService } from '../../../services/api-services';
 import { BoardColumnDetailsDTO } from '../../../models';
 import { Subscription } from 'rxjs';
 import { TaskCardComponent } from '../task-card/task-card.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
     selector: 'app-board-column',
@@ -14,68 +15,52 @@ import { TaskCardComponent } from '../task-card/task-card.component';
     imports: [CommonModule, TaskCardComponent]
 })
 export class BoardColumnComponent implements OnInit, OnDestroy {
-  @Input() status!: TaskStatus;
-  @Input() customTitle?: string;
-  @Input() customDescription?: string;
-  @Input() tasks: Task[] = [];
-  @Input() allTasks: Task[] = []; // Добавляем все задачи для поиска исходного статуса
-  @Input() boardId: string = '1'; // ID доски для API запросов
-  @Output() addTask = new EventEmitter<TaskStatus>();
-  @Output() editTask = new EventEmitter<Task>();
+  @Input() columnId: string = '1';
+  @Input() boardId: string = '1';
+
+  @Input() allTasks: Task[] = [];
+  @Input() columnTasks: Task[] = [];
+  @Output() addTask = new EventEmitter<{boardColumnId: string}>();
+  @Output() editTask = new EventEmitter<{task: Task, boardColumnId: string}>();
   @Output() deleteTask = new EventEmitter<string>();
-  @Output() moveTask = new EventEmitter<{taskId: string, newStatus: TaskStatus}>();
+  @Output() moveTask = new EventEmitter<{taskId: string, newStatus: string}>();
   @Output() dropTask = new EventEmitter<DragDropEvent>();
 
   isDragOver = false;
-  columnData: BoardColumnDetailsDTO | null = null;
+  columnData!: BoardColumnDetailsDTO;
   loading = false;
   error: string | null = null;
   private subscription = new Subscription();
 
-  constructor(private boardColumnApiService: BoardColumnApiService) {}
+  constructor(private boardColumnApiService: BoardColumnApiService,matDialog: MatDialog) {}
 
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  public loadData(): void {
+    this.boardColumnApiService.getBoardColumnById(this.boardId, this.columnId).subscribe((data) => {
+      this.columnData = data;
+    });
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  get statusConfig() {
-    return TASK_STATUS_CONFIG.find(config => config.status === this.status);
-  }
-
-  get columnTitle(): string {
-    // Используем входной параметр, если доступен, иначе данные из API, иначе fallback на конфиг
-    return this.customTitle || this.columnData?.title || this.statusConfig?.label || this.status;
-  }
-
-  get columnColor(): string {
-    return this.statusConfig?.color || '#f5f5f5';
-  }
-
-  get columnIcon(): string {
-    return this.statusConfig?.icon || 'list';
-  }
-
-  get columnDescription(): string {
-    // Используем входной параметр, если доступен, иначе данные из API
-    return this.customDescription || this.columnData?.description || '';
-  }
-
   onAddTask(): void {
-    this.addTask.emit(this.status);
+    this.addTask.emit({boardColumnId: this.columnData?.id});
   }
 
   onEditTask(task: Task): void {
-    this.editTask.emit(task);
+    this.editTask.emit({task: task, boardColumnId: this.columnData?.id});
   }
 
   onDeleteTask(taskId: string): void {
     this.deleteTask.emit(taskId);
   }
 
-  onMoveTask(data: {taskId: string, newStatus: TaskStatus}): void {
+  onMoveTask(data: {taskId: string, newStatus: string}): void {
     this.moveTask.emit(data);
   }
 
@@ -87,34 +72,30 @@ export class BoardColumnComponent implements OnInit, OnDestroy {
 
       onDrop(event: DragEvent): void {
     event.preventDefault();
-    this.isDragOver = false; // Сбрасываем состояние drag-over
+    this.isDragOver = false;
 
     const taskId = event.dataTransfer?.getData('text/plain');
 
     if (taskId) {
-      // Создаем событие drag and drop
       const dragDropEvent: DragDropEvent = {
         taskId: taskId,
-        fromStatus: this.getTaskStatusFromId(taskId), // Получаем статус из сервиса
-        toStatus: this.status
+        fromColumnId: this.getTaskStatusFromId(taskId),
+        toColumnId: this.columnData?.id
       };
 
-      // Проверяем, что статус действительно изменился
-      if (dragDropEvent.fromStatus !== dragDropEvent.toStatus) {
+      if (dragDropEvent.fromColumnId !== dragDropEvent.toColumnId) {
         this.dropTask.emit(dragDropEvent);
       }
     }
   }
 
-    private getTaskStatusFromId(taskId: string): TaskStatus {
-    // Найдем задачу во всех задачах
+    private getTaskStatusFromId(taskId: string): string {
     const task = this.allTasks.find(t => t.id === taskId);
     if (task) {
-      return task.status;
+      return task.id;
     }
 
-    // Fallback - если задача не найдена, используем текущий статус
-    return this.status;
+    return this.columnData?.id;
   }
 
   onDragEnter(event: DragEvent): void {

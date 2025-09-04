@@ -1,0 +1,90 @@
+<h2 mat-dialog-title>{{ dialogTitle }}</h2>
+
+<form [formGroup]="boardForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-container">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Название доски *</mat-label>
+        <input matInput formControlName="boardTitle" placeholder="Введите название доски">
+        <mat-error *ngIf="boardForm.get('boardTitle')?.hasError('required')">
+          Название обязательно
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Описание доски *</mat-label>
+        <textarea matInput formControlName="boardDescription" placeholder="Введите описание доски" rows="3"></textarea>
+        <mat-error *ngIf="boardForm.get('boardDescription')?.hasError('required')">
+          Описание обязательно
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Пользователи *</mat-label>
+        <input matInput formControlName="boardUsers" placeholder="Введите пользователей через запятую">
+        <mat-hint>Например: user1example.com, user2example.com</mat-hint>
+        <mat-error *ngIf="boardForm.get('boardUsers')?.hasError('required')">
+          Пользователи обязательны
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Администраторы *</mat-label>
+        <input matInput formControlName="boardmanagers" placeholder="Введите администраторов через запятую">
+        <mat-hint>Например: admin1example.com, admin2example.com</mat-hint>
+        <mat-error *ngIf="boardForm.get('boardmanagers')?.hasError('required')">
+          Администраторы обязательны
+        </mat-error>
+      </mat-form-field>
+
+      <div class="columns-section">
+        <div class="columns-header">
+          <h3>Колонки доски</h3>
+          <button type="button" mat-mini-fab color="primary" (click)="addColumn()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+
+        <div formArrayName="boardColumns" class="columns-list">
+          <div *ngFor="let column of boardColumnsArray.controls; let i = index" [formGroupName]="i" class="column-item">
+            <div class="column-form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Название колонки *</mat-label>
+                <input matInput formControlName="columnTitle" placeholder="Название колонки">
+                <mat-error *ngIf="column.get('columnTitle')?.hasError('required')">
+                  Название обязательно
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Описание колонки *</mat-label>
+                <input matInput formControlName="columnDescription" placeholder="Описание колонки">
+                <mat-error *ngIf="column.get('columnDescription')?.hasError('required')">
+                  Описание обязательно
+                </mat-error>
+              </mat-form-field>
+
+              <button type="button" mat-icon-button color="warn" (click)="removeColumn(i)"
+                      [disabled]="boardColumnsArray.length <= 1">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onClose()">
+      Отмена
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="boardForm.invalid">
+      {{ submitButtonText }}
+    </button>
+  </mat-dialog-actions>
+</form>

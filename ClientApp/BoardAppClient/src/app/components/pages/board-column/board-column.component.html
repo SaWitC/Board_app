@@ -1,18 +1,16 @@
 <div class="board-column"
-     [style.border-top-color]="columnColor"
+     [style.border-top-color]="columnData.color"
      [class.drag-over]="isDragOver"
      (dragover)="onDragOver($event)"
      (dragenter)="onDragEnter($event)"
      (dragleave)="onDragLeave($event)"
      (drop)="onDrop($event)">
 
-  <!-- Основной контент колонки -->
   <div class="column-content-wrapper">
   <div class="column-header">
     <div class="column-title">
-      <i class="material-icons">{{ columnIcon }}</i>
-      <h3>{{ columnTitle }}</h3>
-      <span class="task-count">{{ tasks.length }}</span>
+      <h3>{{ columnData.title }}</h3>
+      <span class="task-count">{{ columnTasks.length }}</span>
     </div>
     <button class="btn-add-task" (click)="onAddTask()" title="Добавить задачу">
       <i class="material-icons">add</i>
@@ -22,7 +20,7 @@
   <div class="column-content">
     <div class="tasks-container">
       <app-task-card
-        *ngFor="let task of tasks"
+        *ngFor="let task of columnTasks"
         [task]="task"
         (editTask)="onEditTask($event)"
         (deleteTask)="onDeleteTask($event)"
@@ -30,7 +28,7 @@
       </app-task-card>
     </div>
 
-    <div class="empty-state" *ngIf="tasks.length === 0">
+    <div class="empty-state" *ngIf="allTasks.length === 0">
       <i class="material-icons">assignment</i>
       <p>Нет задач</p>
       <button class="btn-add-empty" (click)="onAddTask()">

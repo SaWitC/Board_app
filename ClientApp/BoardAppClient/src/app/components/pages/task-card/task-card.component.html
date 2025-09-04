@@ -42,26 +42,4 @@
   <div class="task-tags" *ngIf="task.tags && task.tags.length > 0">
     <span class="tag" *ngFor="let tag of task.tags">{{ tag }}</span>
   </div>
-
-  <div class="task-footer">
-        <div class="move-task-dropdown">
-      <button class="btn-move" (click)="toggleDropdown()">
-        <i class="material-icons">swap_horiz</i>
-        Переместить
-      </button>
-      <div class="dropdown-menu" [class.show]="isDropdownOpen" #moveDropdown>
-        <button class="dropdown-item"
-                *ngFor="let status of taskStatuses"
-                (click)="onMoveTask(status.status); closeDropdown()"
-                [disabled]="status.status === task.status">
-          <i class="material-icons">{{ status.icon }}</i>
-          {{ status.label }}
-        </button>
-      </div>
-    </div>
-
-    <div class="task-dates">
-      <small>Создано: {{ formatDate(task.createdAt) }}</small>
-    </div>
-  </div>
 </div>

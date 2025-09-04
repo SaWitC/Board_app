@@ -1,10 +1,9 @@
 .task-card {
-  background: var(--background-content);
+  background: var(--board-task-background-color);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 16px;
-  margin-bottom: 12px;
-  border-left: 4px solid var(--background-accent);
+  padding: 8px;
+  margin-bottom: 4px;
   transition: all 0.3s ease;
   position: relative;
   cursor: grab;
@@ -135,122 +134,6 @@
       border-radius: 12px;
       font-size: 11px;
       font-weight: 500;
-    }
-  }
-
-  .task-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 12px;
-    border-top: 1px solid var(--bs-border-color);
-
-    .move-task-dropdown {
-      position: relative;
-
-      .btn-move {
-        background: var(--background-secondary);
-        border: none;
-        padding: 6px 12px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 12px;
-        color: var(--text-color);
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        transition: all 0.2s ease;
-
-        &:hover {
-          background: var(--background-tertiary);
-          color: var(--text-color);
-        }
-
-        i {
-          font-size: 16px;
-        }
-      }
-
-              .dropdown-menu {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          background: var(--background-content);
-          border: 1px solid var(--bs-border-color);
-          border-radius: 4px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-          z-index: 1000;
-          min-width: 150px;
-          display: none;
-
-          &.show {
-            display: block;
-          }
-
-                  .dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            padding: 8px 12px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-size: 14px;
-            color: var(--text-color);
-            transition: background-color 0.2s ease;
-
-            &:hover:not(:disabled) {
-              background-color: var(--background-secondary);
-            }
-
-            &:disabled {
-              color: var(--text-color);
-              opacity: 0.3;
-              cursor: not-allowed;
-            }
-
-          i {
-            font-size: 16px;
-          }
-        }
-      }
-    }
-
-    .task-dates {
-      small {
-        color: var(--text-color);
-        opacity: 0.5;
-        font-size: 11px;
-      }
-    }
-  }
-}
-
-// Responsive design
-@media (max-width: 768px) {
-  .task-card {
-    padding: 12px;
-
-    .task-header {
-      flex-direction: column;
-      gap: 8px;
-
-      .task-actions {
-        align-self: flex-end;
-      }
-    }
-
-    .task-meta {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-    }
-
-    .task-footer {
-      flex-direction: column;
-      gap: 8px;
-      align-items: flex-start;
     }
   }
 }

@@ -24,11 +24,11 @@
     <div class="board-columns ">
       <app-board-column
         *ngFor="let column of columns"
-        [status]="getStatusFromColumn(column)"
-        [customTitle]="column.title"
-        [customDescription]="column.description"
-        [tasks]="getTasksByStatus(getStatusFromColumn(column))"
+        [columnId]="column.id"
+        [boardId]="column.id"
         [allTasks]="tasks"
+        [columnTasks]="getTasksByStatus(column.id)"
+
         (addTask)="onAddTask($event)"
         (editTask)="onEditTask($event)"
         (deleteTask)="onDeleteTask($event)"
@@ -37,11 +37,4 @@
       </app-board-column>
     </div>
   </div>
-
-  <app-task-modal
-    [isOpen]="isModalOpen"
-    [task]="editingTask"
-    (saveTask)="onSaveTask($event)"
-    (closeModal)="closeModal()">
-  </app-task-modal>
 </div>

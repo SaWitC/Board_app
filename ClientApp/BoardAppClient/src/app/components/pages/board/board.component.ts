@@ -1,29 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Task, TaskStatus, DragDropEvent } from '../../../models/task.model';
+import { Task, DragDropEvent } from '../../../models/task.model';
 import { TaskService } from '../../../services/task.service';
-import { BoardColumnApiService } from '../../../services/api-services/board-column-api-service';
+import { BoardColumnApiService } from '../../../services/api-services/board-column-api.service';
 import { BoardColumnLookupDTO } from '../../../models/board-column/board-column-lookup-DTO.interface';
 import { BoardColumnComponent } from '../board-column/board-column.component';
-import { TaskModalComponent } from '../dialog/task-modal/task-modal.component';
+import { DialogService } from '../../../services/dialog.service';
 
 @Component({
     selector: 'app-board',
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss'],
     standalone: true,
-    imports: [CommonModule, BoardColumnComponent, TaskModalComponent]
+    imports: [CommonModule, BoardColumnComponent]
 })
 export class BoardComponent implements OnInit {
   tasks: Task[] = [];
   columns: BoardColumnLookupDTO[] = [];
-  isModalOpen = false;
-  editingTask?: Task;
-  creatingForStatus?: TaskStatus;
 
   constructor(
     private taskService: TaskService,
-    private boardColumnService: BoardColumnApiService
+    private boardColumnService: BoardColumnApiService,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -34,46 +32,49 @@ export class BoardComponent implements OnInit {
   }
 
   private loadColumns(): void {
-    // Используем ID доски по умолчанию для демонстрации
     const boardId = 'default-board';
     this.boardColumnService.getBoardColumns(boardId).subscribe(columns => {
       this.columns = columns;
     });
   }
 
-  getStatusFromColumn(column: BoardColumnLookupDTO): TaskStatus {
-    // Сопоставляем заголовки колонок со статусами задач
-    const titleMapping: { [key: string]: TaskStatus } = {
-      'К выполнению': TaskStatus.TODO,
-      'В работе': TaskStatus.IN_PROGRESS,
-      'На проверке': TaskStatus.REVIEW,
-      'Завершено': TaskStatus.DONE
-    };
-
-    return titleMapping[column.title] || TaskStatus.TODO;
+  getTasksByStatus(columnId: string): Task[] {
+    return this.tasks.filter(task => task.columnId === columnId);
   }
 
-  getTasksByStatus(status: TaskStatus): Task[] {
-    return this.tasks.filter(task => task.status === status);
+  onAddTask(columnId: string): void {
+    this.dialogService.openTaskModal({
+      mode: 'create',
+      boardColumns: this.columns,
+      selectedBoardColumnId:columnId
+    }).subscribe((task) => {
+      if (task) {
+        const taskData = {
+          ...task,
+          boardColumns: this.columns
+        };
+        this.taskService.createTask(taskData);
+      }
+    });
   }
 
-  onAddTask(status: TaskStatus): void {
-    this.creatingForStatus = status;
-    this.editingTask = undefined;
-    this.isModalOpen = true;
-  }
-
-  onEditTask(task: Task): void {
-    this.editingTask = task;
-    this.creatingForStatus = undefined;
-    this.isModalOpen = true;
+  onEditTask(data: {task: Task, boardColumnId: string}): void {
+    this.dialogService.openTaskModal({
+      mode: 'edit',
+      boardColumns: this.columns,
+      selectedBoardColumnId: data.boardColumnId
+    }).subscribe((updatedTask) => {
+      if (updatedTask) {
+        this.taskService.updateTask(data.task.id, updatedTask);
+      }
+    });
   }
 
   onDeleteTask(taskId: string): void {
     this.taskService.deleteTask(taskId);
   }
 
-  onMoveTask(data: {taskId: string, newStatus: TaskStatus}): void {
+  onMoveTask(data: {taskId: string, newStatus: string}): void {
     this.taskService.moveTask(data.taskId, data.newStatus);
   }
 
@@ -81,25 +82,41 @@ export class BoardComponent implements OnInit {
     this.taskService.moveTaskByDragDrop(event);
   }
 
-  onSaveTask(task: Task): void {
-    if (this.editingTask) {
-      // Редактирование существующей задачи
-      this.taskService.updateTask(task.id, task);
-    } else {
-      // Создание новой задачи
-      const taskData = {
-        ...task,
-        status: this.creatingForStatus || TaskStatus.TODO
-      };
-      this.taskService.createTask(taskData);
+  onColumnDragStart(event: DragEvent, column: BoardColumnLookupDTO, index: number): void {
+    if (event.dataTransfer) {
+      event.dataTransfer.setData('text/plain', JSON.stringify({
+        columnId: column.id,
+        fromIndex: index
+      }));
+      event.dataTransfer.effectAllowed = 'move';
     }
-    this.closeModal();
   }
 
-  closeModal(): void {
-    this.isModalOpen = false;
-    this.editingTask = undefined;
-    this.creatingForStatus = undefined;
+  onColumnDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.dataTransfer!.dropEffect = 'move';
+  }
+
+  onColumnDrop(event: DragEvent, toIndex: number): void {
+    event.preventDefault();
+
+    try {
+      const dragData = JSON.parse(event.dataTransfer?.getData('text/plain') || '{}');
+      const fromIndex = dragData.fromIndex;
+
+      if (fromIndex !== undefined && fromIndex !== toIndex) {
+        this.reorderColumns(fromIndex, toIndex);
+      }
+    } catch (error) {
+      console.error('Error parsing drag data:', error);
+    }
+  }
+
+  private reorderColumns(fromIndex: number, toIndex: number): void {
+    const columns = [...this.columns];
+    const [movedColumn] = columns.splice(fromIndex, 1);
+    columns.splice(toIndex, 0, movedColumn);
+    this.columns = columns;
   }
 
   getTaskCount(): number {
@@ -107,7 +124,7 @@ export class BoardComponent implements OnInit {
   }
 
   getCompletedTaskCount(): number {
-    return this.tasks.filter(task => task.status === TaskStatus.DONE).length;
+    return this.tasks.filter(task => task.columnId === '4').length;
   }
 
   getProgressPercentage(): number {

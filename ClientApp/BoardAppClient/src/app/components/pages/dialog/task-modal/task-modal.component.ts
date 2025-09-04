@@ -1,45 +1,74 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Task, TaskPriority, TaskStatus } from 'src/app/models';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+import { BoardColumnLookupDTO, Task, TaskPriority } from 'src/app/models';
+
+export interface TaskModalData {
+  task?: Task;
+  mode: 'create' | 'edit';
+  boardColumns: BoardColumnLookupDTO[];
+  selectedBoardColumnId?: string;
+}
 
 @Component({
     selector: 'app-task-modal',
     templateUrl: './task-modal.component.html',
     styleUrls: ['./task-modal.component.scss'],
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule]
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatIconModule,
+        MatChipsModule
+    ]
 })
 export class TaskModalComponent implements OnInit {
-  @Input() task?: Task;
-  @Input() isOpen = false;
-  @Output() saveTask = new EventEmitter<Task>();
-  @Output() closeModal = new EventEmitter<void>();
-
+  task?: Task;
+  boardColumns: BoardColumnLookupDTO[] = [];
   taskForm!: FormGroup;
-  taskStatuses = Object.values(TaskStatus);
   taskPriorities = Object.values(TaskPriority);
+  dialogTitle: string;
+  submitButtonText: string;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    public dialogRef: MatDialogRef<TaskModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: TaskModalData
+  ) {
+    this.task = data.task;
+    this.boardColumns = data.boardColumns;
+    this.dialogTitle = data.mode === 'create' ? 'Создать новую задачу' : 'Редактировать задачу';
+    this.submitButtonText = data.mode === 'create' ? 'Создать' : 'Сохранить';
+  }
 
   ngOnInit(): void {
     this.initForm();
-  }
-
-  ngOnChanges(): void {
-    if (this.isOpen) {
-      this.initForm();
-    }
   }
 
   private initForm(): void {
     this.taskForm = this.fb.group({
       title: [this.task?.title || '', [Validators.required, Validators.minLength(3)]],
       description: [this.task?.description || ''],
-      status: [this.task?.status || TaskStatus.TODO, Validators.required],
+      columnId: [this.task?.columnId || this.data.selectedBoardColumnId || '', Validators.required],
       priority: [this.task?.priority || TaskPriority.MEDIUM, Validators.required],
       assignee: [this.task?.assignee || ''],
-      dueDate: [this.task?.dueDate ? new Date(this.task.dueDate).toISOString().split('T')[0] : ''],
+      dueDate: [this.task?.dueDate ? new Date(this.task.dueDate) : undefined],
       tags: [this.task?.tags?.join(', ') || '']
     });
   }
@@ -50,7 +79,7 @@ export class TaskModalComponent implements OnInit {
       const taskData: Partial<Task> = {
         title: formValue.title,
         description: formValue.description,
-        status: formValue.status,
+        columnId: formValue.columnId,
         priority: formValue.priority,
         assignee: formValue.assignee || undefined,
         dueDate: formValue.dueDate ? new Date(formValue.dueDate) : undefined,
@@ -64,7 +93,7 @@ export class TaskModalComponent implements OnInit {
           ...taskData,
           updatedAt: new Date()
         };
-        this.saveTask.emit(updatedTask);
+        this.dialogRef.close(updatedTask);
       } else {
         // Создание новой задачи
         const newTask = {
@@ -72,19 +101,13 @@ export class TaskModalComponent implements OnInit {
           createdAt: new Date(),
           updatedAt: new Date()
         };
-        this.saveTask.emit(newTask as Task);
+        this.dialogRef.close(newTask as Task);
       }
     }
   }
 
   onClose(): void {
-    this.closeModal.emit();
-  }
-
-  onBackdropClick(event: Event): void {
-    if (event.target === event.currentTarget) {
-      this.onClose();
-    }
+    this.dialogRef.close();
   }
 
   getPriorityLabel(priority: TaskPriority): string {
@@ -95,15 +118,5 @@ export class TaskModalComponent implements OnInit {
       [TaskPriority.URGENT]: 'Срочный'
     };
     return labels[priority] || priority;
-  }
-
-  getStatusLabel(status: TaskStatus): string {
-    const labels = {
-      [TaskStatus.TODO]: 'К выполнению',
-      [TaskStatus.IN_PROGRESS]: 'В работе',
-      [TaskStatus.REVIEW]: 'На проверке',
-      [TaskStatus.DONE]: 'Завершено'
-    };
-    return labels[status] || status;
   }
 }

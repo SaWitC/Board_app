@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { BoardApiService } from '../../../services/api-services';
-import { BoardLookupDTO } from '../../../models';
+import { DialogService } from '../../../services/dialog.service';
+import { BoardLookupDTO, AddBoardDTO } from '../../../models';
 
 @Component({
   selector: 'app-boards-list',
@@ -18,7 +19,8 @@ export class BoardsListComponent implements OnInit {
 
   constructor(
     private boardApiService: BoardApiService,
-    private router: Router
+    private router: Router,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -47,7 +49,19 @@ export class BoardsListComponent implements OnInit {
   }
 
   onCreateBoard(): void {
-    // TODO: Implement create board functionality
-    console.log('Create board clicked');
+    this.dialogService.openCreateBoardModal().subscribe((boardData) => {
+      if (boardData) {
+        // this.boardApiService.createBoard(boardData).subscribe({
+        //   next: (newBoard) => {
+        //     this.boards.push(newBoard);
+        //     // Показать уведомление об успехе
+        //   },
+        //   error: (error) => {
+        //     console.error('Error creating board:', error);
+        //     // Показать уведомление об ошибке
+        //   }
+        // });
+      }
+    });
   }
 }

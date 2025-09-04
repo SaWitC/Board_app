@@ -1,102 +1,76 @@
-<div class="modal-overlay" *ngIf="isOpen" (click)="onBackdropClick($event)">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>{{ task ? 'Редактировать задачу' : 'Создать новую задачу' }}</h2>
-      <button class="btn-close" (click)="onClose()">
-        <i class="material-icons">close</i>
-      </button>
-    </div>
+<h2 mat-dialog-title>{{ dialogTitle }}</h2>
 
-    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="modal-body">
-      <div class="form-group">
-        <label for="title">Название *</label>
-        <input
-          type="text"
-          id="title"
-          formControlName="title"
-          placeholder="Введите название задачи"
-          class="form-control"
-          [class.error]="taskForm.get('title')?.invalid && taskForm.get('title')?.touched">
-        <div class="error-message" *ngIf="taskForm.get('title')?.invalid && taskForm.get('title')?.touched">
-          <span *ngIf="taskForm.get('title')?.errors?.['required']">Название обязательно</span>
-          <span *ngIf="taskForm.get('title')?.errors?.['minlength']">Минимум 3 символа</span>
-        </div>
-      </div>
+<form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-container">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Название *</mat-label>
+        <input matInput formControlName="title" placeholder="Введите название задачи">
+        <mat-error *ngIf="taskForm.get('title')?.hasError('required')">
+          Название обязательно
+        </mat-error>
+        <mat-error *ngIf="taskForm.get('title')?.hasError('minlength')">
+          Минимум 3 символа
+        </mat-error>
+      </mat-form-field>
 
-      <div class="form-group">
-        <label for="description">Описание</label>
-        <textarea
-          id="description"
-          formControlName="description"
-          placeholder="Введите описание задачи"
-          class="form-control"
-          rows="3"></textarea>
-      </div>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Описание</mat-label>
+        <textarea matInput formControlName="description" placeholder="Введите описание задачи" rows="3"></textarea>
+      </mat-form-field>
 
       <div class="form-row">
-        <div class="form-group">
-          <label for="status">Статус *</label>
-          <select id="status" formControlName="status" class="form-control">
-            <option *ngFor="let status of taskStatuses" [value]="status">
-              {{ getStatusLabel(status) }}
-            </option>
-          </select>
-        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Статус *</mat-label>
+          <mat-select formControlName="columnId">
+            <mat-option *ngFor="let column of boardColumns" [value]="column">
+              {{ column.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-        <div class="form-group">
-          <label for="priority">Приоритет *</label>
-          <select id="priority" formControlName="priority" class="form-control">
-            <option *ngFor="let priority of taskPriorities" [value]="priority">
+        <mat-form-field appearance="outline">
+          <mat-label>Приоритет *</mat-label>
+          <mat-select formControlName="priority">
+            <mat-option *ngFor="let priority of taskPriorities" [value]="priority">
               {{ getPriorityLabel(priority) }}
-            </option>
-          </select>
-        </div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
 
       <div class="form-row">
-        <div class="form-group">
-          <label for="assignee">Исполнитель</label>
-          <input
-            type="text"
-            id="assignee"
-            formControlName="assignee"
-            placeholder="Введите имя исполнителя"
-            class="form-control">
-        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Исполнитель</mat-label>
+          <input matInput formControlName="assignee" placeholder="Введите имя исполнителя">
+        </mat-form-field>
 
-        <div class="form-group">
-          <label for="dueDate">Срок выполнения</label>
-          <input
-            type="date"
-            id="dueDate"
-            formControlName="dueDate"
-            class="form-control">
-        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Срок выполнения</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dueDate" placeholder="Выберите дату">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
       </div>
 
-      <div class="form-group">
-        <label for="tags">Теги</label>
-        <input
-          type="text"
-          id="tags"
-          formControlName="tags"
-          placeholder="Введите теги через запятую"
-          class="form-control">
-        <small class="form-hint">Например: дизайн, разработка, тестирование</small>
-      </div>
-    </form>
-
-    <div class="modal-footer">
-      <button type="button" class="btn-secondary" (click)="onClose()">
-        Отмена
-      </button>
-      <button
-        type="submit"
-        class="btn-primary"
-        (click)="onSubmit()"
-        [disabled]="taskForm.invalid">
-        {{ task ? 'Сохранить' : 'Создать' }}
-      </button>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Теги</mat-label>
+        <input matInput formControlName="tags" placeholder="Введите теги через запятую">
+        <mat-hint>Например: дизайн, разработка, тестирование</mat-hint>
+      </mat-form-field>
     </div>
-  </div>
-</div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onClose()">
+      Отмена
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="taskForm.invalid">
+      {{ submitButtonText }}
+    </button>
+  </mat-dialog-actions>
+</form>

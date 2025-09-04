@@ -86,7 +86,8 @@ export class BoardColumnApiService {
     const mockColumn: BoardColumnDetailsDTO = {
       id: columnId,
       title: `Column ${columnId}`,
-      description: `This is a detailed description for column ${columnId}`
+      description: `This is a detailed description for column ${columnId}`,
+      color: '#000000'
     };
 
     return new Observable(observer => {
@@ -102,7 +103,8 @@ export class BoardColumnApiService {
     const mockColumn: BoardColumnDetailsDTO = {
       id: Math.random().toString(36).substr(2, 9), // Генерируем случайный ID
       title: column.title,
-      description: column.description
+      description: column.description,
+      color: '#000000'
     };
 
     return new Observable(observer => {
@@ -118,7 +120,8 @@ export class BoardColumnApiService {
     const mockColumn: BoardColumnDetailsDTO = {
       id: column.id,
       title: column.title,
-      description: column.description
+      description: column.description,
+      color: '#000000'
     };
 
     return new Observable(observer => {
