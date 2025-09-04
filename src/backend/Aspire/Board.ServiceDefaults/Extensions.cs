@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,8 @@ using Microsoft.Extensions.Options;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using Serilog;
+using Serilog.Settings.Configuration;
 
 namespace Board.ServiceDefaults;
 
@@ -45,6 +48,7 @@ public static class Extensions
         // {
         //     options.AllowedSchemes = ["https"];
         // });
+        builder.AddSerilogLogger();
 
         return builder;
     }
@@ -170,5 +174,35 @@ public static class Extensions
 
         services.AddSingleton<IValidateOptions<T>>(_ => new BaseOptionsValidator<T>(null, propertyExpressions));
     }
+    private static Serilog.ILogger AddSerilogLogger(this IHostApplicationBuilder builder, LoggerConfiguration configuration = null)
+    {
+        Log.Logger = configuration == null
+            ? builder.GetBaseLoggerConfiguration().CreateLogger()
+            : configuration.CreateLogger();
 
+        builder.Logging.ClearProviders();
+        builder.Logging.AddSerilog(Log.Logger);
+        // Register Serilog as the logging provider
+        builder.Services.AddSingleton(Log.Logger);
+
+        return Log.Logger;
+    }
+
+    private static LoggerConfiguration GetBaseLoggerConfiguration(this IHostApplicationBuilder builder)
+    {
+        var logBuilder = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration,
+                new ConfigurationReaderOptions(default(DependencyContext)) { SectionName = "Serilog" })
+            .Enrich.FromLogContext()
+            .Filter.ByExcluding(c =>
+                c.Properties.Any(p => p.Value.ToString().Contains("unhealthy", StringComparison.OrdinalIgnoreCase)))
+            .Filter.ByExcluding(c =>
+                c.Properties.Any(p => p.Value.ToString().Contains("healthy", StringComparison.OrdinalIgnoreCase)))
+            .Filter.ByExcluding(c =>
+                c.Properties.Any(p => p.Value.ToString().Contains("degraded", StringComparison.OrdinalIgnoreCase)))
+            .Filter.ByExcluding(
+                c => c.MessageTemplate.Text.Contains("health check", StringComparison.OrdinalIgnoreCase));
+
+        return logBuilder;
+    }
 }

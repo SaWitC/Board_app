@@ -59,12 +59,14 @@
 		<PackageVersion Include="Polly" Version="8.2.0" />
 		<PackageVersion Include="Polly.Extensions.Http" Version="3.0.0" />
 		<!-- Serilog -->
-		<PackageVersion Include="Serilog" Version="3.1.1" />
-		<PackageVersion Include="Serilog.AspNetCore" Version="8.0.1" />
-		<PackageVersion Include="Serilog.Extensions.Hosting" Version="8.0.0" />
-		<PackageVersion Include="Serilog.Sinks.Console" Version="5.0.1" />
-		<PackageVersion Include="Serilog.Settings.Configuration" Version="8.0.0" />
-		<!-- Validation -->
+		<PackageVersion Include="Serilog" Version="4.3.0" />
+		<PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
+		<PackageVersion Include="Serilog.Extensions.Hosting" Version="9.0.0" />
+        <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
+        <PackageVersion Include="Serilog.Extensions.Logging" Version="9.0.2" />
+        <PackageVersion Include="Serilog.Settings.Configuration" Version="9.0.0" />
+        
+        <!-- Validation -->
 		<PackageVersion Include="FluentValidation" Version="12.0.0" />
 		<PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
 
