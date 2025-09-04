@@ -19,10 +19,14 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblyContaining<Program>());
 
-builder.Services.AddScoped<BaseRepository<BoardItem>, BoardItemRepository>();
-builder.Services.AddScoped<BaseRepository<Board>, BoardRepository>();
-builder.Services.AddDbContext<DbContext>(options =>
-    options.UseSqlServer("connectionString"));
+builder.Services.AddScoped<IRepository<BoardItem>, BoardItemRepository>();
+builder.Services.AddScoped<IRepository<Board>, BoardRepository>();
+builder.Services.AddScoped<BoardItemRepository>();
+builder.Services.AddScoped<BoardRepository>();
+
+
+builder.Services.AddDbContext<BoardAppDbContext>(/*options =>
+    options.UseSqlServer("connectionString")*/);
 
 
 var app = builder.Build();

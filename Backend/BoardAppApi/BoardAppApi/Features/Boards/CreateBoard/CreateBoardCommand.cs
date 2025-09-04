@@ -1,11 +1,10 @@
 using BoardAppApi.Data.Entities;
 using MediatR;
 
-namespace BoardAppApi.Features.Board.UpdateBoard;
+namespace BoardAppApi.Features.Boards.CreateBoard;
 
-public class UpdateBoardCommand : IRequest<Data.Entities.Board>
+public class CreateBoardCommand : IRequest<Board>
 {
-    public Guid Id { get; set; }
     public required string Title { get; set; }
     public required string Description { get; set; }
 }

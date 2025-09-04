@@ -1,12 +1,12 @@
 using BoardAppApi.Data.Entities;
-using BoardAppApi.Data.Repositories.Implemntations;
+using BoardAppApi.Data.Repositories.Abstractions;
 using MediatR;
 
-namespace BoardAppApi.Features.Board.UpdateBoard;
+namespace BoardAppApi.Features.Boards.UpdateBoard;
 
-public class UpdateBoardHandler(BoardRepository _rep) : IRequestHandler<UpdateBoardCommand, Data.Entities.Board>
+public class UpdateBoardHandler(IRepository<Board> _rep) : IRequestHandler<UpdateBoardCommand, Board>
 {
-    public async Task<Data.Entities.Board> Handle(UpdateBoardCommand request, CancellationToken cancellationToken)
+    public async Task<Board> Handle(UpdateBoardCommand request, CancellationToken cancellationToken)
     {
         var entity = await _rep.GetAsync(request.Id, cancellationToken);
         if (entity == null)

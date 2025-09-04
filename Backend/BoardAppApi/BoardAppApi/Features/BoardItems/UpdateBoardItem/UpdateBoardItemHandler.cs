@@ -1,10 +1,10 @@
 using BoardAppApi.Data.Entities;
-using BoardAppApi.Data.Repositories.Implemntations;
+using BoardAppApi.Data.Repositories.Abstractions;
 using MediatR;
 
 namespace BoardAppApi.Features.BoardItems.UpdateBoardItem;
 
-public class UpdateBoardItemHandler(BoardItemRepository _rep) : IRequestHandler<UpdateBoardItemCommand, BoardItem>
+public class UpdateBoardItemHandler(IRepository<BoardItem> _rep) : IRequestHandler<UpdateBoardItemCommand, BoardItem>
 {
     public async Task<BoardItem> Handle(UpdateBoardItemCommand request, CancellationToken cancellationToken)
     {

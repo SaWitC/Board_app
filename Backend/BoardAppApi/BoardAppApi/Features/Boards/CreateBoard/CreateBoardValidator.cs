@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace BoardAppApi.Features.Board.CreateBoard;
+namespace BoardAppApi.Features.Boards.CreateBoard;
 
 public class CreateBoardValidator : AbstractValidator<CreateBoardCommand>
 {

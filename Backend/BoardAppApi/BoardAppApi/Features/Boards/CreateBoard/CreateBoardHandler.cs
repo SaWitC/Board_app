@@ -1,14 +1,14 @@
 using BoardAppApi.Data.Entities;
-using BoardAppApi.Data.Repositories.Implemntations;
+using BoardAppApi.Data.Repositories.Abstractions;
 using MediatR;
 
-namespace BoardAppApi.Features.Board.CreateBoard;
+namespace BoardAppApi.Features.Boards.CreateBoard;
 
-public class CreateBoardHandler(BoardRepository _rep) : IRequestHandler<CreateBoardCommand, Data.Entities.Board>
+public class CreateBoardHandler(IRepository<Board> _rep) : IRequestHandler<CreateBoardCommand, Board>
 {
-    public async Task<Data.Entities.Board> Handle(CreateBoardCommand request, CancellationToken cancellationToken)
+    public async Task<Board> Handle(CreateBoardCommand request, CancellationToken cancellationToken)
     {
-        var entity = new Data.Entities.Board
+        var entity = new Board
         {
             Id = Guid.NewGuid(),
             Title = request.Title,

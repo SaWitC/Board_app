@@ -1,8 +1,7 @@
 using FastEndpoints;
-using MediatR;
 using IMediator = MediatR.IMediator;
 
-namespace BoardAppApi.Features.Board.DeleteBoard;
+namespace BoardAppApi.Features.Boards.DeleteBoard;
 
 public class DeleteBoardEndpoint(IMediator _mediator) : EndpointWithoutRequest
 {

@@ -1,5 +1,4 @@
 using FastEndpoints;
-using MediatR;
 using IMediator = MediatR.IMediator;
 
 namespace BoardAppApi.Features.BoardItems.UpdateBoardItem;

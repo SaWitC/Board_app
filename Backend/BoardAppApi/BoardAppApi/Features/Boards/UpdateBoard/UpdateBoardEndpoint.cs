@@ -1,8 +1,7 @@
 using FastEndpoints;
-using MediatR;
 using IMediator = MediatR.IMediator;
 
-namespace BoardAppApi.Features.Board.UpdateBoard;
+namespace BoardAppApi.Features.Boards.UpdateBoard;
 
 public class UpdateBoardEndpoint(IMediator _mediator) : Endpoint<UpdateBoardCommand>
 {

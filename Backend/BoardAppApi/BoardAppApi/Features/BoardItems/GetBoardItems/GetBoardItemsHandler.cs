@@ -1,4 +1,5 @@
 using BoardAppApi.Data.Entities;
+using BoardAppApi.Data.Repositories.Abstractions;
 using BoardAppApi.Data.Repositories.Implemntations;
 using MediatR;
 

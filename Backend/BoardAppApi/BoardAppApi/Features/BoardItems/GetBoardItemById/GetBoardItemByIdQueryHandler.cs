@@ -1,10 +1,11 @@
 ﻿using BoardAppApi.Data.Entities;
+using BoardAppApi.Data.Repositories.Abstractions;
 using BoardAppApi.Data.Repositories.Implemntations;
 using MediatR;
 
 namespace BoardAppApi.Features.BoardItems.GetBoardById;
 
-public class GetBoardItemByIdQueryHandler(BoardItemRepository _rep) : IRequestHandler<GetBoardItemByIdQuery, BoardItem>
+public class GetBoardItemByIdQueryHandler(IRepository<BoardItem> _rep) : IRequestHandler<GetBoardItemByIdQuery, BoardItem>
 {
     public async Task<BoardItem> Handle(GetBoardItemByIdQuery request, CancellationToken cancellationToken)
     {

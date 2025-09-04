@@ -1,10 +1,10 @@
 using BoardAppApi.Data.Entities;
-using BoardAppApi.Data.Repositories.Implemntations;
+using BoardAppApi.Data.Repositories.Abstractions;
 using MediatR;
 
 namespace BoardAppApi.Features.BoardItems.CreateBoard;
 
-public class CreateBoardItemHandler(BoardItemRepository _rep) : IRequestHandler<CreateBoardItemCommand, BoardItem>
+public class CreateBoardItemHandler(IRepository<BoardItem> _rep) : IRequestHandler<CreateBoardItemCommand, BoardItem>
 {
     public async Task<BoardItem> Handle(CreateBoardItemCommand request, CancellationToken cancellationToken)
     {

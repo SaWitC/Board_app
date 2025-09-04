@@ -1,8 +1,7 @@
 using FastEndpoints;
-using Mediator;
 using IMediator = MediatR.IMediator;
 
-namespace BoardAppApi.Features.Board.GetBoardById;
+namespace BoardAppApi.Features.Boards.GetBoardById;
 
 public class GetBoardByIdEndpoint(IMediator _mediator) : EndpointWithoutRequest
 {

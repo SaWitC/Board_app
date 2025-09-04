@@ -2,7 +2,7 @@ using FastEndpoints;
 using MediatR;
 using IMediator = MediatR.IMediator;
 
-namespace BoardAppApi.Features.Board.CreateBoard;
+namespace BoardAppApi.Features.Boards.CreateBoard;
 
 public class CreateBoardEndpoint(IMediator _mediator) : Endpoint<CreateBoardCommand>
 {

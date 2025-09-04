@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace BoardAppApi.Features.Board.UpdateBoard;
+namespace BoardAppApi.Features.Boards.UpdateBoard;
 
 public class UpdateBoardValidator : AbstractValidator<UpdateBoardCommand>
 {

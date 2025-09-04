@@ -1,5 +1,4 @@
 ﻿using FastEndpoints;
-using Mediator;
 using IMediator = MediatR.IMediator;
 
 namespace BoardAppApi.Features.BoardItems.GetBoardById;
