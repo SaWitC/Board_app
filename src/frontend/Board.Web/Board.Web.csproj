@@ -4,7 +4,7 @@
   <PropertyGroup>
     <SpaRoot>.\</SpaRoot>
     <SpaDevServerUrl>http://localhost:4200</SpaDevServerUrl>
-    <SpaLaunchCommand>npm run dev</SpaLaunchCommand>
+    <SpaLaunchCommand>npm run start</SpaLaunchCommand>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
