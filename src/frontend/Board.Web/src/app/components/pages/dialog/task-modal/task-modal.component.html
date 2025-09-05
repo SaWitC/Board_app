@@ -1,0 +1,76 @@
+<h2 mat-dialog-title>{{ dialogTitle }}</h2>
+
+<form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-container">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Название *</mat-label>
+        <input matInput formControlName="title" placeholder="Введите название задачи">
+        <mat-error *ngIf="taskForm.get('title')?.hasError('required')">
+          Название обязательно
+        </mat-error>
+        <mat-error *ngIf="taskForm.get('title')?.hasError('minlength')">
+          Минимум 3 символа
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Описание</mat-label>
+        <textarea matInput formControlName="description" placeholder="Введите описание задачи" rows="3"></textarea>
+      </mat-form-field>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Статус *</mat-label>
+          <mat-select formControlName="columnId">
+            <mat-option *ngFor="let column of boardColumns" [value]="column">
+              {{ column.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Приоритет *</mat-label>
+          <mat-select formControlName="priority">
+            <mat-option *ngFor="let priority of taskPriorities" [value]="priority">
+              {{ getPriorityLabel(priority) }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Исполнитель</mat-label>
+          <input matInput formControlName="assignee" placeholder="Введите имя исполнителя">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Срок выполнения</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dueDate" placeholder="Выберите дату">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Теги</mat-label>
+        <input matInput formControlName="tags" placeholder="Введите теги через запятую">
+        <mat-hint>Например: дизайн, разработка, тестирование</mat-hint>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onClose()">
+      Отмена
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="taskForm.invalid">
+      {{ submitButtonText }}
+    </button>
+  </mat-dialog-actions>
+</form>

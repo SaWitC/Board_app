@@ -17,9 +17,7 @@ export class AppComponent {
   sidebarOpen = false;
 
   onOpenSidebar(): void {
-    console.log('Opening sidebar, current state:', this.sidebarOpen);
     this.sidebarOpen = true;
-    console.log('Sidebar state after opening:', this.sidebarOpen);
   }
 
   onCloseSidebar(): void {

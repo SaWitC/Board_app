@@ -1,0 +1,7 @@
+export interface AddBoardDTO {
+  title: string;
+  description: string;
+  users: string[];
+  admins: string[];
+  owners: string[];
+}

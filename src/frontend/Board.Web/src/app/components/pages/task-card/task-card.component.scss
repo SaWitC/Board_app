@@ -1,0 +1,139 @@
+.task-card {
+  background: var(--board-task-background-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  margin-bottom: 4px;
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+
+  &.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  &.overdue {
+    border-left-color: var(--background-negative);
+    background-color: var(--background-negative-tint);
+  }
+
+  .task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+
+    .task-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-color);
+      flex: 1;
+      line-height: 1.4;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 4px;
+
+      .btn-icon {
+        background: none;
+        border: none;
+        padding: 4px;
+        border-radius: 4px;
+        cursor: pointer;
+        color: var(--text-color);
+        opacity: 0.7;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background-color: var(--background-secondary);
+          color: var(--text-color);
+          opacity: 1;
+        }
+
+        i {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+
+  .task-content {
+    margin-bottom: 12px;
+
+    .task-description {
+      margin: 0;
+      color: var(--text-color);
+      opacity: 0.7;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  }
+
+  .task-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: center;
+
+    .task-priority {
+      .priority-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+        color: white;
+        text-transform: uppercase;
+      }
+    }
+
+    .task-assignee,
+    .task-due-date {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--text-color);
+      opacity: 0.7;
+
+      i {
+        font-size: 16px;
+      }
+
+      span.overdue {
+        color: var(--background-negative);
+        font-weight: 500;
+        opacity: 1;
+      }
+    }
+  }
+
+  .task-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+
+    .tag {
+      background-color: var(--background-accent);
+      color: var(--btn-primary-text);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+  }
+}

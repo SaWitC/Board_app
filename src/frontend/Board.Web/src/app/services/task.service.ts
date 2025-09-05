@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Task, TaskStatus, TaskPriority, DragDropEvent } from '../models/task.model';
+import { Task, TaskPriority, DragDropEvent } from '../models/task.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class TaskService {
         id: '1',
         title: 'Создать дизайн главной страницы',
         description: 'Разработать современный дизайн для главной страницы приложения',
-        status: TaskStatus.TODO,
+        columnId: '1',
         priority: TaskPriority.HIGH,
         assignee: 'Дизайнер',
         createdAt: new Date(),
@@ -31,7 +31,7 @@ export class TaskService {
         id: '2',
         title: 'Настроить роутинг',
         description: 'Настроить Angular Router для навигации между страницами',
-        status: TaskStatus.IN_PROGRESS,
+        columnId: '2',
         priority: TaskPriority.MEDIUM,
         assignee: 'Разработчик',
         createdAt: new Date(),
@@ -43,7 +43,7 @@ export class TaskService {
         id: '3',
         title: 'Тестирование компонентов',
         description: 'Написать unit тесты для всех компонентов',
-        status: TaskStatus.REVIEW,
+        columnId: '3',
         priority: TaskPriority.HIGH,
         assignee: 'QA',
         createdAt: new Date(),
@@ -53,9 +53,9 @@ export class TaskService {
       },
       {
         id: '4',
-        title: 'Тестирование компонентов',
-        description: 'Написать unit тесты для всех компонентов',
-        status: TaskStatus.REVIEW,
+        title: 'Завершить проект',
+        description: 'Завершить проект и отправить на проверку',
+        columnId: '4',
         priority: TaskPriority.HIGH,
         assignee: 'QA',
         createdAt: new Date(),
@@ -71,10 +71,10 @@ export class TaskService {
     return this.tasks$;
   }
 
-  getTasksByStatus(status: TaskStatus): Observable<Task[]> {
+  getTasksByStatus(columnId: string): Observable<Task[]> {
     return new Observable(observer => {
       this.tasks$.subscribe(tasks => {
-        const filteredTasks = tasks.filter(task => task.status === status);
+        const filteredTasks = tasks.filter(task => task.columnId === columnId);
         observer.next(filteredTasks);
       });
     });
@@ -118,13 +118,13 @@ export class TaskService {
     return updatedTask;
   }
 
-  moveTask(taskId: string, newStatus: TaskStatus): boolean {
+  moveTask(taskId: string, newStatus: string): boolean {
     const task = this.getTaskById(taskId);
     if (!task) {
       return false;
     }
 
-    this.updateTask(taskId, { status: newStatus });
+    this.updateTask(taskId, { columnId: newStatus });
     return true;
   }
 
@@ -135,11 +135,11 @@ export class TaskService {
     }
 
     // Проверяем, что статус действительно изменился
-    if (event.fromStatus === event.toStatus) {
+    if (event.fromColumnId === event.toColumnId) {
       return false;
     }
 
-    this.updateTask(event.taskId, { status: event.toStatus });
+    this.updateTask(event.taskId, { columnId: event.toColumnId });
     return true;
   }
 
