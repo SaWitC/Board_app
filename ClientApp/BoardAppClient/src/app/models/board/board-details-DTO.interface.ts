@@ -1,9 +1,0 @@
-export interface BoardDetailsDTO {
-  id: string;
-  title: string;
-  description: string;
-  users: string[];
-  admins: string[];
-  owners: string[];
-  modificationDate: Date;
-}
