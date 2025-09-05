@@ -1,4 +1,5 @@
 using Board.Infrastructure.Data;
+using Board.Infrastructure.Services;
 
 namespace BoardDb.MigrationService.Services;
 
