@@ -123,13 +123,4 @@ export class BoardComponent implements OnInit {
   getTaskCount(): number {
     return this.tasks.length;
   }
-
-  getCompletedTaskCount(): number {
-    return this.tasks.filter(task => task.columnId === '4').length;
-  }
-
-  getProgressPercentage(): number {
-    if (this.tasks.length === 0) return 0;
-    return Math.round((this.getCompletedTaskCount() / this.tasks.length) * 100);
-  }
 }

@@ -27,7 +27,7 @@
       </app-task-card>
     </div>
 
-    <div class="empty-state" *ngIf="allTasks.length === 0">
+    <div class="empty-state" *ngIf="columnTasks.length === 0">
       <i class="material-icons">assignment</i>
       <p>Нет задач</p>
       <button class="btn-add-empty" (click)="onAddTask()">
