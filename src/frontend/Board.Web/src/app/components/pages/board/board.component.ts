@@ -62,6 +62,7 @@ export class BoardComponent implements OnInit {
     this.dialogService.openTaskModal({
       mode: 'edit',
       boardColumns: this.columns,
+      task: data.task,
       selectedBoardColumnId: data.boardColumnId
     }).subscribe((updatedTask) => {
       if (updatedTask) {

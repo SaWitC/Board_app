@@ -40,7 +40,6 @@ export interface TaskModalData {
 })
 export class TaskModalComponent implements OnInit {
   task?: Task;
-  boardColumns: BoardColumnLookupDTO[] = [];
   taskForm!: FormGroup;
   taskPriorities = Object.values(TaskPriority);
   dialogTitle: string;
@@ -52,12 +51,12 @@ export class TaskModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: TaskModalData
   ) {
     this.task = data.task;
-    this.boardColumns = data.boardColumns;
     this.dialogTitle = data.mode === 'create' ? 'Создать новую задачу' : 'Редактировать задачу';
     this.submitButtonText = data.mode === 'create' ? 'Создать' : 'Сохранить';
   }
 
   ngOnInit(): void {
+    console.log(this.task);
     this.initForm();
   }
 
@@ -65,7 +64,6 @@ export class TaskModalComponent implements OnInit {
     this.taskForm = this.fb.group({
       title: [this.task?.title || '', [Validators.required, Validators.minLength(3)]],
       description: [this.task?.description || ''],
-      columnId: [this.task?.columnId || this.data.selectedBoardColumnId || '', Validators.required],
       priority: [this.task?.priority || TaskPriority.MEDIUM, Validators.required],
       assignee: [this.task?.assignee || ''],
       dueDate: [this.task?.dueDate ? new Date(this.task.dueDate) : undefined],
