@@ -50,6 +50,18 @@ export class TaskService {
         updatedAt: new Date(),
         dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
         tags: ['тестирование', 'качество']
+      },
+      {
+        id: '4',
+        title: 'Тестирование компонентов',
+        description: 'Написать unit тесты для всех компонентов',
+        status: TaskStatus.REVIEW,
+        priority: TaskPriority.HIGH,
+        assignee: 'QA',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+        tags: ['тестирование', 'качество']
       }
     ];
     this.tasksSubject.next(initialTasks);

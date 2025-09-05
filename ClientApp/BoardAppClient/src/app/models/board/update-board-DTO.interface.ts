@@ -1,0 +1,8 @@
+export interface UpdateBoardDTO {
+  id: string;
+  title: string;
+  description: string;
+  users: string[];
+  admins: string[];
+  owners: string[];
+}

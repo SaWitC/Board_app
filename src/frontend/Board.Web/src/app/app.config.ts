@@ -21,7 +21,8 @@ import {
 } from '@angular/common/http';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { routes } from './app-routing.module';
+import { routes } from './app.routes';
+
 // import { LanguageInterceptor } from './core/interceptors/language.interceptor';
 
 export function HttpLoaderFactory(http: HttpClient) {

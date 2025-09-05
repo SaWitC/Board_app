@@ -1,2 +1,27 @@
-<navigation></navigation>
-<app-board></app-board>
+<navigation (openSidebar)="onOpenSidebar()"></navigation>
+
+<!-- <ng-container *ngIf="isAuthenticated"> -->
+  <ng-container>
+  <div class="layout">
+    <div
+      class="sidebar desktop"
+      [class.expanded]="sidebarOpen"
+      [class.collapsed]="!sidebarOpen"
+    >
+    <app-sidebar
+    [class.open]="sidebarOpen"
+    (closeSidebar)="onCloseSidebar()"
+    (openSidebar)="onOpenSidebar()"
+    [isOpen]="sidebarOpen">
+  </app-sidebar>
+    </div>
+
+    <main class="content-area">
+      <div class="content">
+        <div class="content__wrapper">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </main>
+  </div>
+</ng-container>
