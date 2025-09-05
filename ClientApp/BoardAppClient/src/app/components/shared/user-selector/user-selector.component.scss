@@ -1,0 +1,55 @@
+.full-width {
+  width: 100%;
+}
+
+.selected-users-chips {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.user-chip {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border: 1px solid #bbdefb;
+
+  .mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-left: 4px;
+  }
+}
+
+.user-chip:hover {
+  background-color: #bbdefb;
+}
+
+// Стили для автодополнения
+::ng-deep .mat-autocomplete-panel {
+  max-height: 200px;
+}
+
+::ng-deep .mat-option {
+  height: auto;
+  line-height: 1.2;
+  padding: 8px 16px;
+}
+
+// Адаптивность
+@media (max-width: 600px) {
+  .selected-users-chips {
+    gap: 4px;
+  }
+
+  .user-chip {
+    font-size: 12px;
+
+    .mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
