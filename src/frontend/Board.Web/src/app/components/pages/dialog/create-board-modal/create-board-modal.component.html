@@ -1,0 +1,93 @@
+<h2 mat-dialog-title>{{ dialogTitle }}</h2>
+
+<form [formGroup]="boardForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-container">
+      <label class="form-label">Название доски *</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <!-- <mat-label>Название доски *</mat-label> -->
+        <input matInput formControlName="boardTitle" placeholder="Введите название доски">
+        <mat-error *ngIf="boardForm.get('boardTitle')?.hasError('required')">
+          Название обязательно
+        </mat-error>
+      </mat-form-field>
+
+      <label class="form-label">Описание доски *</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <textarea matInput formControlName="boardDescription" placeholder="Введите описание доски" rows="3"></textarea>
+        <mat-error *ngIf="boardForm.get('boardDescription')?.hasError('required')">
+          Описание обязательно
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Компонент выбора пользователей -->
+      <app-user-selector
+        [label]="'Пользователи *'"
+        [placeholder]="'Поиск пользователей...'"
+        [required]="true"
+        [selectedUsers]="selectedUsers"
+        (usersChange)="onUsersChange($event)">
+      </app-user-selector>
+
+      <!-- Компонент выбора администраторов -->
+      <app-user-selector
+        [label]="'Администраторы *'"
+        [placeholder]="'Поиск администраторов...'"
+        [required]="true"
+        [selectedUsers]="selectedAdmins"
+        (usersChange)="onAdminsChange($event)">
+      </app-user-selector>
+
+      <div class="columns-section">
+        <div class="columns-header">
+          <h3>Колонки доски</h3>
+          <button type="button" mat-mini-fab color="primary" (click)="addColumn()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+
+        <div formArrayName="boardColumns" class="columns-list">
+          <div *ngFor="let column of boardColumnsArray.controls; let i = index" [formGroupName]="i" class="column-item">
+            <div class="column-form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Название колонки *</mat-label>
+                <input matInput formControlName="columnTitle" placeholder="Название колонки">
+                <mat-error *ngIf="column.get('columnTitle')?.hasError('required')">
+                  Название обязательно
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Описание колонки *</mat-label>
+                <input matInput formControlName="columnDescription" placeholder="Описание колонки">
+                <mat-error *ngIf="column.get('columnDescription')?.hasError('required')">
+                  Описание обязательно
+                </mat-error>
+              </mat-form-field>
+
+              <button type="button" mat-icon-button color="warn" (click)="removeColumn(i)"
+                      [disabled]="boardColumnsArray.length <= 1">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <div class="pe-4">
+      <button mat-button (click)="onClose()">
+        Отмена
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onSubmit()"
+        [disabled]="boardForm.invalid">
+        {{ submitButtonText }}
+      </button>
+    </div>
+  </mat-dialog-actions>
+</form>

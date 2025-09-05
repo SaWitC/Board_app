@@ -1,0 +1,45 @@
+<div class="task-card"
+     [class.overdue]="isOverdue()"
+     [class.dragging]="isDragging"
+     draggable="true"
+     (dragstart)="onDragStart($event)"
+     (dragend)="onDragEnd($event)">
+  <div class="task-header">
+    <h3 class="task-title">{{ task.title }}</h3>
+    <div class="task-actions">
+      <button class="btn-icon" (click)="onEdit()" title="Редактировать">
+        <i class="material-icons">edit</i>
+      </button>
+      <button class="btn-icon" (click)="onDelete()" title="Удалить">
+        <i class="material-icons">delete</i>
+      </button>
+    </div>
+  </div>
+
+  <div class="task-content" *ngIf="task.description">
+    <p class="task-description">{{ task.description }}</p>
+  </div>
+
+  <div class="task-meta">
+    <div class="task-priority">
+      <span class="priority-badge"
+            [style.background-color]="getPriorityColor(task.priority)">
+        {{ getPriorityLabel(task.priority) }}
+      </span>
+    </div>
+
+    <div class="task-assignee" *ngIf="task.assignee">
+      <i class="material-icons">person</i>
+      <span>{{ task.assignee }}</span>
+    </div>
+
+    <div class="task-due-date" *ngIf="task.dueDate">
+      <i class="material-icons">schedule</i>
+      <span [class.overdue]="isOverdue()">{{ formatDate(task.dueDate) }}</span>
+    </div>
+  </div>
+
+  <div class="task-tags" *ngIf="task.tags && task.tags.length > 0">
+    <span class="tag" *ngFor="let tag of task.tags">{{ tag }}</span>
+  </div>
+</div>

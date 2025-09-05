@@ -22,6 +22,8 @@ import {
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { routes } from './app.routes';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideAnimationsAsync as provideAnimationsAsyncMaterial } from '@angular/platform-browser/animations/async';
 
 // import { LanguageInterceptor } from './core/interceptors/language.interceptor';
 
@@ -54,6 +56,8 @@ export const appConfig: ApplicationConfig = {
     provideToastr({
       preventDuplicates: true,
     }), // Toastr providers
+    provideNativeDateAdapter(), // Material Date Adapter
+    provideAnimationsAsyncMaterial(), // Material animations
     // provideTranslations(),
     provideAnimationsAsync(),
     // {
