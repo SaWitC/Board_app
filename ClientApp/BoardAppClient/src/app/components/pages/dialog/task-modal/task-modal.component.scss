@@ -182,19 +182,28 @@
   }
 }
 
-// Responsive design
-@media (max-width: 768px) {
-  .modal-overlay {
-    padding: 10px;
-  }
+// .form-container {
+//   padding: 16px 0;
+// }
 
-  .modal-content {
-    max-height: 95vh;
-  }
+// .full-width {
+//   width: 100%;
+// }
 
-  .modal-header,
-  .modal-body,
-  .modal-footer {
-    padding: 16px;
-  }
-}
+// .form-row {
+//   display: flex;
+//   gap: 16px;
+
+//   mat-form-field {
+//     flex: 1;
+//   }
+// }
+
+// mat-dialog-content {
+//   min-width: 500px;
+//   max-width: 600px;
+// }
+
+// mat-dialog-actions {
+//   padding: 16px 0;
+// }

@@ -1,0 +1,37 @@
+<mat-form-field appearance="outline" class="full-width">
+  <mat-label>{{ label }}</mat-label>
+
+  <!-- Поле поиска с автодополнением -->
+  <input matInput
+         [matAutocomplete]="auto"
+         [formControl]="searchControl"
+         [placeholder]="placeholder"
+         (input)="onSearchInput($event)">
+
+  <!-- Автодополнение -->
+  <mat-autocomplete #auto="matAutocomplete"
+                    [displayWith]="displayFn"
+                    (optionSelected)="onUserSelect($event.option.value)">
+    <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+      {{ user.email }}
+    </mat-option>
+  </mat-autocomplete>
+
+  <!-- Выбранные пользователи как теги -->
+  <div class="selected-users-chips" *ngIf="selectedUsers.length > 0">
+    <mat-chip *ngFor="let user of selectedUsers"
+              class="user-chip"
+              (removed)="onUserRemove(user.id)">
+      {{ user.email }}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+  </div>
+
+  <!-- Подсказка -->
+  <mat-hint *ngIf="required">Введите email пользователя для поиска</mat-hint>
+
+  <!-- Ошибка валидации -->
+  <mat-error *ngIf="required && selectedUsers.length === 0">
+    Необходимо выбрать хотя бы одного пользователя
+  </mat-error>
+</mat-form-field>

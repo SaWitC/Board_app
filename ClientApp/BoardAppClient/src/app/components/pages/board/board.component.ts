@@ -42,11 +42,11 @@ export class BoardComponent implements OnInit {
     return this.tasks.filter(task => task.columnId === columnId);
   }
 
-  onAddTask(columnId: string): void {
+  onAddTask(data: {boardColumnId: string}): void {
     this.dialogService.openTaskModal({
       mode: 'create',
       boardColumns: this.columns,
-      selectedBoardColumnId:columnId
+      selectedBoardColumnId: data.boardColumnId
     }).subscribe((task) => {
       if (task) {
         const taskData = {

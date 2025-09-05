@@ -7,7 +7,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-import { AddBoardDTO, Task, TaskPriority } from 'src/app/models';
+import { AddBoardDTO } from 'src/app/models';
+import { UserLookupDTO } from 'src/app/models/user/user-lookup-DTO.model';
+import { UserSelectorComponent } from 'src/app/components/shared/user-selector/user-selector.component';
 
 export interface CreateBoardModalData {
   mode: 'create';
@@ -26,15 +28,17 @@ export interface CreateBoardModalData {
         MatFormFieldModule,
         MatInputModule,
         MatIconModule,
-        MatChipsModule
+        MatChipsModule,
+        UserSelectorComponent
     ]
 })
 export class CreateBoardModalComponent implements OnInit {
   boardForm!: FormGroup;
-  // taskStatuses = Object.values(TaskStatus);
-  taskPriorities = Object.values(TaskPriority);
   dialogTitle = 'Создать новую доску';
   submitButtonText = 'Создать';
+
+  selectedUsers: UserLookupDTO[] = [];
+  selectedAdmins: UserLookupDTO[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -50,8 +54,6 @@ export class CreateBoardModalComponent implements OnInit {
     this.boardForm = this.fb.group({
       boardTitle: ['', Validators.required],
       boardDescription: ['', Validators.required],
-      boardUsers: [[] as string[], Validators.required],
-      boardmanagers: [[] as string[], Validators.required],
       boardColumns: new FormArray([])
     });
   }
@@ -69,21 +71,24 @@ export class CreateBoardModalComponent implements OnInit {
     (this.boardForm.controls['boardColumns'] as FormArray).removeAt(index);
   }
 
-  onSubmit(): void {
-    if (this.boardForm.valid) {
-      const formValue = this.boardForm.value;
-      const users = formValue.boardUsers ?
-        formValue.boardUsers.split(',').map((user: string) => user.trim()).filter((user: string) => user) : [];
+  onUsersChange(users: UserLookupDTO[]): void {
+    this.selectedUsers = users;
+  }
 
-      const admins = formValue.boardmanagers ?
-        formValue.boardmanagers.split(',').map((admin: string) => admin.trim()).filter((admin: string) => admin) : [];
+  onAdminsChange(admins: UserLookupDTO[]): void {
+    this.selectedAdmins = admins;
+  }
+
+  onSubmit(): void {
+    if (this.boardForm.valid && this.selectedUsers.length > 0 && this.selectedAdmins.length > 0) {
+      const formValue = this.boardForm.value;
 
       const boardData: AddBoardDTO = {
         title: formValue.boardTitle,
         description: formValue.boardDescription,
-        users: users,
-        admins: admins,
-        owners: []
+        users: this.selectedUsers.map(user => user.email),
+        admins: this.selectedAdmins.map(admin => admin.email),
+        owners: [] // Пока пустой массив
       };
 
       this.dialogRef.close(boardData);
@@ -96,5 +101,11 @@ export class CreateBoardModalComponent implements OnInit {
 
   get boardColumnsArray() {
     return this.boardForm.get('boardColumns') as FormArray;
+  }
+
+  get isFormValid(): boolean {
+    return this.boardForm.valid &&
+           this.selectedUsers.length > 0 &&
+           this.selectedAdmins.length > 0;
   }
 }

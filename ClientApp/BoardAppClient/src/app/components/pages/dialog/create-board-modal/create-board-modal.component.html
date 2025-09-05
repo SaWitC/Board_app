@@ -3,39 +3,40 @@
 <form [formGroup]="boardForm" (ngSubmit)="onSubmit()">
   <mat-dialog-content>
     <div class="form-container">
+      <label class="form-label">Название доски *</label>
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Название доски *</mat-label>
+        <!-- <mat-label>Название доски *</mat-label> -->
         <input matInput formControlName="boardTitle" placeholder="Введите название доски">
         <mat-error *ngIf="boardForm.get('boardTitle')?.hasError('required')">
           Название обязательно
         </mat-error>
       </mat-form-field>
 
+      <label class="form-label">Описание доски *</label>
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Описание доски *</mat-label>
         <textarea matInput formControlName="boardDescription" placeholder="Введите описание доски" rows="3"></textarea>
         <mat-error *ngIf="boardForm.get('boardDescription')?.hasError('required')">
           Описание обязательно
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Пользователи *</mat-label>
-        <input matInput formControlName="boardUsers" placeholder="Введите пользователей через запятую">
-        <mat-hint>Например: user1example.com, user2example.com</mat-hint>
-        <mat-error *ngIf="boardForm.get('boardUsers')?.hasError('required')">
-          Пользователи обязательны
-        </mat-error>
-      </mat-form-field>
+      <!-- Компонент выбора пользователей -->
+      <app-user-selector
+        [label]="'Пользователи *'"
+        [placeholder]="'Поиск пользователей...'"
+        [required]="true"
+        [selectedUsers]="selectedUsers"
+        (usersChange)="onUsersChange($event)">
+      </app-user-selector>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Администраторы *</mat-label>
-        <input matInput formControlName="boardmanagers" placeholder="Введите администраторов через запятую">
-        <mat-hint>Например: admin1example.com, admin2example.com</mat-hint>
-        <mat-error *ngIf="boardForm.get('boardmanagers')?.hasError('required')">
-          Администраторы обязательны
-        </mat-error>
-      </mat-form-field>
+      <!-- Компонент выбора администраторов -->
+      <app-user-selector
+        [label]="'Администраторы *'"
+        [placeholder]="'Поиск администраторов...'"
+        [required]="true"
+        [selectedUsers]="selectedAdmins"
+        (usersChange)="onAdminsChange($event)">
+      </app-user-selector>
 
       <div class="columns-section">
         <div class="columns-header">
@@ -76,15 +77,17 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button mat-button (click)="onClose()">
-      Отмена
-    </button>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="onSubmit()"
-      [disabled]="boardForm.invalid">
-      {{ submitButtonText }}
-    </button>
+    <div class="pe-4">
+      <button mat-button (click)="onClose()">
+        Отмена
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onSubmit()"
+        [disabled]="boardForm.invalid">
+        {{ submitButtonText }}
+      </button>
+    </div>
   </mat-dialog-actions>
 </form>
