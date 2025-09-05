@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="$(MSBuildThisFileDirectory)../../../../../shared/shared.csproj" />
+	<ItemGroup>
+		<ProjectReference Include="..\Board.Domain\Board.Domain.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="FluentValidation" />
+		<PackageReference Include="MediatR" />
+	</ItemGroup>
+</Project>
