@@ -4,6 +4,7 @@ using Board.Infrastructure.Data;
 using Board.Infrastructure.Data.Repositories.Implementations;
 using Board.ServiceDefaults;
 using FastEndpoints;
+using FastEndpoints.Swagger;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -63,6 +64,16 @@ services.AddAuthentication(options =>
     options.Audience = builder.Configuration.GetValue<string>("Auth:Audience");
 });
 
+//TO DO add global admin policy
+builder.Services.AddAuthorization(o =>
+{
+    o.AddPolicy("Editor", p => p.
+        RequireAuthenticatedUser().
+        RequireClaim("permissions", "Editor"));
+});
+
+services.AddHttpContextAccessor();
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -71,9 +82,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerGen();
 }
 
-app.UseHttpsRedirection();
-app.UseAuthorization();
+
 app.UseAuthentication();
+app.UseAuthorization();
+app.UseHttpsRedirection();
+app.UseCors();
+
 app.UseFastEndpoints();
 app.MapControllers();
 
