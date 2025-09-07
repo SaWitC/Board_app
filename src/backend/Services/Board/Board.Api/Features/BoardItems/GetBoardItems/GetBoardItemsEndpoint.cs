@@ -1,6 +1,5 @@
 using Board.Application.Queries.BoardItems.GetBoardItems;
 using FastEndpoints;
-using MediatR;
 using IMediator = MediatR.IMediator;
 
 namespace Board.Api.Features.BoardItems.GetBoardItems;

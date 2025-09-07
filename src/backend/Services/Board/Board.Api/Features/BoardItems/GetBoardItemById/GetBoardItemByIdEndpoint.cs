@@ -1,6 +1,5 @@
-﻿using Board.Application.Queries.BoardItems.GetBoardItemById;
+using Board.Application.Queries.BoardItems.GetBoardItemById;
 using FastEndpoints;
-using MediatR;
 using IMediator = MediatR.IMediator;
 
 namespace Board.Api.Features.BoardItems.GetBoardItemById;

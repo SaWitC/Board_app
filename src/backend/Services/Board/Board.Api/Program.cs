@@ -17,9 +17,15 @@ builder.AddServiceDefaults();
 // Add services to the container.
 services.AddControllers();
 services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
 services.AddFastEndpoints();
-
+services.SwaggerDocument(o =>
+{
+    o.DocumentSettings = s =>
+    {
+        s.Title = "My API";
+        s.Version = "v1";
+    };
+});
 // Register Application validators and handlers
 services.AddValidatorsFromAssembly(typeof(Board.Application.Commands.CreateBoard.CreateBoardValidator).Assembly);
 services.AddMediatR(cfg =>
@@ -28,6 +34,16 @@ services.AddMediatR(cfg =>
 // Infrastructure services
 services.AddOptionsWithBaseValidationOnStart<ConnectionStringsOptions>(builder.Configuration);
 builder.AddDatabase<BoardDbContext, ConnectionStringsOptions>(x => x.BoardDbConnectionString);
+
+services.AddCors(x =>
+{
+    x.AddDefaultPolicy(c =>
+    {
+        c.AllowAnyMethod();
+        c.AllowAnyOrigin();
+        c.AllowAnyHeader();
+    });
+});
 
 // Repository registrations
 services.AddScoped<IBoardRepository, BoardRepository>();
@@ -52,8 +68,7 @@ WebApplication app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerGen();
 }
 
 app.UseHttpsRedirection();
