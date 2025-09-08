@@ -8,7 +8,7 @@
   <div class="column-content-wrapper">
   <div class="column-header">
     <div class="column-title">
-      <h3>{{ columnData.title }}</h3>
+      <h3>{{ columnData?.title || 'Column' }}</h3>
       <span class="task-count">{{ columnTasks.length }}</span>
     </div>
     <button class="btn-add-task" (click)="onAddTask()" title="Добавить задачу">

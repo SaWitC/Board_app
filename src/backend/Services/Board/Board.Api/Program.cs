@@ -1,7 +1,8 @@
-using Board.Application.Repositories;
+using Board.Application.Interfaces;
+using Board.Domain.Entities;
 using Board.Domain.Options;
 using Board.Infrastructure.Data;
-using Board.Infrastructure.Data.Repositories.Implementations;
+using Board.Infrastructure.Data.Repositories;
 using Board.ServiceDefaults;
 using FastEndpoints;
 using FluentValidation;
@@ -17,6 +18,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddFastEndpoints();
 
+// CORS allow all (development)
+const string AllowAllCorsPolicy = "AllowAll";
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy(AllowAllCorsPolicy, policy =>
+		policy
+			.AllowAnyOrigin()
+			.AllowAnyHeader()
+			.AllowAnyMethod()
+	);
+});
+
 // Register Application validators and handlers
 builder.Services.AddValidatorsFromAssembly(typeof(Board.Application.Commands.CreateBoard.CreateBoardValidator).Assembly);
 builder.Services.AddMediatR(cfg =>
@@ -27,10 +40,10 @@ builder.Services.AddOptionsWithBaseValidationOnStart<ConnectionStringsOptions>(b
 builder.AddDatabase<BoardDbContext, ConnectionStringsOptions>(x => x.BoardDbConnectionString);
 
 // Repository registrations
-builder.Services.AddScoped<IBoardRepository, BoardRepository>();
-builder.Services.AddScoped<IBoardItemRepository, BoardItemRepository>();
-builder.Services.AddScoped<IBoardColumnRepository, BoardColumnRepository>();
-builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<IRepository<Board.Domain.Entities.Board>, Repository<Board.Domain.Entities.Board>>();
+builder.Services.AddScoped<IRepository<BoardItem>, Repository<BoardItem>>();
+builder.Services.AddScoped<IRepository<BoardColumn>, Repository<BoardColumn>>();
+builder.Services.AddScoped<IRepository<Tag>, Repository<Tag>>();
 
 var app = builder.Build();
 
@@ -41,7 +54,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Only redirect to HTTPS outside Development to avoid CORS issues on redirects
+if (!app.Environment.IsDevelopment())
+{
+	app.UseHttpsRedirection();
+}
+
+app.UseCors(AllowAllCorsPolicy);
 app.UseAuthorization();
 app.UseFastEndpoints();
 app.MapControllers();

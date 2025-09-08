@@ -37,7 +37,7 @@
         <div class="board-header">
           <h3 class="board-title">{{ board.title }}</h3>
           <div class="board-actions">
-            <button class="action-btn" (click)="$event.stopPropagation()">
+            <button class="action-btn" (click)="onOpenMenu($event, board)" [matMenuTriggerFor]="cardMenu">
               <span>⋮</span>
             </button>
           </div>
@@ -48,6 +48,11 @@
           <span class="admins-count">{{ board.admins?.length || 0 }} admins</span>
         </div>
       </div>
+
+      <mat-menu #cardMenu="matMenu">
+        <button mat-menu-item (click)="$event.stopPropagation(); onEditSelected()">Edit</button>
+        <button mat-menu-item (click)="$event.stopPropagation(); selectedBoard && onDeleteBoard(selectedBoard.id)">Delete</button>
+      </mat-menu>
     </div>
   </div>
 </div>

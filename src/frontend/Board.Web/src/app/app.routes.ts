@@ -12,6 +12,10 @@ export const routes: Routes =  [{
       component: BoardComponent,
     },
     {
+      path: 'board/:id',
+      component: BoardComponent,
+    },
+    {
       path: 'boards',
       component: BoardsListComponent,
     },

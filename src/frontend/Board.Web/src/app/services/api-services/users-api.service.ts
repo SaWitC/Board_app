@@ -1,6 +1,6 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, of } from "rxjs";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Observable } from "rxjs";
 import { environment } from "../../environments/environment";
 import { UserLookupDTO } from "src/app/models/user/user-lookup-DTO.model";
 
@@ -9,24 +9,10 @@ import { UserLookupDTO } from "src/app/models/user/user-lookup-DTO.model";
 })
 export class UsersApiService {
 
-  constructor(private http: HttpClient) {
-  }
+	constructor(private http: HttpClient) {}
 
-  // public searchUsers(search: string): Observable<UserLookupDTO[]> {
-  //   return this.http.get<UserLookupDTO[]>(`${environment.apiUrl}/users/search?search=${search}`);
-  // }
-
-  public searchUsers(search: string): Observable<UserLookupDTO[]> {
-    return of(
-      [
-        {
-          id: '1',
-          email: 'test1@test.com'
-        },
-        {
-          id: '2',
-          email: 'test2@test.com'
-        }
-      ]);
-  }
+	public searchUsers(search: string): Observable<UserLookupDTO[]> {
+		const params = new HttpParams().set('q', search ?? '');
+		return this.http.get<UserLookupDTO[]>(`${environment.apiUrl}/users`, { params });
+	}
 }

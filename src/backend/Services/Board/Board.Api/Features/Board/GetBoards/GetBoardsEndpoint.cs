@@ -15,7 +15,7 @@ public class GetBoardsEndpoint(IMediator _mediator) : EndpointWithoutRequest
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        await Send.OkAsync(await _mediator.Send(new GetBoardsQuery(), ct));
+        await Send.OkAsync(await _mediator.Send(new GetBoardsQuery(), ct), ct);
     }
 }
 

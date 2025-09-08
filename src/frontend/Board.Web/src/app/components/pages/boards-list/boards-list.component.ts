@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { BoardApiService } from '../../../services/api-services';
 import { DialogService } from '../../../services/dialog.service';
-import { BoardLookupDTO, AddBoardDTO } from '../../../models';
+import { BoardLookupDTO, AddBoardDTO, BoardDetailsDTO, UpdateBoardDTO } from '../../../models';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-boards-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatMenuModule],
   templateUrl: './boards-list.component.html',
   styleUrl: './boards-list.component.scss'
 })
@@ -16,6 +17,7 @@ export class BoardsListComponent implements OnInit {
   boards: BoardLookupDTO[] = [];
   loading = false;
   error: string | null = null;
+  selectedBoard: BoardLookupDTO | null = null;
 
   constructor(
     private boardApiService: BoardApiService,
@@ -51,16 +53,78 @@ export class BoardsListComponent implements OnInit {
   onCreateBoard(): void {
     this.dialogService.openCreateBoardModal().subscribe((boardData) => {
       if (boardData) {
-        // this.boardApiService.createBoard(boardData).subscribe({
-        //   next: (newBoard) => {
-        //     this.boards.push(newBoard);
-        //     // Показать уведомление об успехе
-        //   },
-        //   error: (error) => {
-        //     console.error('Error creating board:', error);
-        //     // Показать уведомление об ошибке
-        //   }
-        // });
+        this.boardApiService.addBoard(boardData as AddBoardDTO).subscribe({
+          next: (newBoard) => {
+            const newBoardLookup: BoardLookupDTO = {
+              id: newBoard.id,
+              title: newBoard.title,
+              description: newBoard.description,
+              users: newBoard.users,
+              admins: newBoard.admins,
+              owners: newBoard.owners
+            };
+            this.boards.push(newBoardLookup);
+            console.log('Board created successfully:', newBoard);
+          },
+          error: (error) => {
+            console.error('Error creating board:', error);
+            this.error = 'Failed to create board';
+          }
+        });
+      }
+    });
+  }
+
+  onDeleteBoard(boardId: string): void {
+    this.boardApiService.deleteBoard(boardId).subscribe({
+      next: () => {
+        this.boards = this.boards.filter(b => b.id !== boardId);
+      },
+      error: (err) => {
+        console.error('Error deleting board:', err);
+        this.error = 'Failed to delete board';
+      }
+    });
+  }
+
+  onOpenMenu(event: MouseEvent, board: BoardLookupDTO): void {
+    event.stopPropagation();
+    this.selectedBoard = board;
+  }
+
+  onEditSelected(): void {
+    if (!this.selectedBoard) { return; }
+
+    // Load full board details if needed; here we have enough for title/description
+    const boardDetails: BoardDetailsDTO = {
+      id: this.selectedBoard.id,
+      title: this.selectedBoard.title,
+      description: this.selectedBoard.description,
+      users: this.selectedBoard.users ?? [],
+      admins: this.selectedBoard.admins ?? [],
+      owners: this.selectedBoard.owners ?? [],
+      modificationDate: new Date()
+    };
+
+    this.dialogService.openEditBoardModal(boardDetails).subscribe((updateDto?: UpdateBoardDTO) => {
+      if (updateDto) {
+        this.boardApiService.updateBoard(updateDto).subscribe({
+          next: (updated) => {
+            this.boards = this.boards.map(b => b.id === updated.id ? ({
+              id: updated.id,
+              title: updated.title,
+              description: updated.description,
+              users: updated.users,
+              admins: updated.admins,
+              owners: updated.owners,
+              modificationDate: updated.modificationDate
+            }) : b);
+          },
+          error: (err) => {
+            console.error('Error updating board:', err);
+            this.error = 'Failed to update board';
+          }
+        });
       }
     });
   }

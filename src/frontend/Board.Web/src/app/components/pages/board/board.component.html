@@ -1,7 +1,7 @@
 <div class="board-container">
   <div class="board-header">
     <div class="board-title">
-      <h1>PROJECT TITLE</h1>
+      <h1>{{ currentBoard?.title || 'PROJECT TITLE' }}</h1>
     </div>
 
     <div class="board-stats">
@@ -21,11 +21,14 @@
   </div>
 
   <div class="board-content">
-    <div class="board-columns ">
+    <div *ngIf="loading" class="loading">Загрузка задач...</div>
+    <div *ngIf="!loading && error" class="error">{{ error }}</div>
+
+    <div class="board-columns " *ngIf="!loading && !error">
       <app-board-column
         *ngFor="let column of columns"
         [columnId]="column.id"
-        [boardId]="column.id"
+        [boardId]="currentBoardId ?? column.id"
         [allTasks]="tasks"
         [columnTasks]="getTasksByStatus(column.id)"
 

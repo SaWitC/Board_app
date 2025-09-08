@@ -15,7 +15,7 @@ public class GetBoardByIdEndpoint(IMediator _mediator) : EndpointWithoutRequest
     public override async Task HandleAsync(CancellationToken ct)
     {
         Guid id = Route<Guid>("id");
-        await Send.OkAsync(await _mediator.Send(new GetBoardByIdQuery { Id = id }, ct));
+        await Send.OkAsync(await _mediator.Send(new GetBoardByIdQuery { Id = id }, ct), ct);
     }
 }
 

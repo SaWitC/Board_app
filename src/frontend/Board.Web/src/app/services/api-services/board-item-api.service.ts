@@ -1,7 +1,6 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { environment } from "../../environments/environment";
+import { Observable, switchMap } from "rxjs";
+import { ApiService } from "./api.service";
 import {
   BoardItemLookupDTO,
   BoardItemDetailsDTO,
@@ -14,32 +13,42 @@ import {
 })
 export class BoardItemApiService {
 
-  constructor(private http: HttpClient) {
-  }
+	constructor(private api: ApiService) {}
 
-  public getBoardItems(boardId: string, columnId: string): Observable<BoardItemLookupDTO[]> {
-    return this.http.get<BoardItemLookupDTO[]>(`${environment.apiUrl}/boards/${boardId}/columns/${columnId}/items`);
-  }
+	public getBoardItems(): Observable<BoardItemLookupDTO[]> {
+		return this.api.get<BoardItemLookupDTO[]>(`/boarditems`);
+	}
 
-  public getBoardItemById(boardId: string, columnId: string, itemId: string): Observable<BoardItemDetailsDTO> {
-    return this.http.get<BoardItemDetailsDTO>(`${environment.apiUrl}/boards/${boardId}/columns/${columnId}/items/${itemId}`);
-  }
+	public getBoardItemById(itemId: string): Observable<BoardItemDetailsDTO> {
+		return this.api.get<BoardItemDetailsDTO>(`/boarditems/${itemId}`);
+	}
 
-  public addBoardItem(boardId: string, columnId: string, item: AddBoardItemDTO): Observable<BoardItemDetailsDTO> {
-    return this.http.post<BoardItemDetailsDTO>(`${environment.apiUrl}/boards/${boardId}/columns/${columnId}/items`, item);
-  }
+	public addBoardItem(item: AddBoardItemDTO): Observable<BoardItemDetailsDTO> {
+		return this.api.post<BoardItemDetailsDTO>(`/boarditems`, item);
+	}
 
-  public updateBoardItem(boardId: string, columnId: string, item: UpdateBoardItemDTO): Observable<BoardItemDetailsDTO> {
-    return this.http.put<BoardItemDetailsDTO>(`${environment.apiUrl}/boards/${boardId}/columns/${columnId}/items`, item);
-  }
+	public updateBoardItem(itemId: string, item: UpdateBoardItemDTO): Observable<BoardItemDetailsDTO> {
+		return this.api.put<BoardItemDetailsDTO>(`/boarditems/${itemId}`, item);
+	}
 
-  public deleteBoardItem(boardId: string, columnId: string, itemId: string): Observable<boolean> {
-    return this.http.delete<boolean>(`${environment.apiUrl}/boards/${boardId}/columns/${columnId}/items/${itemId}`);
-  }
+	public deleteBoardItem(itemId: string): Observable<boolean> {
+		return this.api.delete<boolean>(`/boarditems/${itemId}`);
+	}
 
-  public moveBoardItem(boardId: string, fromColumnId: string, toColumnId: string, itemId: string): Observable<boolean> {
-    return this.http.put<boolean>(`${environment.apiUrl}/boards/${boardId}/columns/${fromColumnId}/items/${itemId}/move`, {
-      targetColumnId: toColumnId
-    });
-  }
+	public moveBoardItem(itemId: string, targetColumnId: string): Observable<BoardItemDetailsDTO> {
+		return this.getBoardItemById(itemId).pipe(
+			switchMap((item) => {
+				const updatePayload: UpdateBoardItemDTO = {
+					id: item.id,
+					title: item.title,
+					description: item.description,
+					boardColumnId: targetColumnId,
+					priority: item.priority,
+					assigneeId: item.assigneeId,
+					dueDate: item.dueDate,
+				};
+				return this.updateBoardItem(itemId, updatePayload);
+			})
+		);
+	}
 }

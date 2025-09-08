@@ -24,6 +24,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { routes } from './app.routes';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { provideAnimationsAsync as provideAnimationsAsyncMaterial } from '@angular/platform-browser/animations/async';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 
 // import { LanguageInterceptor } from './core/interceptors/language.interceptor';
 
@@ -60,10 +61,10 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsyncMaterial(), // Material animations
     // provideTranslations(),
     provideAnimationsAsync(),
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: LanguageInterceptor,
-    //   multi: true, // this ensures you can have multiple interceptors if needed
-    // },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
   ],
 };
