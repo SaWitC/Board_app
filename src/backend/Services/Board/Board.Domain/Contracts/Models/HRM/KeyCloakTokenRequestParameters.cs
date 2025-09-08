@@ -1,3 +1,5 @@
+using Refit;
+
 namespace Board.Domain.Contracts.Models.HRM;
 
 public sealed class KeyCloakTokenRequestParameters
