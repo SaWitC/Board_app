@@ -8,7 +8,7 @@
   <div class="column-content-wrapper">
   <div class="column-header">
     <div class="column-title">
-      <h3>{{ columnData.title }}</h3>
+      <h3>{{ columnData?.title??"..." }}</h3>
       <span class="task-count">{{ columnTasks.length }}</span>
     </div>
     <button class="btn-add-task" (click)="onAddTask()" title="Добавить задачу">
@@ -27,7 +27,7 @@
       </app-task-card>
     </div>
 
-    <div class="empty-state" *ngIf="allTasks.length === 0">
+    <div class="empty-state" *ngIf="columnTasks.length === 0">
       <i class="material-icons">assignment</i>
       <p>Нет задач</p>
       <button class="btn-add-empty" (click)="onAddTask()">

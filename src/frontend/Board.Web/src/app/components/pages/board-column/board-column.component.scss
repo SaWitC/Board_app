@@ -110,11 +110,6 @@
         opacity: 0.5;
       }
 
-      p {
-        margin: 0 0 16px 0;
-        font-size: 14px;
-      }
-
       .btn-add-empty {
         background: var(--background-secondary);
         border: 1px solid var(--bs-border-color);
@@ -130,27 +125,6 @@
           color: var(--text-color);
         }
       }
-    }
-  }
-}
-
-// Responsive design
-@media (max-width: 768px) {
-  .board-column {
-    height: 100%;
-
-    .column-header {
-      padding: 12px;
-
-      .column-title {
-        h3 {
-          font-size: 14px;
-        }
-      }
-    }
-
-    .column-content {
-      padding: 12px;
     }
   }
 }

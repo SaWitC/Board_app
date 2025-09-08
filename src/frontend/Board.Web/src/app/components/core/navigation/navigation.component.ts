@@ -2,6 +2,7 @@ import { Component, Inject, PLATFORM_ID, Output, EventEmitter } from '@angular/c
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'navigation',
@@ -32,6 +33,7 @@ export class NavigationComponent {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
+    public auth: AuthService,
     // private translateService: TranslateService
   ) {}
 

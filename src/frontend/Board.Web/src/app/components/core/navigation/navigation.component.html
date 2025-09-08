@@ -6,6 +6,16 @@
     <!-- <ng-select [(ngModel)]="selectedLanguage" [clearable]="false" [items]="languages" bindLabel="description"
       bindValue="code" (change)="onLanguageChange($event)" class="me-2 pt-1">
     </ng-select> -->
+
+
+    <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
+      <h1 class="text-white">Logged in</h1>
+    </ng-container>
+
+    <ng-template #loggedOut>
+      <button (click)="auth.loginWithRedirect()">Log in</button>
+    </ng-template>
+
     <div class="form-check form-switch me-3">
       <mat-button-toggle-group (change)="changeTheme()" [(value)]="theme">
         <mat-button-toggle value="light"><i style="color: rgb(255, 196, 0);" class="bi bi-brightness-high-fill"></i></mat-button-toggle>
