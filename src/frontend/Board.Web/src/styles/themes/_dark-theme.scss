@@ -31,6 +31,7 @@
   --bs-custom-btn-hover-bg: #d88d5a !important;
   --bs-custom-btn-hover-border-color: #d88d5a;
   --bs-border-color: #666666;
+  --bs-heading-color: var(--text-color);
 
   .btn-primary {
     --bs-btn-color: var(--bs-custom-btn-color) !important;
@@ -41,7 +42,7 @@
   }
 
   .mat-mdc-option {
-    color: black;
+    color: var(--text-color);
   }
 
   --input-background: rgb(43, 42, 42);
@@ -51,7 +52,6 @@
   /* Slightly lighter */
 
   --ng-select-background: rgb(43, 42, 42);
-  ;
   /* Very dark gray background */
   --ng-select-text-color: #e2e7f7;
   /* White text */
@@ -80,7 +80,7 @@
   --mat-table-header-headline-color: var(--text-color);
 
   --mat-paginator-container-background-color: #1f1d1d;
-  --mat-paginator-container-text-color:var(--text-color);
+  --mat-paginator-container-text-color: var(--text-color);
   --mat-sys-on-surface: var(--text-color);
 
   --mdc-dialog-container-color: #222121;
@@ -91,4 +91,5 @@
   --mat-option-selected-state-label-text-color: var(--text-color);
   --mat-option-selected-state-layer-color: #333;
   --mat-standard-button-toggle-selected-state-background-color: #333;
+  --mat-autocomplete-background-color: var(--ng-select-background);
 }
