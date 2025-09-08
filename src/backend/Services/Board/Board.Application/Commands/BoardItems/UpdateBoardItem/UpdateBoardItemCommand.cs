@@ -1,10 +1,10 @@
 namespace Board.Application.Commands.BoardItems.UpdateBoardItem;
 
-	using Board.Application.DTOs;
-	using Board.Domain.Enums;
-	using MediatR;
+using Board.Application.DTOs;
+using Board.Domain.Contracts.Enums;
+using MediatR;
 
-	public class UpdateBoardItemCommand : IRequest<BoardItemDto>
+public class UpdateBoardItemCommand : IRequest<BoardItemDto>
 	{
 		public Guid Id { get; set; }
 		public required string Title { get; set; }

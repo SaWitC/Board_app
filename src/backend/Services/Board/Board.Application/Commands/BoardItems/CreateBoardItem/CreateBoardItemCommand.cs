@@ -1,7 +1,7 @@
 namespace Board.Application.Commands.BoardItems.CreateBoardItem;
 
 using Board.Application.DTOs;
-using Board.Domain.Enums;
+using Board.Domain.Contracts.Enums;
 using MediatR;
 
 public class CreateBoardItemCommand : IRequest<BoardItemDto>
