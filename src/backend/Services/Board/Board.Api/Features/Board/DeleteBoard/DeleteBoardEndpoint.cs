@@ -1,10 +1,9 @@
-using Board.Application.Commands.DeleteBoard;
+using Board.Application.Interfaces;
 using FastEndpoints;
-using IMediator = MediatR.IMediator;
 
 namespace Board.Api.Features.Board.DeleteBoard;
 
-public class DeleteBoardEndpoint(IMediator _mediator) : EndpointWithoutRequest
+public class DeleteBoardEndpoint : EndpointWithoutRequest
 {
     public override void Configure()
     {
@@ -12,10 +11,26 @@ public class DeleteBoardEndpoint(IMediator _mediator) : EndpointWithoutRequest
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(CancellationToken ct)
+    private readonly IRepository<Domain.Entities.Board> _repository;
+
+    public DeleteBoardEndpoint(IRepository<Domain.Entities.Board> repository)
+    {
+        _repository = repository;
+    }
+
+    public override async Task HandleAsync(CancellationToken cancellationToken)
     {
         Guid id = Route<Guid>("id");
-        await Send.OkAsync(await _mediator.Send(new DeleteBoardCommand { Id = id }, ct), ct);
+
+        Domain.Entities.Board entity = await _repository.GetAsync(x => x.Id == id, cancellationToken);
+        if (entity == null)
+        {
+            await Send.OkAsync(false, cancellationToken);
+        }
+
+        await _repository.DeleteAsync(entity, cancellationToken);
+
+        await Send.OkAsync(true, cancellationToken);
     }
 }
 

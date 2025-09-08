@@ -1,9 +1,8 @@
 using Board.Application.DTOs;
-using MediatR;
 
-namespace Board.Application.Commands.CreateBoard;
+namespace Board.Api.Features.Board.CreateBoard;
 
-public class CreateBoardCommand : IRequest<BoardDto>
+public class CreateBoardRequest
 {
     public required string Title { get; set; }
     public required string Description { get; set; }

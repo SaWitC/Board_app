@@ -1,10 +1,10 @@
-using Board.Application.Queries.Boards.GetBoards;
+using Board.Application.DTOs;
+using Board.Application.Interfaces;
 using FastEndpoints;
-using IMediator = MediatR.IMediator;
 
 namespace Board.Api.Features.Board.GetBoards;
 
-public class GetBoardsEndpoint(IMediator _mediator) : EndpointWithoutRequest
+public class GetBoardsEndpoint : EndpointWithoutRequest
 {
     public override void Configure()
     {
@@ -12,9 +12,27 @@ public class GetBoardsEndpoint(IMediator _mediator) : EndpointWithoutRequest
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(CancellationToken ct)
+    private readonly IRepository<Domain.Entities.Board> _repository;
+
+    public GetBoardsEndpoint(IRepository<Domain.Entities.Board> repository)
     {
-        await Send.OkAsync(await _mediator.Send(new GetBoardsQuery(), ct), ct);
+        _repository = repository;
+    }
+    public override async Task HandleAsync(CancellationToken cancellationToken)
+    {
+        IList<BoardDto> boards = await _repository.GetAllAsync(null, b => new BoardDto
+        {
+            Id = b.Id,
+            Title = b.Title,
+            Description = b.Description,
+            //TODO: add guid -> email mapping
+            Users = b.Users.Select(u => u.ToString()).ToList(),
+            Admins = b.Admins.Select(a => a.ToString()).ToList(),
+            Owners = b.Owners.Select(o => o.ToString()).ToList(),
+            ModificationDate = b.ModificationDate
+        }, cancellationToken);
+
+        await Send.OkAsync(boards, cancellationToken);
     }
 }
 

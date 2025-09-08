@@ -1,8 +1,9 @@
-namespace Board.Application.Commands.UpdateBoard;
+using FastEndpoints;
+using FluentValidation;
 
-	using FluentValidation;
+namespace Board.Api.Features.Board.UpdateBoard;
 
-	public class UpdateBoardValidator : AbstractValidator<UpdateBoardCommand>
+public class UpdateBoardValidator : Validator<UpdateBoardRequest>
 	{
 		public UpdateBoardValidator()
 		{
