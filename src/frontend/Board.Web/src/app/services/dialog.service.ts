@@ -14,8 +14,9 @@ export class DialogService {
 
   openTaskModal(taskModalData: TaskModalData): Observable<Task | undefined> {
     const dialogRef: MatDialogRef<TaskModalComponent> = this.dialog.open(TaskModalComponent, {
-      width: '600px',
+      width: '1200px',
       maxWidth: '90vw',
+      height: '800px',
       maxHeight: '90vh',
       data: taskModalData,
       disableClose: false,

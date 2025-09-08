@@ -6,13 +6,14 @@ import { BoardColumnDetailsDTO } from '../../../models';
 import { Subscription } from 'rxjs';
 import { TaskCardComponent } from '../task-card/task-card.component';
 import {MatDialog} from '@angular/material/dialog';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-board-column',
     templateUrl: './board-column.component.html',
     styleUrls: ['./board-column.component.scss'],
     standalone: true,
-    imports: [CommonModule, TaskCardComponent]
+    imports: [CommonModule, TaskCardComponent, TranslateModule]
 })
 export class BoardColumnComponent implements OnInit, OnDestroy {
   @Input() columnId: string = '1';

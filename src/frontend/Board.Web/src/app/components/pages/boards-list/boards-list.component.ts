@@ -5,11 +5,12 @@ import { BoardApiService } from '../../../services/api-services';
 import { DialogService } from '../../../services/dialog.service';
 import { BoardLookupDTO, AddBoardDTO, BoardDetailsDTO, UpdateBoardDTO } from '../../../models';
 import { MatMenuModule } from '@angular/material/menu';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-boards-list',
   standalone: true,
-  imports: [CommonModule, MatMenuModule],
+  imports: [CommonModule, MatMenuModule, TranslateModule],
   templateUrl: './boards-list.component.html',
   styleUrl: './boards-list.component.scss'
 })

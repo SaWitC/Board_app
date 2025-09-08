@@ -2,6 +2,9 @@ import { Component, Inject, PLATFORM_ID, Output, EventEmitter } from '@angular/c
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { AuthService } from '@auth0/auth0-angular';
+import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'navigation',
@@ -10,6 +13,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatButtonToggleModule,
     CommonModule,
     FormsModule,
+    TranslateModule,
   ],
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
@@ -32,7 +36,8 @@ export class NavigationComponent {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    // private translateService: TranslateService
+    public auth: AuthService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -42,8 +47,8 @@ export class NavigationComponent {
         this.theme = 'dark';
         document.querySelector('body')?.classList.add('dark');
       }
-      // this.selectedLanguage = localStorage.getItem('user-language') ?? 'en';
-      // this.translateService.use(this.selectedLanguage);
+      this.selectedLanguage = localStorage.getItem('user-language') ?? 'en';
+      this.translateService.use(this.selectedLanguage);
     }
   }
 
@@ -62,10 +67,10 @@ export class NavigationComponent {
   //    this.openSidebar.emit();
   // }
 
-  // public onLanguageChange(language: any) {
-  //   this.translateService.use(language.code);
-  //   if (isPlatformBrowser(this.platformId)) {
-  //     localStorage.setItem('user-language', language.code);
-  //   }
-  // }
+  public onLanguageChange(language: any) {
+    this.translateService.use(language.code);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('user-language', language.code);
+    }
+  }
 }

@@ -10,13 +10,14 @@ import { BoardItemApiService } from '../../../services/api-services/board-item-a
 import { boardItemToTask, taskToCreateDto, taskToUpdateDto } from '../../../services/mappers/board-item.mapper';
 import { BoardApiService } from '../../../services/api-services/board-api.service';
 import { BoardDetailsDTO } from '../../../models/board/board-details-DTO.interface';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-board',
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss'],
     standalone: true,
-    imports: [CommonModule, BoardColumnComponent]
+    imports: [CommonModule, BoardColumnComponent, TranslateModule]
 })
 export class BoardComponent implements OnInit {
   tasks: Task[] = [];
@@ -223,14 +224,5 @@ export class BoardComponent implements OnInit {
 
   getTaskCount(): number {
     return this.tasks.length;
-  }
-
-  getCompletedTaskCount(): number {
-    return this.tasks.filter(task => task.columnId === '4').length;
-  }
-
-  getProgressPercentage(): number {
-    if (this.tasks.length === 0) return 0;
-    return Math.round((this.getCompletedTaskCount() / this.tasks.length) * 100);
   }
 }

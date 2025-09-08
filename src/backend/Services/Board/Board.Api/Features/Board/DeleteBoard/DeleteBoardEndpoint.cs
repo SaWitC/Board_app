@@ -1,6 +1,5 @@
 using Board.Application.Commands.DeleteBoard;
 using FastEndpoints;
-using MediatR;
 using IMediator = MediatR.IMediator;
 
 namespace Board.Api.Features.Board.DeleteBoard;

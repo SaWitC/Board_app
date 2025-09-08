@@ -1,0 +1,37 @@
+{
+  "NOTIFICATIONS": {
+    "REQUEST_COMPLETED_SUCCESSFULLY": "Запрос успешно выполнен",
+    "SUCCESS": "Успешно",
+    "REQUEST_FAILED": "Не удалось выполнить запрос",
+    "ERROR": "Ошибка"
+  },
+  "NAV": {
+    "BOARD_APP": "BOARD APP",
+    "LOG_IN": "Войти",
+    "LOGGED_IN": "В системе"
+  },
+  "SIDEBAR": {
+    "MENU": "Меню",
+    "MY_PROJECTS": "Мои проекты",
+    "INFO": "Информация"
+  },
+  "BOARDS_LIST": {
+    "TITLE": "Мои проекты",
+    "CREATE_BOARD": "Создать доску",
+    "LOADING": "Загрузка досок...",
+    "EMPTY_TITLE": "Пока нет досок",
+    "EMPTY_SUBTITLE": "Создайте свою первую доску, чтобы начать",
+    "USERS": "польз.",
+    "ADMINS": "админы"
+  },
+  "BOARD": {
+    "TOTAL_TASKS": "Всего задач:",
+    "NO_TASKS": "Нет задач",
+    "ADD_TASK": "Добавить задачу"
+  },
+  "COMMON": {
+    "RETRY": "Повторить",
+    "EDIT": "Редактировать",
+    "DELETE": "Удалить"
+  }
+} 

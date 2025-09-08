@@ -6,16 +6,8 @@
 
     <div class="board-stats">
       <div class="stat-item">
-        <span class="stat-label">Всего задач:</span>
+        <span class="stat-label">{{ 'BOARD.TOTAL_TASKS' | translate }}</span>
         <span class="stat-value">{{ getTaskCount() }}</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label">Завершено:</span>
-        <span class="stat-value">{{ getCompletedTaskCount() }}</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label">Прогресс:</span>
-        <span class="stat-value">{{ getProgressPercentage() }}%</span>
       </div>
     </div>
   </div>
