@@ -20,6 +20,8 @@ builder.AddServiceDefaults();
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddFastEndpoints();
+builder.Services.AddSwaggerGen();
+
 services.SwaggerDocument(o =>
 {
     o.DocumentSettings = s =>
@@ -28,10 +30,6 @@ services.SwaggerDocument(o =>
         s.Version = "v1";
     };
 });
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddFastEndpoints();
 
 // CORS allow all (development)
 const string AllowAllCorsPolicy = "AllowAll";
@@ -54,16 +52,6 @@ services.AddMediatR(cfg =>
 services.AddOptionsWithBaseValidationOnStart<ConnectionStringsOptions>(builder.Configuration);
 services.AddOptionsWithBaseValidationOnStart<AuthOptions>(builder.Configuration, x => x.IsBypassAuthorization);
 builder.AddDatabase<BoardDbContext, ConnectionStringsOptions>(x => x.BoardDbConnectionString);
-
-services.AddCors(x =>
-{
-    x.AddDefaultPolicy(c =>
-    {
-        c.AllowAnyMethod();
-        c.AllowAnyOrigin();
-        c.AllowAnyHeader();
-    });
-});
 
 //Add authentication
 var authOptions = builder.Configuration.GetSection(AuthOptions.SectionName).Get<AuthOptions>() ?? new AuthOptions();
