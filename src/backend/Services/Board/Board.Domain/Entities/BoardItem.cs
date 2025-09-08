@@ -1,5 +1,5 @@
+using Board.Domain.Contracts.Enums;
 using Board.Domain.Entities.Abstractions;
-using Board.Domain.Enums;
 
 namespace Board.Domain.Entities;
 

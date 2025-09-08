@@ -1,4 +1,5 @@
 using Board.Api.Configuration;
+using Board.Api.Features.Board.CreateBoard;
 using Board.Domain.Options;
 using Board.Infrastructure.Data;
 using Board.ServiceDefaults;
@@ -27,10 +28,7 @@ builder.AddServiceDefaults();
 services.AddControllers();
 
 // Register Application validators and handlers
-services.AddValidatorsFromAssembly(typeof(Board.Application.Commands.CreateBoard.CreateBoardValidator).Assembly);
-services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(Board.Application.Commands.CreateBoard.CreateBoardCommand).Assembly));
-
+services.AddValidatorsFromAssembly(typeof(CreateBoardValidator).Assembly);
 
 builder.AddDatabase<BoardDbContext, ConnectionStringsOptions>(x => x.BoardDbConnectionString);
 services.ConfigureAuth(authOptions)

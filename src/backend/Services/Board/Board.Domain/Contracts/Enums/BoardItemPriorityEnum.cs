@@ -1,4 +1,4 @@
-﻿namespace Board.Domain.Enums;
+namespace Board.Domain.Contracts.Enums;
 
 public enum BoardItemPriorityEnum
 {
