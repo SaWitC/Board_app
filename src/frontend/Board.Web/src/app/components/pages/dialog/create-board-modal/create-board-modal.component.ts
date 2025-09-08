@@ -17,21 +17,21 @@ export interface CreateBoardModalData {
 }
 
 @Component({
-    selector: 'app-create-board-modal',
-    templateUrl: './create-board-modal.component.html',
-    styleUrls: ['./create-board-modal.component.scss'],
-    standalone: true,
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatDialogModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        MatChipsModule,
-        UserSelectorComponent
-    ]
+  selector: 'app-create-board-modal',
+  templateUrl: './create-board-modal.component.html',
+  styleUrls: ['./create-board-modal.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatChipsModule,
+    UserSelectorComponent
+  ]
 })
 export class CreateBoardModalComponent implements OnInit {
   boardForm!: FormGroup;
@@ -45,7 +45,7 @@ export class CreateBoardModalComponent implements OnInit {
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<CreateBoardModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: CreateBoardModalData
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -69,6 +69,15 @@ export class CreateBoardModalComponent implements OnInit {
       boardDescription: ['', Validators.required],
       boardColumns: new FormArray([])
     });
+
+    ["TODO", "In Progress", "Ready for Review", "Done"].forEach(column => {
+      const columnForm = this.fb.group({
+        columnTitle: [column, Validators.required],
+        columnDescription: ['', Validators.required],
+      });
+
+      (this.boardForm.controls['boardColumns'] as FormArray).push(columnForm);
+    })
   }
 
   public addColumn(): void {
@@ -137,7 +146,7 @@ export class CreateBoardModalComponent implements OnInit {
 
   get isFormValid(): boolean {
     return this.boardForm.valid &&
-           this.selectedUsers.length > 0 &&
-           this.selectedAdmins.length > 0;
+      this.selectedUsers.length > 0 &&
+      this.selectedAdmins.length > 0;
   }
 }

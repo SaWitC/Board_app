@@ -12,31 +12,33 @@
         </mat-error>
       </mat-form-field>
 
-      <label class="form-label">Описание доски *</label>
-      <mat-form-field appearance="outline" class="full-width">
-        <textarea matInput formControlName="boardDescription" placeholder="Введите описание доски" rows="3"></textarea>
-        <mat-error *ngIf="boardForm.get('boardDescription')?.hasError('required')">
-          Описание обязательно
-        </mat-error>
-      </mat-form-field>
+      <div class="mt-2">
+        <label class="form-label">Описание доски *</label>
+        <mat-form-field appearance="outline" class="full-width">
+          <textarea matInput formControlName="boardDescription" placeholder="Введите описание доски"
+            rows="3"></textarea>
+          <mat-error *ngIf="boardForm.get('boardDescription')?.hasError('required')">
+            Описание обязательно
+          </mat-error>
+        </mat-form-field>
+      </div>
+
 
       <!-- Компонент выбора пользователей -->
-      <app-user-selector
-        [label]="'Пользователи *'"
-        [placeholder]="'Поиск пользователей...'"
-        [required]="true"
-        [selectedUsers]="selectedUsers"
-        (usersChange)="onUsersChange($event)">
-      </app-user-selector>
+      <div class="mt-2">
+        <app-user-selector [label]="'Пользователи *'" [placeholder]="'Поиск пользователей...'" [required]="true"
+          [selectedUsers]="selectedUsers" (usersChange)="onUsersChange($event)">
+        </app-user-selector>
+      </div>
 
-      <!-- Компонент выбора администраторов -->
-      <app-user-selector
-        [label]="'Администраторы *'"
-        [placeholder]="'Поиск администраторов...'"
-        [required]="true"
-        [selectedUsers]="selectedAdmins"
-        (usersChange)="onAdminsChange($event)">
-      </app-user-selector>
+      <div class="mt-2">
+        <!-- Компонент выбора администраторов -->
+        <app-user-selector class="mt-3" [label]="'Администраторы *'" [placeholder]="'Поиск администраторов...'"
+          [required]="true" [selectedUsers]="selectedAdmins" (usersChange)="onAdminsChange($event)">
+        </app-user-selector>
+      </div>
+
+
 
       <div class="columns-section">
         <div class="columns-header">
@@ -50,7 +52,7 @@
           <div *ngFor="let column of boardColumnsArray.controls; let i = index" [formGroupName]="i" class="column-item">
             <div class="column-form-row">
               <mat-form-field appearance="outline">
-                <mat-label>Название колонки *</mat-label>
+                <mat-label>Название колонки</mat-label>
                 <input matInput formControlName="columnTitle" placeholder="Название колонки">
                 <mat-error *ngIf="column.get('columnTitle')?.hasError('required')">
                   Название обязательно
@@ -58,15 +60,15 @@
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Описание колонки *</mat-label>
+                <mat-label>Описание колонки</mat-label>
                 <input matInput formControlName="columnDescription" placeholder="Описание колонки">
                 <mat-error *ngIf="column.get('columnDescription')?.hasError('required')">
                   Описание обязательно
                 </mat-error>
               </mat-form-field>
 
-              <button type="button" mat-icon-button color="warn" (click)="removeColumn(i)"
-                      [disabled]="boardColumnsArray.length <= 1">
+              <button type="button" class="delete-icon" mat-icon-button color="warn" (click)="removeColumn(i)"
+                [disabled]="boardColumnsArray.length <= 1">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
@@ -81,11 +83,7 @@
       <button mat-button (click)="onClose()">
         Отмена
       </button>
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="onSubmit()"
-        [disabled]="boardForm.invalid">
+      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="boardForm.invalid">
         {{ submitButtonText }}
       </button>
     </div>

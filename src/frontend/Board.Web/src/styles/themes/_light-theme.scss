@@ -31,6 +31,7 @@
   --bs-custom-btn-hover-bg: #3375d8 !important;
   --bs-custom-btn-hover-border-color: #0a58ca;
   --bs-border-color: #ecebe5;
+  --bs-heading-color: var(--text-color);
 
   .btn-primary {
     --bs-btn-color: var(--bs-custom-btn-color) !important;
@@ -41,7 +42,7 @@
   }
 
   .mat-mdc-option {
-    color: black;
+    color: var(--text-color);
   }
 
   --btn-primary-text: rgb(255, 255, 255);
@@ -90,8 +91,9 @@
 
   --mdc-text-button-label-text-color: var(--background-accent);
 
-  --mat-select-panel-background-color:#f1f1f1;
+  --mat-select-panel-background-color: #f1f1f1;
   --mat-option-selected-state-label-text-color: var(--text-color);
   --mat-option-selected-state-layer-color: #e0e0e0;
   --mat-standard-button-toggle-selected-state-background-color: #e0e0e0;
+  --mat-autocomplete-background-color: var(--ng-select-background);
 }
