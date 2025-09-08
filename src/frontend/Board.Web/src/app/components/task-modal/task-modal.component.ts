@@ -1,7 +1,9 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Task, TaskPriority, TaskStatus } from 'src/app/models';
+import { Task } from 'src/app/core/models/task.interface';
+import { TaskStatus } from 'src/app/core/models/enums/task-status.enum';
+import { TaskPriority } from 'src/app/core/models/enums/task-priority.enum';
 
 @Component({
     selector: 'app-task-modal',

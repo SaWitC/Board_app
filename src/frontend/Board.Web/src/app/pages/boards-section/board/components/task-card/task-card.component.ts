@@ -1,6 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Task, TaskPriority } from 'src/app/models';
+import { CommonModule } from "@angular/common";
+import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Task } from "src/app/core/models";
+import { TaskPriority } from "src/app/core/models/enums/task-priority.enum";
+
 
 @Component({
     selector: 'app-task-card',

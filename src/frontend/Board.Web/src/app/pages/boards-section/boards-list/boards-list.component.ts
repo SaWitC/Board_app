@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { BoardApiService } from '../../../services/api-services';
-import { DialogService } from '../../../services/dialog.service';
-import { BoardLookupDTO, AddBoardDTO, BoardDetailsDTO, UpdateBoardDTO } from '../../../models';
 import { MatMenuModule } from '@angular/material/menu';
 import { TranslateModule } from '@ngx-translate/core';
+import { BoardLookupDTO, AddBoardDTO, BoardDetailsDTO, UpdateBoardDTO } from 'src/app/core/models';
+import { BoardApiService } from 'src/app/core/services/api-services';
+import { DialogService } from 'src/app/core/services/dialog.service';
 
 @Component({
   selector: 'app-boards-list',

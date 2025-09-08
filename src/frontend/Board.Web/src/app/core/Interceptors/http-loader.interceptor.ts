@@ -6,7 +6,8 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
-import { LoaderService } from 'src/app/services/loader.service';
+import { LoaderService } from '../services/loader.service';
+
 
 @Injectable()
 export class HttpLoaderInterceptor implements HttpInterceptor {
@@ -20,7 +21,7 @@ export class HttpLoaderInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     this.showLoader();
     this.requestCount++;
-    
+
     return next.handle(req).pipe(
       catchError((err) => {
         this.removeRequest();

@@ -1,12 +1,12 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Task, DragDropEvent } from '../../../models/task.model';
-import { BoardColumnApiService } from '../../../services/api-services';
-import { BoardColumnDetailsDTO } from '../../../models';
 import { Subscription } from 'rxjs';
 import { TaskCardComponent } from '../task-card/task-card.component';
 import {MatDialog} from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
+import { Task } from 'src/app/core/models/task.interface';
+import { DragDropEvent, BoardColumnDetailsDTO } from 'src/app/core/models';
+import { BoardColumnApiService } from 'src/app/core/services/api-services';
 
 @Component({
     selector: 'app-board-column',
