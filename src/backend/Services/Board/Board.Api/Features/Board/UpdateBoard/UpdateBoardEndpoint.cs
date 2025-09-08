@@ -15,7 +15,7 @@ public class UpdateBoardEndpoint(IMediator _mediator) : Endpoint<UpdateBoardComm
     public override async Task HandleAsync(UpdateBoardCommand req, CancellationToken ct)
     {
         req.Id = Route<Guid>("id");
-        await Send.OkAsync(await _mediator.Send(req, ct));
+        await Send.OkAsync(await _mediator.Send(req, ct), ct);
     }
 }
 

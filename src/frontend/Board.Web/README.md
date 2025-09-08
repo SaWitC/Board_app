@@ -1,8 +1,8 @@
-# Канбан Доска - Angular Приложение
+# Kanban Board - Angular Application
 
-Современное веб-приложение для управления задачами и проектами, построенное на Angular с использованием канбан-методологии.
+A modern Angular web application for managing tasks and projects using the Kanban methodology.
 
-## 🚀 Возможности
+## 🚀 Features
 
 - **Управление задачами**: Создание, редактирование и удаление задач
 - **Канбан-доска**: Визуальное представление задач в колонках по статусам
@@ -29,7 +29,7 @@
 - **Material Icons** - Иконки
 - **Reactive Forms** - Формы для создания/редактирования задач
 
-## 📁 Структура проекта
+## 📁 Project structure
 
 ```
 src/
@@ -42,7 +42,8 @@ src/
 │   ├── models/
 │   │   └── task.model.ts          # Модели данных и интерфейсы
 │   ├── services/
-│   │   └── task.service.ts        # Сервис для управления задачами
+│   │   ├── api-services/          # HTTP API services (Board, Board Columns, Board Items, Users)
+│   │   └── mappers/               # Mapping helpers from API models to UI models
 │   ├── app.component.*            # Главный компонент приложения
 │   ├── app.module.ts              # Главный модуль
 │   └── app-routing.module.ts      # Роутинг
@@ -78,7 +79,7 @@ ng serve
 ng build
 ```
 
-## 📱 Использование
+## 📱 Usage
 
 ### Создание новой задачи
 
@@ -109,7 +110,7 @@ ng build
 1. Нажмите на иконку удаления (корзина) на карточке задачи
 2. Подтвердите удаление
 
-## 🎨 Особенности дизайна
+## 🎨 Design features
 
 - **Современный UI**: Минималистичный и интуитивно понятный интерфейс
 - **Цветовая схема**: Градиентный фон и цветовая кодировка статусов
@@ -117,11 +118,11 @@ ng build
 - **Адаптивность**: Полная поддержка мобильных устройств
 - **Доступность**: Поддержка клавиатурной навигации и screen readers
 
-## 🔧 Конфигурация
+## 🔧 Configuration
 
-### Настройка статусов задач
+### Task statuses configuration
 
-Статусы задач можно настроить в файле `src/app/models/task.model.ts`:
+Task statuses can be configured in `src/app/models/task.model.ts`: 
 
 ```typescript
 export const TASK_STATUS_CONFIG: TaskStatusConfig[] = [
@@ -135,9 +136,9 @@ export const TASK_STATUS_CONFIG: TaskStatusConfig[] = [
 ];
 ```
 
-### Настройка приоритетов
+### Priority configuration
 
-Приоритеты настраиваются в том же файле:
+Priorities are configured in the same file:
 
 ```typescript
 export enum TaskPriority {
@@ -148,38 +149,38 @@ export enum TaskPriority {
 }
 ```
 
-## 🚀 Расширение функциональности
+## 🚀 Extending functionality
 
-### Добавление новых статусов
+### Adding new statuses
 
 1. Добавьте новый статус в enum `TaskStatus`
 2. Добавьте конфигурацию в `TASK_STATUS_CONFIG`
 3. Обновите компонент доски для отображения новой колонки
 
-### Интеграция с бэкендом
+### Backend integration
 
-1. Создайте сервис для работы с API
-2. Замените методы в `TaskService` на HTTP-запросы
-3. Добавьте обработку ошибок и loading состояний
+1. Create API services in `src/app/services/api-services` (e.g., `BoardApiService`, `BoardColumnApiService`, `BoardItemApiService`, `UsersApiService`)
+2. Inject API services into components and orchestrate data flows via observables
+3. Add error handling and loading states using RxJS operators
 
-### Добавление фильтрации
+### Adding filtering
 
-1. Создайте компонент фильтров
-2. Добавьте логику фильтрации в `TaskService`
-3. Обновите компонент доски для применения фильтров
+1. Create a filter component
+2. Implement filtering on the API layer (query params) or in a dedicated state layer
+3. Update the board component to apply filters via API service calls
 
-## 📄 Лицензия
+## 📄 License
 
-Этот проект создан в образовательных целях.
+This project is created for educational purposes.
 
-## 🤝 Вклад в проект
+## 🤝 Contributing
 
-1. Форкните репозиторий
-2. Создайте ветку для новой функции (`git checkout -b feature/amazing-feature`)
-3. Зафиксируйте изменения (`git commit -m 'Add some amazing feature'`)
-4. Отправьте в ветку (`git push origin feature/amazing-feature`)
-5. Откройте Pull Request
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📞 Поддержка
+## 📞 Support
 
-Если у вас есть вопросы или предложения, создайте issue в репозитории проекта.
+If you have questions or suggestions, please open an issue in the repository.

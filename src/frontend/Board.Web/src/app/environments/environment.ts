@@ -7,5 +7,6 @@ export const environment: Environment = {
     domain: 'inno-board-prod.us.auth0.com',
     audience: 'inno-board-api-prod',
     access_token_uri: 'https://localhost:7212/*',
+    isBypassAuthorization: true,
   },
 }

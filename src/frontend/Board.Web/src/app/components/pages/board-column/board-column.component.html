@@ -6,33 +6,34 @@
      (drop)="onDrop($event)">
 
   <div class="column-content-wrapper">
-  <div class="column-header">
-    <div class="column-title">
-      <h3>{{ columnData?.title??"..." }}</h3>
-      <span class="task-count">{{ columnTasks.length }}</span>
-    </div>
-    <button class="btn-add-task" (click)="onAddTask()" title="Добавить задачу">
-      <i class="material-icons">add</i>
-    </button>
-  </div>
-
-  <div class="column-content">
-    <div class="tasks-container">
-      <app-task-card
-        *ngFor="let task of columnTasks"
-        [task]="task"
-        (editTask)="onEditTask($event)"
-        (deleteTask)="onDeleteTask($event)"
-        (moveTask)="onMoveTask($event)">
-      </app-task-card>
-    </div>
-
-    <div class="empty-state" *ngIf="columnTasks.length === 0">
-      <i class="material-icons">assignment</i>
-      <p>Нет задач</p>
-      <button class="btn-add-empty" (click)="onAddTask()">
-        Добавить задачу
+    <div class="column-header">
+      <div class="column-title">
+        <h3>{{ columnData?.title ?? "..." }}</h3>
+        <span class="task-count">{{ columnTasks.length }}</span>
+      </div>
+      <button class="btn-add-task" (click)="onAddTask()" title="{{ 'BOARD.ADD_TASK' | translate }}">
+        <i class="material-icons">add</i>
       </button>
+    </div>
+
+    <div class="column-content">
+      <div class="tasks-container">
+        <app-task-card
+          *ngFor="let task of columnTasks"
+          [task]="task"
+          (editTask)="onEditTask($event)"
+          (deleteTask)="onDeleteTask($event)"
+          (moveTask)="onMoveTask($event)">
+        </app-task-card>
+      </div>
+
+      <div class="empty-state" *ngIf="columnTasks.length === 0">
+        <i class="material-icons">assignment</i>
+        <p>{{ 'BOARD.NO_TASKS' | translate }}</p>
+        <button class="btn-add-empty" (click)="onAddTask()">
+          {{ 'BOARD.ADD_TASK' | translate }}
+        </button>
+      </div>
     </div>
   </div>
 </div>

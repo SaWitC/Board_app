@@ -1,6 +1,6 @@
 using Board.Application.Queries.BoardItems.GetBoardItems;
 using FastEndpoints;
-using IMediator = MediatR.IMediator;
+using MediatR;
 
 namespace Board.Api.Features.BoardItems.GetBoardItems;
 
@@ -14,7 +14,7 @@ public class GetBoardItemsEndpoint(IMediator _mediator) : EndpointWithoutRequest
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        await Send.OkAsync(await _mediator.Send(new GetBoardItemsQuery(), ct));
+        await Send.OkAsync(await _mediator.Send(new GetBoardItemsQuery(), ct), ct);
     }
 }
 

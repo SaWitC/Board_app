@@ -1,11 +1,23 @@
 <div class="navbar ">
   <div class="navbar-left">
-    <h2 class="ms-3 logo-title">InnoBoard</h2>
+    <h2 class="ms-3 logo-title">BOARD APP</h2>
   </div>
   <div class="ms-auto d-flex">
     <!-- <ng-select [(ngModel)]="selectedLanguage" [clearable]="false" [items]="languages" bindLabel="description"
       bindValue="code" (change)="onLanguageChange($event)" class="me-2 pt-1">
     </ng-select> -->
+    <select class="form-select me-2" style="width: 180px;" [(ngModel)]="selectedLanguage" (change)="onLanguageChange({ code: selectedLanguage })">
+      <option *ngFor="let lang of languages" [value]="lang.code">{{ lang.description }}</option>
+    </select>
+
+
+    <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
+      <h1 class="text-white">{{ 'NAV.LOGGED_IN' | translate }}</h1>
+    </ng-container>
+
+    <ng-template #loggedOut>
+      <button (click)="auth.loginWithRedirect()">{{ 'NAV.LOG_IN' | translate }}</button>
+    </ng-template>
 
     <div class="form-check form-switch me-3">
       <mat-button-toggle-group (change)="changeTheme()" [(value)]="theme">

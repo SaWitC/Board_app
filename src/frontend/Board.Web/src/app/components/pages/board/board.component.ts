@@ -1,40 +1,111 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Task, DragDropEvent } from '../../../models/task.model';
-import { TaskService } from '../../../services/task.service';
 import { BoardColumnApiService } from '../../../services/api-services/board-column-api.service';
 import { BoardColumnLookupDTO } from '../../../models/board-column/board-column-lookup-DTO.interface';
 import { BoardColumnComponent } from '../board-column/board-column.component';
 import { DialogService } from '../../../services/dialog.service';
+import { BoardItemApiService } from '../../../services/api-services/board-item-api.service';
+import { boardItemToTask, taskToCreateDto, taskToUpdateDto } from '../../../services/mappers/board-item.mapper';
+import { BoardApiService } from '../../../services/api-services/board-api.service';
+import { BoardDetailsDTO } from '../../../models/board/board-details-DTO.interface';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-board',
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss'],
     standalone: true,
-    imports: [CommonModule, BoardColumnComponent]
+    imports: [CommonModule, BoardColumnComponent, TranslateModule]
 })
 export class BoardComponent implements OnInit {
   tasks: Task[] = [];
   columns: BoardColumnLookupDTO[] = [];
+  loading = false;
+  error: string | null = null;
+  currentBoardId: string | null = null;
+  currentBoard: BoardDetailsDTO | null = null;
 
   constructor(
-    private taskService: TaskService,
     private boardColumnService: BoardColumnApiService,
-    private dialogService: DialogService
+    private boardItemService: BoardItemApiService,
+    private dialogService: DialogService,
+    private boardApiService: BoardApiService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loadColumns();
-    this.taskService.tasks$.subscribe(tasks => {
-      this.tasks = tasks;
+    // Get board ID from route parameters
+    this.route.params.subscribe(params => {
+      const boardId = params['id'];
+      if (boardId) {
+        this.currentBoardId = boardId;
+        this.loadBoardDetails(boardId);
+        this.loadColumns(boardId);
+        this.loadTasks();
+      } else {
+        // If no board ID, load the first available board
+        this.loadFirstBoard();
+      }
     });
   }
 
-  private loadColumns(): void {
-    const boardId = 'default-board';
-    this.boardColumnService.getBoardColumns(boardId).subscribe(columns => {
-      this.columns = columns;
+  private loadFirstBoard(): void {
+    this.boardApiService.getBoards().subscribe({
+      next: (boards) => {
+        const boardId = boards?.[0]?.id;
+        if (!boardId) {
+          this.columns = [];
+          return;
+        }
+        this.currentBoardId = boardId;
+        this.loadBoardDetails(boardId);
+        this.loadColumns(boardId);
+        this.loadTasks();
+      },
+      error: (error) => {
+        console.error('Error loading boards:', error);
+        this.error = 'Failed to load boards';
+      }
+    });
+  }
+
+  private loadBoardDetails(boardId: string): void {
+    this.boardApiService.getBoardById(boardId).subscribe({
+      next: (board: BoardDetailsDTO) => {
+        this.currentBoard = board;
+      },
+      error: (error: unknown) => {
+        console.error('Error loading board details:', error);
+      }
+    });
+  }
+
+  private loadColumns(boardId: string): void {
+    this.boardColumnService.getBoardColumns(boardId).subscribe({
+      next: (columns) => this.columns = columns,
+      error: (error) => {
+        console.error('Error loading columns:', error);
+        this.error = 'Failed to load columns';
+      }
+    });
+  }
+
+  private loadTasks(): void {
+    this.loading = true;
+    this.error = null;
+    this.boardItemService.getBoardItems().subscribe({
+      next: (items) => {
+        this.tasks = items.map(boardItemToTask);
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'Failed to load task';
+        this.loading = false;
+        console.error(err);
+      }
     });
   }
 
@@ -49,11 +120,13 @@ export class BoardComponent implements OnInit {
       selectedBoardColumnId: data.boardColumnId
     }).subscribe((task) => {
       if (task) {
-        const taskData = {
-          ...task,
-          boardColumns: this.columns
-        };
-        this.taskService.createTask(taskData);
+        const createDto = taskToCreateDto(task);
+        this.boardItemService.addBoardItem(createDto).subscribe({
+          next: (created) => {
+            this.tasks = [...this.tasks, boardItemToTask(created)];
+          },
+          error: (err) => console.error('Error creating task ', err)
+        });
       }
     });
   }
@@ -62,25 +135,54 @@ export class BoardComponent implements OnInit {
     this.dialogService.openTaskModal({
       mode: 'edit',
       boardColumns: this.columns,
-      task: data.task,
-      selectedBoardColumnId: data.boardColumnId
+      selectedBoardColumnId: data.boardColumnId,
+      task: data.task
     }).subscribe((updatedTask) => {
       if (updatedTask) {
-        this.taskService.updateTask(data.task.id, updatedTask);
+        this.boardItemService.getBoardItemById(data.task.id).subscribe({
+          next: (existing) => {
+            const updateDto = taskToUpdateDto(existing, updatedTask);
+            this.boardItemService.updateBoardItem(data.task.id, updateDto).subscribe({
+              next: (res) => {
+                const mapped = boardItemToTask(res);
+                this.tasks = this.tasks.map(t => t.id === mapped.id ? mapped : t);
+              },
+              error: (err) => console.error('Failed to update board', err)
+            });
+          },
+          error: (err) => console.error('Failed to get board for updating', err)
+        });
       }
     });
   }
 
   onDeleteTask(taskId: string): void {
-    this.taskService.deleteTask(taskId);
+    this.boardItemService.deleteBoardItem(taskId).subscribe({
+      next: () => {
+        this.tasks = this.tasks.filter(t => t.id !== taskId);
+      },
+      error: (err) => console.error('Failed to delete task', err)
+    });
   }
 
   onMoveTask(data: {taskId: string, newStatus: string}): void {
-    this.taskService.moveTask(data.taskId, data.newStatus);
+    this.boardItemService.moveBoardItem(data.taskId, data.newStatus).subscribe({
+      next: (res) => {
+        const mapped = boardItemToTask(res);
+        this.tasks = this.tasks.map(t => t.id === mapped.id ? mapped : t);
+      },
+      error: (err) => console.error('Ошибка перемещения задачи', err)
+    });
   }
 
   onDropTask(event: DragDropEvent): void {
-    this.taskService.moveTaskByDragDrop(event);
+    this.boardItemService.moveBoardItem(event.taskId, event.toColumnId).subscribe({
+      next: (res) => {
+        const mapped = boardItemToTask(res);
+        this.tasks = this.tasks.map(t => t.id === mapped.id ? mapped : t);
+      },
+      error: (err) => console.error('Ошибка перемещения задачи (D&D)', err)
+    });
   }
 
   onColumnDragStart(event: DragEvent, column: BoardColumnLookupDTO, index: number): void {

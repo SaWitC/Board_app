@@ -19,6 +19,7 @@ export { BoardLookupDTO } from './board/board-lookup-DTO.interface';
 export { BoardDetailsDTO } from './board/board-details-DTO.interface';
 export { UpdateBoardDTO } from './board/update-board-DTO.interface';
 export { AddBoardDTO } from './board/add-board-DTO.interface';
+export { BoardColumnDTO } from './board/add-board-DTO.interface';
 
 
 

@@ -1,6 +1,6 @@
 using Board.Application.Commands.BoardItems.DeleteBoardItem;
 using FastEndpoints;
-using IMediator = MediatR.IMediator;
+using MediatR;
 
 namespace Board.Api.Features.BoardItems.DeleteBoardItem;
 
@@ -15,7 +15,7 @@ public class DeleteBoardItemEndpoint(IMediator _mediator) : EndpointWithoutReque
     public override async Task HandleAsync(CancellationToken ct)
     {
         Guid id = Route<Guid>("id");
-        await Send.OkAsync(await _mediator.Send(new DeleteBoardItemCommand { Id = id }, ct));
+        await Send.OkAsync(await _mediator.Send(new DeleteBoardItemCommand { Id = id }, ct), ct);
     }
 }
 

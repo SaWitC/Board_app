@@ -1,32 +1,36 @@
+using Board.Application.DTOs;
+using Board.Application.Interfaces;
+using MediatR;
+
 namespace Board.Application.Queries.Boards.GetBoardById;
 
-	using Board.Application.DTOs;
-	using Board.Application.Repositories;
-	using MediatR;
+public class GetBoardByIdQueryHandler : IRequestHandler<GetBoardByIdQuery, BoardDto>
+{
+    private readonly IRepository<Domain.Entities.Board> _repository;
 
-	public class GetBoardByIdQueryHandler : IRequestHandler<GetBoardByIdQuery, BoardDto>
-	{
-		private readonly IBoardRepository _boardRepository;
+    public GetBoardByIdQueryHandler(IRepository<Domain.Entities.Board> repository)
+    {
+        _repository = repository;
+    }
 
-		public GetBoardByIdQueryHandler(IBoardRepository boardRepository)
-		{
-			_boardRepository = boardRepository;
-		}
+    public async Task<BoardDto> Handle(GetBoardByIdQuery request, CancellationToken cancellationToken)
+    {
+        var entity = await _repository.GetAsync(x => x.Id == request.Id, cancellationToken);
+        if (entity == null)
+        {
+            return null;
+        }
 
-		public async Task<BoardDto> Handle(GetBoardByIdQuery request, CancellationToken cancellationToken)
-		{
-			var entity = await _boardRepository.GetAsync(request.Id, cancellationToken);
-			if (entity == null)
-			{
-				return null;
-			}
-
-			return new BoardDto
-			{
-				Id = entity.Id,
-				Title = entity.Title,
-				Description = entity.Description,
-				ModificationDate = entity.ModificationDate
-			};
-		}
-	}
+        return new BoardDto
+        {
+            Id = entity.Id,
+            Title = entity.Title,
+            Description = entity.Description,
+            //TODO: add guid -> email mapping
+            Users = [.. entity.Users.Select(u => u.ToString())],
+            Admins = [.. entity.Admins.Select(a => a.ToString())],
+            Owners = [.. entity.Owners.Select(o => o.ToString())],
+            ModificationDate = entity.ModificationDate
+        };
+    }
+}

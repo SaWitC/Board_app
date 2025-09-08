@@ -1,6 +1,8 @@
 import {
   ApplicationConfig,
   provideZoneChangeDetection,
+  importProvidersFrom,
+  APP_INITIALIZER,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideToastr } from 'ngx-toastr';
@@ -22,13 +24,44 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { provideAnimationsAsync as provideAnimationsAsyncMaterial } from '@angular/platform-browser/animations/async';
 import { environment } from './environments/environment';
 import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
-import { UnauthorizedInterceptor } from './core/Interceptors/unathorized.interceptor';
-import { HttpLoaderInterceptor } from './core/Interceptors/http-loader.interceptor';
-import { LanguageInterceptor } from './core/Interceptors/language.interceptor';
-import { HttpNotificationInterceptorService } from './core/Interceptors/http-notification-interceptor-service';
+import { UnauthorizedInterceptor } from './core/interceptors/unathorized.interceptor';
+import { HttpLoaderInterceptor } from './core/interceptors/http-loader.interceptor';
+import { LanguageInterceptor } from './core/interceptors/language.interceptor';
+import { HttpNotificationInterceptorService } from './core/interceptors/http-notification-interceptor-service';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 
-export function HttpLoaderFactory(http: HttpClient) {
-  // return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+// translations are stored in assets/i18n/*.json
+
+export function AppTranslateHttpLoaderFactory(http: HttpClient): TranslateLoader {
+  return {
+    getTranslation: (lang: string) => http.get<any>(`assets/i18n/${lang}.json`)
+  } as TranslateLoader;
+}
+
+export function initializeTranslations(translate: TranslateService) {
+  return () => {
+    const isBrowser = typeof window !== 'undefined';
+    const defaultLang = 'en';
+    let lang = defaultLang;
+    try {
+      if (isBrowser) {
+        lang = localStorage.getItem('user-language') ?? defaultLang;
+        if (!localStorage.getItem('user-language')) {
+          localStorage.setItem('user-language', lang);
+        }
+      }
+    } catch {}
+
+    translate.setDefaultLang(defaultLang);
+    try {
+      return firstValueFrom(translate.use(lang));
+    } catch {
+      return Promise.resolve();
+    }
+  };
 }
 
 
@@ -37,7 +70,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([authHttpInterceptorFn]),
+      ...(environment.auth.isBypassAuthorization ? [] : [withInterceptors([authHttpInterceptorFn])]),
       withInterceptorsFromDi()
     ),
     provideClientHydration(withEventReplay()),
@@ -49,6 +82,21 @@ export const appConfig: ApplicationConfig = {
     }), // Toastr providers
     // provideTranslations(),
     provideAnimationsAsync(),
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useFactory: AppTranslateHttpLoaderFactory,
+          deps: [HttpClient]
+        }
+      })
+    ),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeTranslations,
+      deps: [TranslateService],
+      multi: true,
+    },
     //Auth
     provideAuth0({
       domain: environment.auth.domain,
@@ -79,6 +127,9 @@ export const appConfig: ApplicationConfig = {
           },
         ],
       },
+      ...(environment.auth.isBypassAuthorization
+        ? { cacheLocation: 'localstorage', useRefreshTokens: true, authorizationParams: { ...{ redirect_uri: window.location.origin }, audience: environment.auth.audience, scope: 'openid profile email' } }
+        : {}),
     }),
 
     //Interceptors

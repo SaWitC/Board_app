@@ -1,30 +1,30 @@
 <div class="boards-container">
   <div class="boards-header pt-3">
-    <h1>My Projects</h1>
+    <h1>{{ 'BOARDS_LIST.TITLE' | translate }}</h1>
     <button class="create-board-btn" (click)="onCreateBoard()">
       <span class="btn-icon">+</span>
-      Create Board
+      {{ 'BOARDS_LIST.CREATE_BOARD' | translate }}
     </button>
   </div>
 
   <div class="boards-content">
     <div *ngIf="loading" class="loading">
       <div class="spinner"></div>
-      <p>Loading boards...</p>
+      <p>{{ 'BOARDS_LIST.LOADING' | translate }}</p>
     </div>
 
     <div *ngIf="error" class="error">
       <p>{{ error }}</p>
-      <button class="retry-btn" (click)="loadBoards()">Retry</button>
+      <button class="retry-btn" (click)="loadBoards()">{{ 'COMMON.RETRY' | translate }}</button>
     </div>
 
     <div *ngIf="!loading && !error && boards.length === 0" class="empty-state">
       <div class="empty-icon">📋</div>
-      <h3>No boards yet</h3>
-      <p>Create your first board to get started</p>
+      <h3>{{ 'BOARDS_LIST.EMPTY_TITLE' | translate }}</h3>
+      <p>{{ 'BOARDS_LIST.EMPTY_SUBTITLE' | translate }}</p>
       <button class="create-board-btn primary" (click)="onCreateBoard()">
         <span class="btn-icon">+</span>
-        Create Board
+        {{ 'BOARDS_LIST.CREATE_BOARD' | translate }}
       </button>
     </div>
 
@@ -37,17 +37,22 @@
         <div class="board-header">
           <h3 class="board-title">{{ board.title }}</h3>
           <div class="board-actions">
-            <button class="action-btn" (click)="$event.stopPropagation()">
+            <button class="action-btn" (click)="onOpenMenu($event, board)" [matMenuTriggerFor]="cardMenu">
               <span>⋮</span>
             </button>
           </div>
         </div>
         <p class="board-description">{{ board.description }}</p>
         <div class="board-meta">
-          <span class="users-count">{{ board.users?.length || 0 }} users</span>
-          <span class="admins-count">{{ board.admins?.length || 0 }} admins</span>
+          <span class="users-count">{{ board.users?.length || 0 }} {{ 'BOARDS_LIST.USERS' | translate }}</span>
+          <span class="admins-count">{{ board.admins?.length || 0 }} {{ 'BOARDS_LIST.ADMINS' | translate }}</span>
         </div>
       </div>
+
+      <mat-menu #cardMenu="matMenu">
+        <button mat-menu-item (click)="$event.stopPropagation(); onEditSelected()">{{ 'COMMON.EDIT' | translate }}</button>
+        <button mat-menu-item (click)="$event.stopPropagation(); selectedBoard && onDeleteBoard(selectedBoard.id)">{{ 'COMMON.DELETE' | translate }}</button>
+      </mat-menu>
     </div>
   </div>
 </div>

@@ -14,6 +14,6 @@ public class CreateBoardEndpoint(IMediator _mediator) : Endpoint<CreateBoardComm
 
     public override async Task HandleAsync(CreateBoardCommand req, CancellationToken ct)
     {
-        await Send.OkAsync(await _mediator.Send(req, ct));
+        await Send.OkAsync(await _mediator.Send(req, ct), ct);
     }
 }

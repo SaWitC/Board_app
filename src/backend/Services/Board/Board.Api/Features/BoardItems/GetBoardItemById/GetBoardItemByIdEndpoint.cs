@@ -1,6 +1,6 @@
 using Board.Application.Queries.BoardItems.GetBoardItemById;
 using FastEndpoints;
-using IMediator = MediatR.IMediator;
+using MediatR;
 
 namespace Board.Api.Features.BoardItems.GetBoardItemById;
 
@@ -15,6 +15,6 @@ public class GetBoardItemByIdEndpoint(IMediator _mediator) : EndpointWithoutRequ
     public override async Task HandleAsync(CancellationToken ct)
     {
         Guid id = Route<Guid>("id");
-        await Send.OkAsync(await _mediator.Send(new GetBoardItemByIdQuery { Id = id }, ct));
+        await Send.OkAsync(await _mediator.Send(new GetBoardItemByIdQuery { Id = id }, ct), ct);
     }
 }

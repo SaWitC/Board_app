@@ -5,5 +5,6 @@ export interface Environment {
     domain: string;
     audience: string;
     access_token_uri: string;
+    isBypassAuthorization?: boolean;
   };
 }

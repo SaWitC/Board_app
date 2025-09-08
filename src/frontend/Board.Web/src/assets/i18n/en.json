@@ -1,0 +1,37 @@
+{
+  "NOTIFICATIONS": {
+    "REQUEST_COMPLETED_SUCCESSFULLY": "Request completed successfully",
+    "SUCCESS": "Success",
+    "REQUEST_FAILED": "Request failed",
+    "ERROR": "Error"
+  },
+  "NAV": {
+    "BOARD_APP": "BOARD APP",
+    "LOG_IN": "Log in",
+    "LOGGED_IN": "Logged in"
+  },
+  "SIDEBAR": {
+    "MENU": "Menu",
+    "MY_PROJECTS": "My Projects",
+    "INFO": "Info"
+  },
+  "BOARDS_LIST": {
+    "TITLE": "My Projects",
+    "CREATE_BOARD": "Create Board",
+    "LOADING": "Loading boards...",
+    "EMPTY_TITLE": "No boards yet",
+    "EMPTY_SUBTITLE": "Create your first board to get started",
+    "USERS": "users",
+    "ADMINS": "admins"
+  },
+  "BOARD": {
+    "TOTAL_TASKS": "Total tasks:",
+    "NO_TASKS": "No tasks",
+    "ADD_TASK": "Add task"
+  },
+  "COMMON": {
+    "RETRY": "Retry",
+    "EDIT": "Edit",
+    "DELETE": "Delete"
+  }
+} 

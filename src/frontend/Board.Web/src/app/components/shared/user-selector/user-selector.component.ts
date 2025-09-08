@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { UserLookupDTO } from '../../../models/user/user-lookup-DTO.model';
 import { debounceTime, distinctUntilChanged, switchMap, filter, map } from 'rxjs/operators';
 import { Observable, Subject, of } from 'rxjs';
+import { UsersApiService } from '../../../services/api-services/users-api.service';
 
 @Component({
   selector: 'app-user-selector',
@@ -38,7 +39,7 @@ export class UserSelectorComponent implements OnInit, OnDestroy {
   filteredUsers: Observable<UserLookupDTO[]> = of([]);
   private searchSubject = new Subject<string>();
 
-  constructor() {}
+  constructor(private usersApi: UsersApiService) {}
 
   ngOnInit(): void {
     this.setupSearch();
@@ -58,22 +59,9 @@ export class UserSelectorComponent implements OnInit, OnDestroy {
   }
 
   private searchUsers(searchTerm: string): Observable<UserLookupDTO[]> {
-    // Моковые данные для демонстрации
-    const mockUsers: UserLookupDTO[] = [
-      { id: '1', email: 'user1@example.com' },
-      { id: '2', email: 'user2@example.com' },
-      { id: '3', email: 'admin1@example.com' },
-      { id: '4', email: 'admin2@example.com' },
-      { id: '5', email: 'developer1@example.com' },
-      { id: '6', email: 'tester1@example.com' }
-    ];
-
-    const filtered = mockUsers.filter(user =>
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      !this.selectedUsers.some(selected => selected.id === user.id)
+    return this.usersApi.searchUsers(searchTerm).pipe(
+      map(users => users.filter(u => !this.selectedUsers.some(s => s.id === u.id)))
     );
-
-    return of(filtered);
   }
 
   onSearchInput(event: any): void {

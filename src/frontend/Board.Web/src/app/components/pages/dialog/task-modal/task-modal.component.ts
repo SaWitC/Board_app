@@ -44,6 +44,7 @@ export class TaskModalComponent implements OnInit {
   taskPriorities = Object.values(TaskPriority);
   dialogTitle: string;
   submitButtonText: string;
+  boardColumns: BoardColumnLookupDTO[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -51,6 +52,7 @@ export class TaskModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: TaskModalData
   ) {
     this.task = data.task;
+    this.boardColumns = data.boardColumns ?? [];
     this.dialogTitle = data.mode === 'create' ? 'Создать новую задачу' : 'Редактировать задачу';
     this.submitButtonText = data.mode === 'create' ? 'Создать' : 'Сохранить';
   }
@@ -61,9 +63,12 @@ export class TaskModalComponent implements OnInit {
   }
 
   private initForm(): void {
+    const initialColumnId = this.task?.columnId || this.data.selectedBoardColumnId || (this.boardColumns[0]?.id ?? '');
+
     this.taskForm = this.fb.group({
       title: [this.task?.title || '', [Validators.required, Validators.minLength(3)]],
       description: [this.task?.description || ''],
+      columnId: [initialColumnId, Validators.required],
       priority: [this.task?.priority || TaskPriority.MEDIUM, Validators.required],
       assignee: [this.task?.assignee || ''],
       dueDate: [this.task?.dueDate ? new Date(this.task.dueDate) : undefined],

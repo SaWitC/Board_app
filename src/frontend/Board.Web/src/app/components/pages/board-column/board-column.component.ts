@@ -6,13 +6,14 @@ import { BoardColumnDetailsDTO } from '../../../models';
 import { Subscription } from 'rxjs';
 import { TaskCardComponent } from '../task-card/task-card.component';
 import {MatDialog} from '@angular/material/dialog';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-board-column',
     templateUrl: './board-column.component.html',
     styleUrls: ['./board-column.component.scss'],
     standalone: true,
-    imports: [CommonModule, TaskCardComponent]
+    imports: [CommonModule, TaskCardComponent, TranslateModule]
 })
 export class BoardColumnComponent implements OnInit, OnDestroy {
   @Input() columnId: string = '1';
@@ -27,7 +28,7 @@ export class BoardColumnComponent implements OnInit, OnDestroy {
   @Output() dropTask = new EventEmitter<DragDropEvent>();
 
   isDragOver = false;
-  columnData!: BoardColumnDetailsDTO;
+  columnData?: BoardColumnDetailsDTO;
   loading = false;
   error: string | null = null;
   private subscription = new Subscription();
@@ -49,11 +50,13 @@ export class BoardColumnComponent implements OnInit, OnDestroy {
   }
 
   onAddTask(): void {
-    this.addTask.emit({boardColumnId: this.columnData?.id});
+    const targetColumnId = this.columnData?.id ?? this.columnId;
+    this.addTask.emit({boardColumnId: targetColumnId});
   }
 
   onEditTask(task: Task): void {
-    this.editTask.emit({task: task, boardColumnId: this.columnData?.id});
+    const targetColumnId = this.columnData?.id ?? this.columnId;
+    this.editTask.emit({task: task, boardColumnId: targetColumnId});
   }
 
   onDeleteTask(taskId: string): void {
@@ -80,7 +83,7 @@ export class BoardColumnComponent implements OnInit, OnDestroy {
       const dragDropEvent: DragDropEvent = {
         taskId: taskId,
         fromColumnId: this.getTaskStatusFromId(taskId),
-        toColumnId: this.columnData?.id
+        toColumnId: this.columnData?.id ?? this.columnId
       };
 
       if (dragDropEvent.fromColumnId !== dragDropEvent.toColumnId) {
@@ -95,7 +98,7 @@ export class BoardColumnComponent implements OnInit, OnDestroy {
       return task.id;
     }
 
-    return this.columnData?.id;
+    return this.columnData?.id ?? this.columnId;
   }
 
   onDragEnter(event: DragEvent): void {
