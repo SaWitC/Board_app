@@ -5,7 +5,7 @@ using FastEndpoints;
 
 namespace Board.Api.Features.BoardItems.GetBoardItemById;
 
-public class GetBoardItemByIdEndpoint : Endpoint<GetBoardItemByIdRequest>
+public class GetBoardItemByIdEndpoint : EndpointWithoutRequest
 {
     private readonly IRepository<BoardItem> _repository;
 
@@ -19,7 +19,7 @@ public class GetBoardItemByIdEndpoint : Endpoint<GetBoardItemByIdRequest>
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(GetBoardItemByIdRequest request, CancellationToken cancellationToken)
+    public override async Task HandleAsync(CancellationToken cancellationToken)
     {
         Guid id = Route<Guid>("id");
 

@@ -4,7 +4,7 @@ using FastEndpoints;
 
 namespace Board.Api.Features.Board.GetBoardById;
 
-public class GetBoardByIdEndpoint : Endpoint<GetBoardByIdRequest>
+public class GetBoardByIdEndpoint : EndpointWithoutRequest
 {
     public override void Configure()
     {
@@ -19,10 +19,10 @@ public class GetBoardByIdEndpoint : Endpoint<GetBoardByIdRequest>
         _repository = repository;
     }
 
-    public override async Task HandleAsync(GetBoardByIdRequest request, CancellationToken cancellationToken)
+    public override async Task HandleAsync(CancellationToken cancellationToken)
     {
         Guid id = Route<Guid>("id");
-        Domain.Entities.Board entity = await _repository.GetAsync(x => x.Id == request.Id, cancellationToken);
+        Domain.Entities.Board entity = await _repository.GetAsync(x => x.Id == id, cancellationToken);
         if (entity == null)
         {
             await Send.OkAsync(null, cancellationToken);

@@ -4,7 +4,7 @@ using FastEndpoints;
 
 namespace Board.Api.Features.BoardItems.DeleteBoardItem;
 
-public class DeleteBoardItemEndpoint : Endpoint<DeleteBoardItemRequest>
+public class DeleteBoardItemEndpoint : EndpointWithoutRequest
 {
     private readonly IRepository<BoardItem> _repository;
 
@@ -18,7 +18,7 @@ public class DeleteBoardItemEndpoint : Endpoint<DeleteBoardItemRequest>
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(DeleteBoardItemRequest request, CancellationToken cancellationToken)
+    public override async Task HandleAsync(CancellationToken cancellationToken)
     {
         Guid id = Route<Guid>("id");
 

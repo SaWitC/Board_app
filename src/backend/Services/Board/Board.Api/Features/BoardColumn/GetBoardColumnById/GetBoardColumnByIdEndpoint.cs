@@ -4,7 +4,7 @@ using FastEndpoints;
 
 namespace Board.Api.Features.BoardColumn.GetBoardColumnById;
 
-public class GetBoardColumnByIdEndpoint : Endpoint<GetBoardColumnByIdRequest>
+public class GetBoardColumnByIdEndpoint : EndpointWithoutRequest
 {
 
     private readonly IRepository<Domain.Entities.BoardColumn> _repository;
@@ -19,7 +19,7 @@ public class GetBoardColumnByIdEndpoint : Endpoint<GetBoardColumnByIdRequest>
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(GetBoardColumnByIdRequest request, CancellationToken cancellationToken)
+    public override async Task HandleAsync(CancellationToken cancellationToken)
     {
         Guid id = Route<Guid>("id");
 

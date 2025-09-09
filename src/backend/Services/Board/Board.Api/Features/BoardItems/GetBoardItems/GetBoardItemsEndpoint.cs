@@ -5,7 +5,7 @@ using FastEndpoints;
 
 namespace Board.Api.Features.BoardItems.GetBoardItems;
 
-public class GetBoardItemsEndpoint : Endpoint<GetBoardItemsRequest>
+public class GetBoardItemsEndpoint : EndpointWithoutRequest
 {
     private readonly IRepository<BoardItem> _repository;
 
@@ -20,7 +20,7 @@ public class GetBoardItemsEndpoint : Endpoint<GetBoardItemsRequest>
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(GetBoardItemsRequest req, CancellationToken cancellationToken)
+    public override async Task HandleAsync(CancellationToken cancellationToken)
     {
         IList<BoardItemDto> items = await _repository.GetAllAsync(null, e => new BoardItemDto
         {
