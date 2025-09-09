@@ -12,6 +12,7 @@ public static class RepositoriesConfiguration
         services.AddScoped<IRepository<BoardItem>, Repository<BoardItem>>();
         services.AddScoped<IRepository<BoardColumn>, Repository<BoardColumn>>();
         services.AddScoped<IRepository<Tag>, Repository<Tag>>();
+        services.AddScoped<IRepository<BoardTemplate>, Repository<BoardTemplate>>();
 
         return services;
     }
