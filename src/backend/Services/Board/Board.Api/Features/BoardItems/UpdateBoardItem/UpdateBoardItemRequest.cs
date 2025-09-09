@@ -1,10 +1,8 @@
-namespace Board.Application.Commands.BoardItems.CreateBoardItem;
-
-using Board.Application.DTOs;
 using Board.Domain.Contracts.Enums;
-using MediatR;
 
-public class CreateBoardItemCommand : IRequest<BoardItemDto>
+namespace Board.Api.Features.BoardItems.UpdateBoardItem;
+
+public class UpdateBoardItemRequest
 {
     public required string Title { get; set; }
     public required string Description { get; set; }
