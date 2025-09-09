@@ -10,7 +10,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-import { BoardColumnLookupDTO, Task, TaskPriority } from 'src/app/models';
+import { Task } from 'src/app/core/models/task.interface';
+import { BoardColumnLookupDTO } from 'src/app/core/models';
+import { TaskPriority } from 'src/app/core/models/enums/task-priority.enum';
 
 export interface TaskModalData {
   task?: Task;

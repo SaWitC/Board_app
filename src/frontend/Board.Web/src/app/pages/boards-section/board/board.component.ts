@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Task, DragDropEvent } from '../../../models/task.model';
-import { BoardColumnApiService } from '../../../services/api-services/board-column-api.service';
-import { BoardColumnLookupDTO } from '../../../models/board-column/board-column-lookup-DTO.interface';
-import { BoardColumnComponent } from '../board-column/board-column.component';
-import { DialogService } from '../../../services/dialog.service';
-import { BoardItemApiService } from '../../../services/api-services/board-item-api.service';
-import { boardItemToTask, taskToCreateDto, taskToUpdateDto } from '../../../services/mappers/board-item.mapper';
-import { BoardApiService } from '../../../services/api-services/board-api.service';
-import { BoardDetailsDTO } from '../../../models/board/board-details-DTO.interface';
+import { Task } from 'src/app/core/models/task.interface';
 import { TranslateModule } from '@ngx-translate/core';
+import { BoardColumnLookupDTO, BoardDetailsDTO, DragDropEvent } from 'src/app/core/models';
+import { BoardColumnApiService, BoardItemApiService, BoardApiService } from 'src/app/core/services/api-services';
+import { DialogService } from 'src/app/core/services/dialog.service';
+import { boardItemToTask, taskToCreateDto, taskToUpdateDto } from 'src/app/core/services/mappers/board-item.mapper';
+import { BoardColumnComponent } from './components/board-column/board-column.component';
+
 
 @Component({
     selector: 'app-board',

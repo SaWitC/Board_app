@@ -7,9 +7,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-import { AddBoardDTO, BoardColumnDTO, UpdateBoardDTO, BoardDetailsDTO } from 'src/app/models';
-import { UserLookupDTO } from 'src/app/models/user/user-lookup-DTO.model';
 import { UserSelectorComponent } from 'src/app/components/shared/user-selector/user-selector.component';
+import { BoardDetailsDTO, UpdateBoardDTO, BoardColumnDTO, AddBoardDTO } from 'src/app/core/models';
+import { UserLookupDTO } from 'src/app/core/models/user/user-lookup-DTO.model';
 
 export interface CreateBoardModalData {
   mode: 'create' | 'edit';
@@ -75,7 +75,14 @@ export class CreateBoardModalComponent implements OnInit {
         }));
       });
     } else {
-      this.addColumn();
+      ["TODO", "In Progress", "Ready for Review", "Done"].forEach(column => {
+        const columnForm = this.fb.group({
+          columnTitle: [column, Validators.required],
+          columnDescription: ['', Validators.required],
+        });
+
+        (this.boardForm.controls['boardColumns'] as FormArray).push(columnForm);
+      })
     }
   }
 
@@ -85,15 +92,6 @@ export class CreateBoardModalComponent implements OnInit {
       boardDescription: ['', Validators.required],
       boardColumns: new FormArray([])
     });
-
-    ["TODO", "In Progress", "Ready for Review", "Done"].forEach(column => {
-      const columnForm = this.fb.group({
-        columnTitle: [column, Validators.required],
-        columnDescription: ['', Validators.required],
-      });
-
-      (this.boardForm.controls['boardColumns'] as FormArray).push(columnForm);
-    })
   }
 
   public addColumn(): void {

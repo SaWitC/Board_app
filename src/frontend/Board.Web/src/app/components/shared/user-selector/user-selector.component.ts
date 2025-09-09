@@ -7,10 +7,10 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { UserLookupDTO } from '../../../models/user/user-lookup-DTO.model';
 import { debounceTime, distinctUntilChanged, switchMap, filter, map } from 'rxjs/operators';
 import { Observable, Subject, of } from 'rxjs';
-import { UsersApiService } from '../../../services/api-services/users-api.service';
+import { UserLookupDTO } from 'src/app/core/models/user/user-lookup-DTO.model';
+import { UsersApiService } from 'src/app/core/services/api-services/users-api.service';
 
 @Component({
   selector: 'app-user-selector',

@@ -22,16 +22,15 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { routes } from './app.routes';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { provideAnimationsAsync as provideAnimationsAsyncMaterial } from '@angular/platform-browser/animations/async';
-import { environment } from './environments/environment';
 import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
 import { UnauthorizedInterceptor } from './core/interceptors/unathorized.interceptor';
 import { HttpLoaderInterceptor } from './core/interceptors/http-loader.interceptor';
 import { LanguageInterceptor } from './core/interceptors/language.interceptor';
 import { HttpNotificationInterceptorService } from './core/interceptors/http-notification-interceptor-service';
-import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 // translations are stored in assets/i18n/*.json
 
@@ -110,7 +109,7 @@ export const appConfig: ApplicationConfig = {
         scope: 'openid profile email',
       },
 
-    
+
       // Specify configuration for the interceptor
       httpInterceptor: {
         allowedList: [
@@ -136,12 +135,12 @@ export const appConfig: ApplicationConfig = {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: UnauthorizedInterceptor,
-      multi: true, 
+      multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpLoaderInterceptor,
-      multi: true, 
+      multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,
