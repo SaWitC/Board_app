@@ -23,14 +23,14 @@ import { routes } from './app.routes';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { provideAnimationsAsync as provideAnimationsAsyncMaterial } from '@angular/platform-browser/animations/async';
 import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
-import { UnauthorizedInterceptor } from './core/interceptors/unathorized.interceptor';
-import { HttpLoaderInterceptor } from './core/interceptors/http-loader.interceptor';
-import { LanguageInterceptor } from './core/interceptors/language.interceptor';
-import { HttpNotificationInterceptorService } from './core/interceptors/http-notification-interceptor-service';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { UnauthorizedInterceptor } from './core/Interceptors/unathorized.interceptor';
+import { HttpLoaderInterceptor } from './core/Interceptors/http-loader.interceptor';
+import { LanguageInterceptor } from './core/Interceptors/language.interceptor';
+import { HttpNotificationInterceptorService } from './core/Interceptors/http-notification-interceptor-service';
 
 // translations are stored in assets/i18n/*.json
 

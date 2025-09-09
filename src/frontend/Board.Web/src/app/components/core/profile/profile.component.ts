@@ -1,27 +1,30 @@
-import { Component, Inject, PLATFORM_ID, Output, EventEmitter } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser, NgIf } from '@angular/common';
+import { RouterLink, RouterModule } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AuthService, User } from '@auth0/auth0-angular';
+import { NgSelectComponent } from '@ng-select/ng-select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { AuthService } from '@auth0/auth0-angular';
-import { TranslateService } from '@ngx-translate/core';
-import { TranslateModule } from '@ngx-translate/core';
-import { ProfileComponent } from '../profile/profile.component';
+import { FormsModule } from '@angular/forms';
+import { UserService } from 'src/app/core/services/auth/user.service';
 
 @Component({
-  selector: 'navigation',
+  selector: 'profile',
   standalone: true,
   imports: [
-    MatButtonToggleModule,
     CommonModule,
+    MatButtonToggleModule,
+    RouterModule,
     FormsModule,
-    TranslateModule,
-    ProfileComponent
-  ],
-  templateUrl: './navigation.component.html',
-  styleUrls: ['./navigation.component.scss'],
+    NgSelectComponent,
+    TranslateModule
+],
+  templateUrl: './profile.component.html',
+  styleUrl: './profile.component.scss',
 })
-export class NavigationComponent {
-  //  @Output() openSidebar = new EventEmitter<void>();
+export class ProfileComponent implements OnInit {
+  public isEditor: boolean = false;
+  public userDetails: User | null | undefined = null;
 
   public selectedLanguage = 'en';
   public theme: string = 'light';
@@ -37,21 +40,30 @@ export class NavigationComponent {
   ];
 
   constructor(
+    private userService: UserService,
+    private authService: AuthService,
     @Inject(PLATFORM_ID) private platformId: Object,
-    public auth: AuthService,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'dark') {
         this.theme = 'dark';
         document.querySelector('body')?.classList.add('dark');
+      } else {
+        document.querySelector('body')?.classList.remove('dark');
       }
+
       this.selectedLanguage = localStorage.getItem('user-language') ?? 'en';
       this.translateService.use(this.selectedLanguage);
     }
+
+    this.isEditor = this.userService.hasEditorPermission();
+    this.authService.user$.subscribe((user) => {
+      this.userDetails = user;
+    });
   }
 
   public changeTheme(): void {
@@ -65,14 +77,14 @@ export class NavigationComponent {
     }
   }
 
-  // public onOpenSidebar(): void {
-  //    this.openSidebar.emit();
-  // }
-
   public onLanguageChange(language: any) {
     this.translateService.use(language.code);
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('user-language', language.code);
     }
+  }
+
+  public logout() {
+    this.authService.logout();
   }
 }

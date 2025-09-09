@@ -33,6 +33,7 @@
             "styles": [
               "src/styles.scss",
                             "node_modules/ngx-toastr/toastr.css",
+                            "node_modules/@ng-select/ng-select/themes/default.theme.css",
                             "@angular/material/prebuilt-themes/azure-blue.css",
                             "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
@@ -112,6 +113,7 @@
             "styles": [
               "src/styles.scss",
                             "node_modules/ngx-toastr/toastr.css",
+                            "node_modules/@ng-select/ng-select/themes/default.theme.css",
                             "@angular/material/prebuilt-themes/azure-blue.css",
                             "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
