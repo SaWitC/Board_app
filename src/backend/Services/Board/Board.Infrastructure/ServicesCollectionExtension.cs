@@ -8,8 +8,7 @@ using Refit;
 namespace Board.Infrastructure;
 public static class ServicesCollectionExtension
 {
-
-    public static IServiceCollection AddHrm(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddHrm(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddRefitClient<IAuthApiClient>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration?.GetValue<string>("HRM:KeycloakUrl") ?? string.Empty));
