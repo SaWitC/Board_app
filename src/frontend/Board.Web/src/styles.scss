@@ -124,3 +124,39 @@ textarea:focus {
   font-weight: 400;
   color: var(--text-color);
 }
+
+ng-select .ng-select-container {
+  background-color: var(--ng-select-background) !important;
+  color: var(--ng-select-text-color) !important;
+  border-color: var(--ng-select-border-color) !important;
+}
+
+ng-select .ng-option {
+  color: var(--ng-select-text-color) !important;
+  background-color: var(--ng-select-option-background) !important;
+}
+
+ng-select .ng-option:hover {
+  background-color: var(--ng-select-option-hover-background) !important;
+}
+
+ng-select .ng-option[aria-disabled="true"] {
+  color: var(--ng-select-disabled-option-color) !important;
+}
+
+ng-select .ng-select-placeholder {
+  color: var(--ng-select-placeholder-color) !important;
+}
+
+.mat-button-toggle-appearance-standard {
+  color: var(--text-color) !important;
+  background-color: inherit !important;
+}
+
+ng-select.ng-select-disabled .ng-select-container {
+  background-color: var(--ng-select-disabled-background) !important;
+}
+
+ng-select input {
+  color: var(--text-color) !important;
+}
