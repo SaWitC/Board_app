@@ -1,20 +1,38 @@
-using Board.Application.Queries.BoardItems.GetBoardItemById;
+using Board.Application.DTOs;
+using Board.Application.Interfaces;
+using Board.Domain.Entities;
 using FastEndpoints;
-using MediatR;
+using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.BoardItems.GetBoardItemById;
 
-public class GetBoardItemByIdEndpoint(IMediator _mediator) : EndpointWithoutRequest
+public class GetBoardItemByIdEndpoint : EndpointWithoutRequest
 {
+    private readonly IRepository<BoardItem> _repository;
+    private readonly IMapper _mapper;
+
+    public GetBoardItemByIdEndpoint(IRepository<BoardItem> repository, IMapper mapper)
+    {
+        _repository = repository;
+        _mapper = mapper;
+    }
     public override void Configure()
     {
         Get("/api/boarditems/{id}");
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken cancellationToken)
     {
         Guid id = Route<Guid>("id");
-        await Send.OkAsync(await _mediator.Send(new GetBoardItemByIdQuery { Id = id }, ct), ct);
+
+        BoardItem entity = await _repository.GetAsync(x => x.Id == id, cancellationToken);
+        if (entity == null)
+        {
+            await Send.OkAsync(null, cancellationToken);
+        }
+
+        var response = _mapper.Map<BoardItemDto>(entity);
+        await Send.OkAsync(response, cancellationToken);
     }
 }

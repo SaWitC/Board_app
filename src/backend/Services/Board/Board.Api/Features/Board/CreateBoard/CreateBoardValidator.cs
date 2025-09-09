@@ -10,8 +10,17 @@ public class CreateBoardValidator : Validator<CreateBoardRequest>
     {
         RuleFor(i => i.Title).NotNull().NotEmpty().MaximumLength(20);
         RuleFor(i => i.Description).MaximumLength(100);
+        RuleForEach(i => i.BoardUsers).NotNull().NotEmpty().SetValidator(new BoardUserValidator());
+        RuleForEach(i => i.BoardColumns).NotNull().NotEmpty().SetValidator(new BoardColumnValidator());
+    }
+}
 
-        RuleForEach(i => i.BoardColumns).SetValidator(new BoardColumnValidator());
+public class BoardUserValidator : AbstractValidator<BoardUserDto>
+{
+    public BoardUserValidator()
+    {
+        RuleFor(c => c.Role).NotNull().NotEmpty();
+        RuleFor(c => c.Email).NotNull().NotEmpty().MaximumLength(100);
     }
 }
 

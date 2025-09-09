@@ -3,11 +3,14 @@ export interface BoardColumnDTO {
   description: string;
 }
 
+export interface BoardUserDTO {
+  email: string;
+  role: number;
+}
+
 export interface AddBoardDTO {
   title: string;
   description: string;
-  users: string[];
-  admins: string[];
-  owners: string[];
+  boardUsers: BoardUserDTO[];
   boardColumns: BoardColumnDTO[];
 }
