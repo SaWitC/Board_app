@@ -2,7 +2,7 @@ namespace Board.Domain.Entities;
 public class BoardUsers
 {
     public Guid BoardId { get; set; }
-    public Guid UserId { get; set; }
+    public string Email { get; set; }
     public UserAccessEnum Role { get; set; }
 }
 
