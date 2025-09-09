@@ -1,22 +1,75 @@
-using Board.Application.Commands.UpdateBoard;
+using Board.Application.DTOs;
+using Board.Application.Interfaces;
+using Board.Infrastructure.Data.Extensions;
 using FastEndpoints;
-using IMediator = MediatR.IMediator;
+using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.Board.UpdateBoard;
 
-public class UpdateBoardEndpoint(IMediator _mediator) : Endpoint<UpdateBoardCommand>
+public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
 {
+    private readonly IRepository<Domain.Entities.Board> _repository;
+    private readonly IMapper _mapper;
+    public UpdateBoardEndpoint(IRepository<Domain.Entities.Board> repository, IMapper mapper)
+    {
+        _repository = repository;
+        _mapper = mapper;
+    }
     public override void Configure()
     {
         Put("/api/boards/{id}");
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(UpdateBoardCommand req, CancellationToken ct)
+
+    public override async Task HandleAsync(UpdateBoardRequest request, CancellationToken cancellationToken)
     {
-        req.Id = Route<Guid>("id");
-        await Send.OkAsync(await _mediator.Send(req, ct), ct);
+        Guid id = Route<Guid>("id");
+
+        Domain.Entities.Board entity = await _repository.GetAsync(x => x.Id == id, cancellationToken, false, x => x.BoardColumns, x => x.BoardUsers);
+        if (entity == null)
+        {
+            await Send.OkAsync(null, cancellationToken);
+        }
+
+        entity.Title = request.Title;
+        entity.Description = request.Description;
+        entity.ModificationDate = DateTimeOffset.UtcNow;
+        entity.BoardColumns.Synchronize(request.BoardColumns,
+            entityColumn => entityColumn.Id,
+            requestColumn => requestColumn.Id,
+            updateAction: (entityColumn, requestColumn) =>
+            {
+                entityColumn.Title = requestColumn.Title;
+                entityColumn.Description = requestColumn.Description;
+            },
+            createAction: requestColumn => new Domain.Entities.BoardColumn
+            {
+                Id = Guid.NewGuid(),
+                Title = requestColumn.Title,
+                Description = requestColumn.Description,
+                Elements = []
+            }
+        );
+        entity.BoardUsers.Synchronize(request.BoardUsers,
+            entityUser => entityUser.Email,
+            requestUser => requestUser.Email,
+            updateAction: (entityUser, requestUser) =>
+            {
+                entityUser.Role = requestUser.Role;
+            },
+            createAction: requestUser => new Domain.Entities.BoardUser
+            {
+                BoardId = id,
+                Email = requestUser.Email,
+                Role = requestUser.Role
+            }
+        );
+
+        Domain.Entities.Board updated = await _repository.UpdateAsync(entity, cancellationToken);
+        var response = _mapper.Map<BoardDto>(updated);
+
+        await Send.OkAsync(response, cancellationToken);
     }
 }
-
 

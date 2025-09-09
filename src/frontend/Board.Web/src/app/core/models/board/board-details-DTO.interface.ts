@@ -2,8 +2,7 @@ export interface BoardDetailsDTO {
   id: string;
   title: string;
   description: string;
-  users?: string[];
-  admins?: string[];
-  owners?: string[];
+  boardUsers: { email: string; role: number; }[];
+  boardColumns: { id?: string; title: string; description: string; }[];
   modificationDate: Date;
 }

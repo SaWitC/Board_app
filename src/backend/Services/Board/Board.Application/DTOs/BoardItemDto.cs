@@ -1,8 +1,8 @@
 namespace Board.Application.DTOs;
 
-	using Board.Domain.Enums;
+using Board.Domain.Contracts.Enums;
 
-	public class BoardItemDto
+public class BoardItemDto
 	{
 		public Guid Id { get; set; }
 		public string Title { get; set; }

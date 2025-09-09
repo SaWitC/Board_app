@@ -1,10 +1,11 @@
-using Board.Application.Queries.Boards.GetBoards;
+using Board.Application.DTOs;
+using Board.Application.Interfaces;
 using FastEndpoints;
-using IMediator = MediatR.IMediator;
+using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.Board.GetBoards;
 
-public class GetBoardsEndpoint(IMediator _mediator) : EndpointWithoutRequest
+public class GetBoardsEndpoint : EndpointWithoutRequest
 {
     public override void Configure()
     {
@@ -12,10 +13,19 @@ public class GetBoardsEndpoint(IMediator _mediator) : EndpointWithoutRequest
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(CancellationToken ct)
+    private readonly IRepository<Domain.Entities.Board> _repository;
+    private readonly IMapper _mapper;
+
+    public GetBoardsEndpoint(IRepository<Domain.Entities.Board> repository, IMapper mapper)
     {
-        await Send.OkAsync(await _mediator.Send(new GetBoardsQuery(), ct), ct);
+        _repository = repository;
+        _mapper = mapper;
+    }
+    public override async Task HandleAsync(CancellationToken cancellationToken)
+    {
+        var entities = await _repository.GetAllAsync(cancellationToken, true, b => b.BoardColumns, b => b.BoardUsers);
+        var boards = _mapper.Map<IList<BoardDto>>(entities);
+        await Send.OkAsync(boards, cancellationToken);
     }
 }
-
 

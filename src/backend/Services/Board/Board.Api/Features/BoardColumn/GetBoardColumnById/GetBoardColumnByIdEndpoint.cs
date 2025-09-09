@@ -1,20 +1,36 @@
-using Board.Application.Queries.BoardColumns.GetBoardColumnById;
+using Board.Application.DTOs;
+using Board.Application.Interfaces;
 using FastEndpoints;
-using IMediator = MediatR.IMediator;
+using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.BoardColumn.GetBoardColumnById;
 
-public class GetBoardColumnByIdEndpoint(IMediator _mediator) : EndpointWithoutRequest
+public class GetBoardColumnByIdEndpoint : EndpointWithoutRequest
 {
-	public override void Configure()
-	{
-		Get("/api/boards/{boardId}/columns/{id}");
-		AllowAnonymous();
-	}
 
-	public override async Task HandleAsync(CancellationToken ct)
-	{
-		Guid id = Route<Guid>("id");
-		await Send.OkAsync(await _mediator.Send(new GetBoardColumnByIdQuery { Id = id }, ct), ct);
-	}
-} 
+    private readonly IRepository<Domain.Entities.BoardColumn> _repository;
+    private readonly IMapper _mapper;
+
+    public GetBoardColumnByIdEndpoint(IRepository<Domain.Entities.BoardColumn> repository, IMapper mapper)
+    {
+        _repository = repository;
+        _mapper = mapper;
+    }
+    public override void Configure()
+    {
+        Get("/api/boards/{boardId}/columns/{id}");
+        AllowAnonymous();
+    }
+
+    public override async Task HandleAsync(CancellationToken cancellationToken)
+    {
+        Guid id = Route<Guid>("id");
+
+        Domain.Entities.BoardColumn entity = await _repository.GetAsync(x => x.Id == id, cancellationToken);
+        BoardColumnDto response = entity == null
+            ? null
+            : _mapper.Map<BoardColumnDto>(entity);
+
+        await Send.OkAsync(response, cancellationToken);
+    }
+}

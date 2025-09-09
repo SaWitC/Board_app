@@ -20,6 +20,14 @@ export class BoardsListComponent implements OnInit {
   error: string | null = null;
   selectedBoard: BoardLookupDTO | null = null;
 
+  getUsersCount(board: BoardLookupDTO): number {
+    return (board.boardUsers ?? []).filter(u => u.role === 7).length;
+  }
+
+  getAdminsCount(board: BoardLookupDTO): number {
+    return (board.boardUsers ?? []).filter(u => u.role === 127).length;
+  }
+
   constructor(
     private boardApiService: BoardApiService,
     private router: Router,
@@ -60,11 +68,10 @@ export class BoardsListComponent implements OnInit {
               id: newBoard.id,
               title: newBoard.title,
               description: newBoard.description,
-              users: newBoard.users,
-              admins: newBoard.admins,
-              owners: newBoard.owners
+              modificationDate: newBoard.modificationDate,
+              boardUsers: newBoard.boardUsers ?? []
             };
-            this.boards.push(newBoardLookup);
+            this.boards = [...this.boards, newBoardLookup];
             console.log('Board created successfully:', newBoard);
           },
           error: (error) => {
@@ -96,36 +103,31 @@ export class BoardsListComponent implements OnInit {
   onEditSelected(): void {
     if (!this.selectedBoard) { return; }
 
-    // Load full board details if needed; here we have enough for title/description
-    const boardDetails: BoardDetailsDTO = {
-      id: this.selectedBoard.id,
-      title: this.selectedBoard.title,
-      description: this.selectedBoard.description,
-      users: this.selectedBoard.users ?? [],
-      admins: this.selectedBoard.admins ?? [],
-      owners: this.selectedBoard.owners ?? [],
-      modificationDate: new Date()
-    };
-
-    this.dialogService.openEditBoardModal(boardDetails).subscribe((updateDto?: UpdateBoardDTO) => {
-      if (updateDto) {
-        this.boardApiService.updateBoard(updateDto).subscribe({
-          next: (updated) => {
-            this.boards = this.boards.map(b => b.id === updated.id ? ({
-              id: updated.id,
-              title: updated.title,
-              description: updated.description,
-              users: updated.users,
-              admins: updated.admins,
-              owners: updated.owners,
-              modificationDate: updated.modificationDate
-            }) : b);
-          },
-          error: (err) => {
-            console.error('Error updating board:', err);
-            this.error = 'Failed to update board';
+    this.boardApiService.getBoardById(this.selectedBoard.id).subscribe({
+      next: (boardDetails: BoardDetailsDTO) => {
+        this.dialogService.openEditBoardModal(boardDetails).subscribe((updateDto?: UpdateBoardDTO) => {
+          if (updateDto) {
+            this.boardApiService.updateBoard(updateDto).subscribe({
+              next: (updated) => {
+                this.boards = this.boards.map(b => b.id === updated.id ? ({
+                  id: updated.id,
+                  title: updated.title,
+                  description: updated.description,
+                  modificationDate: updated.modificationDate,
+                  boardUsers: updated.boardUsers ?? []
+                }) : b);
+              },
+              error: (err) => {
+                console.error('Error updating board:', err);
+                this.error = 'Failed to update board';
+              }
+            });
           }
         });
+      },
+      error: (err) => {
+        console.error('Error loading board details:', err);
+        this.error = 'Failed to load board details';
       }
     });
   }

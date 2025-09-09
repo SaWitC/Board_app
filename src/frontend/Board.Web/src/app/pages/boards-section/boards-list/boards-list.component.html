@@ -44,8 +44,8 @@
         </div>
         <p class="board-description">{{ board.description }}</p>
         <div class="board-meta">
-          <span class="users-count">{{ board.users?.length || 0 }} {{ 'BOARDS_LIST.USERS' | translate }}</span>
-          <span class="admins-count">{{ board.admins?.length || 0 }} {{ 'BOARDS_LIST.ADMINS' | translate }}</span>
+          <span class="users-count">{{ getUsersCount(board) }} {{ 'BOARDS_LIST.USERS' | translate }}</span>
+          <span class="admins-count">{{ getAdminsCount(board) }} {{ 'BOARDS_LIST.ADMINS' | translate }}</span>
         </div>
       </div>
 
