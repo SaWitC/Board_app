@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable } from "rxjs";
     providedIn: 'root'
 })
 export class UserService {
+    //User board permissions
     private permissionsSubject$$: BehaviorSubject<string[] | null> = new BehaviorSubject<string[] | null>(null);
 
     constructor() { }
@@ -22,8 +23,5 @@ export class UserService {
         return this.permissionsSubject$$.asObservable();
     }
 
-    public hasEditorPermission(): boolean {
-        return this.permissionsSubject$$.value?.includes('Editor') ?? false
-    }
 }
 

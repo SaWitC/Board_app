@@ -60,7 +60,6 @@ export class ProfileComponent implements OnInit {
       this.translateService.use(this.selectedLanguage);
     }
 
-    this.isEditor = this.userService.hasEditorPermission();
     this.authService.user$.subscribe((user) => {
       this.userDetails = user;
     });
