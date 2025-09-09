@@ -1,16 +1,19 @@
 using Board.Application.DTOs;
 using Board.Application.Interfaces;
 using FastEndpoints;
+using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.BoardColumn.UpdateBoardColumn;
 
 public class UpdateBoardColumnEndpoint : Endpoint<UpdateBoardColumnRequest>
 {
     private readonly IRepository<Domain.Entities.BoardColumn> _repository;
+    private readonly IMapper _mapper;
 
-    public UpdateBoardColumnEndpoint(IRepository<Domain.Entities.BoardColumn> repository)
+    public UpdateBoardColumnEndpoint(IRepository<Domain.Entities.BoardColumn> repository, IMapper mapper)
     {
         _repository = repository;
+        _mapper = mapper;
     }
 
     public override void Configure()
@@ -32,12 +35,7 @@ public class UpdateBoardColumnEndpoint : Endpoint<UpdateBoardColumnRequest>
 
         Domain.Entities.BoardColumn updated = await _repository.UpdateAsync(entity, cancellationToken);
 
-        BoardColumnDto response = new BoardColumnDto
-        {
-            Id = updated.Id,
-            Title = updated.Title,
-            Description = updated.Description
-        };
+        var response = _mapper.Map<BoardColumnDto>(updated);
         await Send.OkAsync(response, cancellationToken);
     }
 }

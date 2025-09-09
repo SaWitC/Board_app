@@ -25,16 +25,14 @@ export class BoardApiService {
 		const payload = {
 			title: board.title,
 			description: board.description,
-			users: board.users,
-			admins: board.admins,
-			owners: board.owners,
+			boardUsers: board.boardUsers,
 			boardColumns: board.boardColumns
 		};
 		return this.api.post<any>(`/boards`, payload).pipe(map(x => this.mapBoardDetails(x)));
 	}
 
 	public updateBoard(board: UpdateBoardDTO): Observable<BoardDetailsDTO> {
-		const payload = { title: board.title, description: board.description };
+		const payload = { title: board.title, description: board.description, boardUsers: board.boardUsers, boardColumns: board.boardColumns };
 		return this.api.put<any>(`/boards/${board.id}`, payload).pipe(map(x => this.mapBoardDetails(x)));
 	}
 
@@ -55,9 +53,8 @@ export class BoardApiService {
 			id: String(source.id),
 			title: source.title,
 			description: source.description,
-			users: source.users ?? [],
-			admins: source.admins ?? [],
-			owners: source.owners ?? []
+			boardUsers: source.boardUsers ?? [],
+			modificationDate: source.modificationDate ? new Date(source.modificationDate) : undefined
 		};
 	}
 
@@ -66,9 +63,8 @@ export class BoardApiService {
 			id: String(source.id),
 			title: source.title,
 			description: source.description,
-			users: source.users ?? [],
-			admins: source.admins ?? [],
-			owners: source.owners ?? [],
+			boardUsers: source.boardUsers ?? [],
+			boardColumns: (source.boardColumns ?? []).map((c: any) => ({ id: String(c.id), title: c.title, description: c.description })),
 			modificationDate: new Date(source.modificationDate)
 		};
 	}

@@ -1,5 +1,6 @@
 using Board.Api.Configuration;
 using Board.Api.Features.Board.CreateBoard;
+using Board.Application.Mapping;
 using Board.Domain.Options;
 using Board.Infrastructure.Data;
 using Board.ServiceDefaults;
@@ -29,6 +30,7 @@ services.AddControllers();
 
 // Register Application validators and handlers
 services.AddValidatorsFromAssembly(typeof(CreateBoardValidator).Assembly);
+services.AddAutoMapper(typeof(BoardMappingProfile).Assembly);
 
 builder.AddDatabase<BoardDbContext, ConnectionStringsOptions>(x => x.BoardDbConnectionString);
 services.ConfigureAuth(authOptions)

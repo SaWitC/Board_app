@@ -1,6 +1,7 @@
 using Board.Application.DTOs;
 using Board.Application.Interfaces;
 using FastEndpoints;
+using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.Board.GetBoardById;
 
@@ -13,35 +14,25 @@ public class GetBoardByIdEndpoint : EndpointWithoutRequest
     }
 
     private readonly IRepository<Domain.Entities.Board> _repository;
+    private readonly IMapper _mapper;
 
-    public GetBoardByIdEndpoint(IRepository<Domain.Entities.Board> repository)
+    public GetBoardByIdEndpoint(IRepository<Domain.Entities.Board> repository, IMapper mapper)
     {
         _repository = repository;
+        _mapper = mapper;
     }
 
     public override async Task HandleAsync(CancellationToken cancellationToken)
     {
         Guid id = Route<Guid>("id");
-        Domain.Entities.Board entity = await _repository.GetAsync(x => x.Id == id, cancellationToken);
+        Domain.Entities.Board entity = await _repository.GetAsync(x => x.Id == id, cancellationToken, true, x => x.BoardColumns, x => x.BoardUsers);
         if (entity == null)
         {
             await Send.OkAsync(null, cancellationToken);
         }
 
-        BoardDto response = new BoardDto
-        {
-            Id = entity.Id,
-            Title = entity.Title,
-            Description = entity.Description,
-            //TODO: add guid -> email mapping
-            Users = [.. entity.Users.Select(u => u.ToString())],
-            Admins = [.. entity.Admins.Select(a => a.ToString())],
-            Owners = [.. entity.Owners.Select(o => o.ToString())],
-            ModificationDate = entity.ModificationDate
-        };
-
+        var response = _mapper.Map<BoardDto>(entity);
         await Send.OkAsync(response, cancellationToken);
     }
 }
-
 

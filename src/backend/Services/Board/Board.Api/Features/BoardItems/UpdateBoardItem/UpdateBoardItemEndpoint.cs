@@ -2,16 +2,19 @@ using Board.Application.DTOs;
 using Board.Application.Interfaces;
 using Board.Domain.Entities;
 using FastEndpoints;
+using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.BoardItems.UpdateBoardItem;
 
 public class UpdateBoardItemEndpoint : Endpoint<UpdateBoardItemRequest>
 {
     private readonly IRepository<BoardItem> _repository;
+    private readonly IMapper _mapper;
 
-    public UpdateBoardItemEndpoint(IRepository<BoardItem> repository)
+    public UpdateBoardItemEndpoint(IRepository<BoardItem> repository, IMapper mapper)
     {
         _repository = repository;
+        _mapper = mapper;
     }
     public override void Configure()
     {
@@ -38,21 +41,8 @@ public class UpdateBoardItemEndpoint : Endpoint<UpdateBoardItemRequest>
         entity.ModificationDate = DateTimeOffset.UtcNow;
 
         BoardItem updated = await _repository.UpdateAsync(entity, cancellationToken);
-        BoardItemDto response = new BoardItemDto
-        {
-            Id = updated.Id,
-            Title = updated.Title,
-            Description = updated.Description,
-            BoardColumnId = updated.BoardColumnId,
-            Priority = updated.Priority,
-            AssigneeId = updated.AssigneeId,
-            DueDate = updated.DueDate,
-            ModificationDate = updated.ModificationDate,
-            CreatedTime = updated.CreatedTime
-        };
+        var response = _mapper.Map<BoardItemDto>(updated);
 
         await Send.OkAsync(response, cancellationToken);
     }
 }
-
-

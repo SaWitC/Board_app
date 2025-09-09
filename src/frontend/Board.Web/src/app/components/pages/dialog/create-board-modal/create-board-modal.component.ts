@@ -58,6 +58,22 @@ export class CreateBoardModalComponent implements OnInit {
         boardTitle: this.data.board.title,
         boardDescription: this.data.board.description
       });
+
+      // Preselect users/admins by role based on boardUsers
+      const boardUsers = this.data.board.boardUsers ?? [];
+      this.selectedUsers = boardUsers.filter(u => u.role === 7).map(u => ({ id: u.email, email: u.email }));
+      this.selectedAdmins = boardUsers.filter(u => u.role === 127).map(u => ({ id: u.email, email: u.email }));
+
+      // Prefill columns with existing values
+      const arr = this.boardForm.get('boardColumns') as FormArray;
+      arr.clear();
+      (this.data.board.boardColumns ?? []).forEach(c => {
+        arr.push(this.fb.group({
+          id: [c.id || ''],
+          columnTitle: [c.title, Validators.required],
+          columnDescription: [c.description, Validators.required]
+        }));
+      });
     } else {
       this.addColumn();
     }
@@ -106,19 +122,28 @@ export class CreateBoardModalComponent implements OnInit {
       const formValue = this.boardForm.value;
 
       if (this.data?.mode === 'edit' && this.data.board) {
+        const boardColumns = formValue.boardColumns.map((column: any) => ({
+          id: column.id,
+          title: column.columnTitle,
+          description: column.columnDescription
+        }));
+
         const updateData: UpdateBoardDTO = {
           id: this.data.board.id,
           title: formValue.boardTitle,
           description: formValue.boardDescription,
-          users: this.data.board.users ?? [],
-          admins: this.data.board.admins ?? [],
-          owners: this.data.board.owners ?? []
+          boardUsers: [
+            ...this.selectedUsers.map(u => ({ email: u.email, role: 7 })),
+            ...this.selectedAdmins.map(a => ({ email: a.email, role: 127 }))
+          ],
+          boardColumns: boardColumns
         };
         this.dialogRef.close(updateData);
         return;
       }
 
-      const boardColumns: BoardColumnDTO[] = formValue.boardColumns.map((column: any) => ({
+      const boardColumns: any[] = formValue.boardColumns.map((column: any) => ({
+        id: column.id,
         title: column.columnTitle,
         description: column.columnDescription
       }));
@@ -126,9 +151,10 @@ export class CreateBoardModalComponent implements OnInit {
       const boardData: AddBoardDTO = {
         title: formValue.boardTitle,
         description: formValue.boardDescription,
-        users: this.selectedUsers.map(user => user.email),
-        admins: this.selectedAdmins.map(admin => admin.email),
-        owners: [],
+        boardUsers: [
+          ...this.selectedUsers.map(u => ({ email: u.email, role: 7 })),
+          ...this.selectedAdmins.map(a => ({ email: a.email, role: 127 }))
+        ],
         boardColumns: boardColumns
       };
 

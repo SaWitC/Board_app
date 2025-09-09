@@ -20,6 +20,8 @@ export { BoardDetailsDTO } from './board/board-details-DTO.interface';
 export { UpdateBoardDTO } from './board/update-board-DTO.interface';
 export { AddBoardDTO } from './board/add-board-DTO.interface';
 export { BoardColumnDTO } from './board/add-board-DTO.interface';
+export { BoardUserDTO } from './board/board-user-DTO.interface';
+export { UserAccess } from './enums/user-access.enum';
 
 
 
