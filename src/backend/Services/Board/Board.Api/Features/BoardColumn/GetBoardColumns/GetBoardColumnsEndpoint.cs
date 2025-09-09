@@ -1,20 +1,43 @@
-using Board.Application.Queries.BoardColumns.GetBoardColumns;
+using Board.Application.DTOs;
+using Board.Application.Interfaces;
 using FastEndpoints;
-using MediatR;
 
 namespace Board.Api.Features.BoardColumn.GetBoardColumns;
 
-public class GetBoardColumnsEndpoint(IMediator _mediator) : EndpointWithoutRequest
+public class GetBoardColumnsEndpoint : Endpoint<GetBoardColumnsRequest>
 {
-	public override void Configure()
-	{
-		Get("/api/boards/{boardId}/columns");
-		AllowAnonymous();
-	}
+    private readonly IRepository<Domain.Entities.Board> _boardRepository;
 
-	public override async Task HandleAsync(CancellationToken ct)
-	{
+    public GetBoardColumnsEndpoint(IRepository<Domain.Entities.Board> boardRepository)
+    {
+        _boardRepository = boardRepository;
+    }
+
+    public override void Configure()
+    {
+        Get("/api/boards/{boardId}/columns");
+        AllowAnonymous();
+    }
+
+    public override async Task HandleAsync(GetBoardColumnsRequest request, CancellationToken cancellationToken)
+    {
         Guid boardId = Route<Guid>("boardId");
-        await Send.OkAsync(await _mediator.Send(new GetBoardColumnsQuery { BoardId = boardId }, ct), ct);
-	}
-} 
+
+        Domain.Entities.Board board = await _boardRepository.GetAsync(b => b.Id == boardId, cancellationToken, true, b => b.BoardColumns);
+        if (board == null)
+        {
+            await Send.OkAsync(Array.Empty<BoardColumnDto>(), cancellationToken);
+        }
+
+        List<BoardColumnDto> response = board.BoardColumns
+            .Select(c => new BoardColumnDto
+            {
+                Id = c.Id,
+                Title = c.Title,
+                Description = c.Description
+            })
+            .ToList();
+
+        await Send.OkAsync(response, cancellationToken);
+    }
+}

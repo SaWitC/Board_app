@@ -1,20 +1,33 @@
-using Board.Application.Commands.BoardColumns.DeleteBoardColumn;
+using Board.Application.Interfaces;
 using FastEndpoints;
-using IMediator = MediatR.IMediator;
 
 namespace Board.Api.Features.BoardColumn.DeleteBoardColumn;
 
-public class DeleteBoardColumnEndpoint(IMediator _mediator) : EndpointWithoutRequest
+public class DeleteBoardColumnEndpoint : EndpointWithoutRequest
 {
-	public override void Configure()
-	{
-		Delete("/api/boards/{boardId}/columns/{id}");
-		AllowAnonymous();
-	}
+    private readonly IRepository<Domain.Entities.BoardColumn> _repository;
 
-	public override async Task HandleAsync(CancellationToken ct)
-	{
-		Guid id = Route<Guid>("id");
-		await Send.OkAsync(await _mediator.Send(new DeleteBoardColumnCommand { Id = id }, ct), ct);
-	}
-} 
+    public DeleteBoardColumnEndpoint(IRepository<Domain.Entities.BoardColumn> repository)
+    {
+        _repository = repository;
+    }
+    public override void Configure()
+    {
+        Delete("/api/boards/{boardId}/columns/{id}");
+        AllowAnonymous();
+    }
+
+    public override async Task HandleAsync(CancellationToken cancellationToken)
+    {
+        Guid id = Route<Guid>("id");
+        Domain.Entities.BoardColumn entity = await _repository.GetAsync(x => x.Id == id, cancellationToken, false);
+        if (entity == null)
+        {
+            await Send.OkAsync(false, cancellationToken);
+        }
+
+        await _repository.DeleteAsync(entity, cancellationToken);
+        await Send.OkAsync(true, cancellationToken);
+
+    }
+}
