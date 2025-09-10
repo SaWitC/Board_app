@@ -29,6 +29,14 @@ export class TaskCardComponent {
     [TaskType.USER_STORY]: 'user-story'
   };
 
+  public taskTypeClassMapPriority: Record<TaskPriority, string> = {
+    [TaskPriority.LOW]: 'priority-color-low',
+    [TaskPriority.MEDIUM]: 'priority-color-medium',
+    [TaskPriority.HIGH]: 'priority-color-high',
+    [TaskPriority.URGENT]: 'priority-color-urgent'
+  };
+
+
 
 
     onDragStart(event: DragEvent): void {
@@ -43,16 +51,6 @@ export class TaskCardComponent {
     this.isDragging = false;
   }
 
-  getPriorityColor(priority: TaskPriority): string {
-    const colors = {
-      [TaskPriority.LOW]: '#4caf50',
-      [TaskPriority.MEDIUM]: '#ff9800',
-      [TaskPriority.HIGH]: '#f44336',
-      [TaskPriority.URGENT]: '#9c27b0'
-    };
-    return colors[priority] || '#757575';
-  }
-
   getPriorityLabel(priority: TaskPriority): string {
     const labels = {
       [TaskPriority.LOW]: 'Низкий',
@@ -60,6 +58,7 @@ export class TaskCardComponent {
       [TaskPriority.HIGH]: 'Высокий',
       [TaskPriority.URGENT]: 'Срочный'
     };
+
     return labels[priority] || 'Неизвестно';
   }
 

@@ -1,35 +1,51 @@
 @mixin light-theme {
-  --background: rgb(235, 236, 240);
-  --background-secondary: rgb(246, 246, 246);
+  --header-letter: black;
+  --background: #fafafa;
+  --sidebar-background:#FFFFFF;
+  --background-secondary: #FFFFFF;
+  --background-secondary: #FFFFFF;
   --background-secondary-alpha: rgb(246, 246, 246);
   --background-tertiary: rgb(249, 249, 249);
-  --background-content: rgb(255, 255, 255);
+  --background-content: #FFFFFF;
   --background-modal: rgb(255, 255, 255);
   --background-modal-inverse: rgb(45, 45, 45);
   --background-over-alpha: rgb(29, 29, 29);
-  --background-accent: rgb(0, 118, 248);
-  --background-accent-themed: rgb(38, 136, 233);
-  --background-accent-tint: rgb(90, 158, 255);
+  --background-accent: rgb(246, 246, 246);
+  --background-accent-themed: rgb(39, 143, 253);
+  --background-accent-tint: rgb(246, 246, 246);
   --field-background: rgb(242, 244, 245);
   --background-positive: rgb(44, 188, 80);
   --background-negative: rgb(252, 62, 46);
-  --background-negative-tint: rgb(255, 235, 235);
+  --background-negative-tint: rgb(238, 177, 177);
   --background-warning: rgb(255, 244, 229);
+  --box-shadow-color-secondary: #e2e2e2;
+
+  //TEXT
   --text-color: black;
   --text-color-negative: rgb(252, 62, 46);
 
-  --border-color-negative: rgb(252, 62, 46);
-  --border-color-accent: rgb(0, 118, 248);
-  --border-color-negative-tint: rgb(255, 121, 109);
+  // BORDERS
+  --border-color-negative: #e57373;
+  --border-color-accent: #5b9dff;
+  --border-color-negative-tint: #ffb3b3;
+
+  // PRIORITY
+  --priority-color-low: #81c784;
+  --priority-color-medium: #ffb74d;
+  --priority-color-high: #ff8a65;
+  --priority-color-urgent: #e57373;
 
 
-  /* Light theme scrollbar styles */
-  --scrollbar-bg: #f1f1f1;
-  /* Light track background */
-  --scrollbar-thumb: #a9a9a9;
-  /* Light thumb color */
-  --scrollbar-thumb-hover: #555;
-  /* Thumb hover color */
+  //BOARD
+  --board-background-color: #2a2a2a;
+  --board-header-background-color: #f9f9f9;
+
+  //BOARD COLUMN
+  --board-column-background-color: #f9f9f9;
+  //BOARD ITEM
+  --board-task-background-color: #ffffff;
+
+
 
   --bs-custom-btn-color: #fff !important;
   --bs-custom-btn-bg: #0d6efd !important;
@@ -51,18 +67,19 @@
     color: var(--text-color);
   }
 
+
   --btn-primary-text: rgb(255, 255, 255);
-  --btn-primary-text-background: rgb(0, 118, 248);
+  --btn-primary-text-background: rgb(246, 246, 246);
 
   --input-background: rgb(255, 255, 255);
-  --input-border-active: rgb(0, 118, 248);
-  --input-text: rgb(29, 29, 29);
+  --input-border-active: rgb(51, 146, 248);
+  --input-text: rgb(53, 53, 53);
   --input-bg-active: rgb(242, 244, 245);
   /* Slightly tinted */
 
   --ng-select-background: #ffffff;
   /* White background */
-  --ng-select-text-color: #000000;
+  --ng-select-text-color: rgb(53, 53, 53);
   /* Black text */
   --ng-select-border-color: var(--bs-border-color);
   /* Light gray border */
@@ -76,15 +93,18 @@
   /* Disabled options in gray */
   --ng-select-placeholder-color: #888888;
   /* Placeholder text */
+  --ng-select-disabled-background: #bebdbd;
 
-  --side-menu-active: rgb(0, 118, 248);
+  --side-menu-active: #ebe9e9;
 
+  --mat-table-even-row: #fafafa;
+  --mat-table-odd-row: #ffffff;
+  --mat-table-row-hover-background-color: #dfdddd;
   --mat-standard-button-toggle-divider-color: #dcdcdc;
-  --mat-standard-button-toggle-selected-state-text-color: black;
+  --mat-standard-button-toggle-selected-state-text-color: rgb(33, 33, 33);
 
-  --board-task-background-color: white;
-  // --mat-table-background-color: white;
-  --mat-table-row-item-label-text-color: #000000;
+  --mat-table-background-color: white;
+  --mat-table-row-item-label-text-color: rgb(33, 33, 33);
 
   --mat-table-row-item-outline-color: var(--ng-select-border-color);
   --mat-table-header-headline-color: var(--text-color);
@@ -95,11 +115,29 @@
 
   --mdc-dialog-container-color: #f8f8f8;
 
-  --mdc-text-button-label-text-color: var(--background-accent);
+  --mdc-text-button-label-text-color: var(--text-color);
 
   --mat-select-panel-background-color: #f1f1f1;
   --mat-option-selected-state-label-text-color: var(--text-color);
   --mat-option-selected-state-layer-color: #e0e0e0;
-  --mat-standard-button-toggle-selected-state-background-color: #e0e0e0;
-  --mat-autocomplete-background-color: var(--ng-select-background);
+
+  --mat-datepicker-calendar-date-text-color: var(--text-color);
+  --mdc-filled-text-field-container-color: var(--input-background);
+  --mat-datepicker-calendar-container-background-color: var(--input-background);
+  --mat-datepicker-calendar-header-text-color: var(--text-color);
+  --mat-datepicker-calendar-period-button-text-color: var(--text-color);
+  --mat-paginator-enabled-icon-color: var(--ng-select-text-color);
+  --mat-paginator-disabled-icon-color: var(--ng-select-disabled-option-color);
+
+
+  /* Light theme scrollbar styles */
+  --scrollbar-bg: #f1f1f1;
+  /* Light track background */
+  --scrollbar-thumb: #a9a9a9;
+  /* Light thumb color */
+  --scrollbar-thumb-hover: #555;
+  /* Thumb hover color */
+
 }
+
+

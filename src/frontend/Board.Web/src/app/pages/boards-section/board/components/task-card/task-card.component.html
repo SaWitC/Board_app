@@ -24,7 +24,7 @@
   <div class="task-meta">
     <div class="task-priority">
       <span class="priority-badge"
-            [style.background-color]="getPriorityColor(task.priority)">
+      [ngClass]="taskTypeClassMapPriority[task.priority]">
         {{ getPriorityLabel(task.priority) }}
       </span>
     </div>

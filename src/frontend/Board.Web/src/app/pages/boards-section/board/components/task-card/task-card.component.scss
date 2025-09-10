@@ -108,6 +108,22 @@
         font-weight: 500;
         color: white;
         text-transform: uppercase;
+
+        &.priority-color-low {
+          background-color: var(--priority-color-low);
+        }
+
+        &.priority-color-medium {
+          background-color: var(--priority-color-medium);
+        }
+
+        &.priority-color-high {
+          background-color: var(--priority-color-high);
+        }
+
+        &.priority-color-urgent {
+          background-color: var(--priority-color-urgent);
+        }
       }
     }
 
