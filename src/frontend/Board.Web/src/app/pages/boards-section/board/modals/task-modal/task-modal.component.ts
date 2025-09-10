@@ -63,8 +63,8 @@ export class TaskModalComponent implements OnInit {
   private initForm(): void {
 
     this.taskForm = this.fb.group({
-      title: [this.task?.title || '', [Validators.required, Validators.minLength(3)]],
-      description: [this.task?.description || ''],
+      title: [this.task?.title || '', [Validators.required, Validators.minLength(3), Validators.maxLength(500)]],
+      description: [this.task?.description || '', [Validators.required]],
       priority: [this.task?.priority || TaskPriority.MEDIUM, Validators.required],
       assignee: [this.task?.assignee || ''],
       dueDate: [this.task?.dueDate ? new Date(this.task.dueDate) : undefined],
