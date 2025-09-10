@@ -1,9 +1,11 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task } from 'src/app/core/models/task.interface';
 import { TaskStatus } from 'src/app/core/models/enums/task-status.enum';
 import { TaskPriority } from 'src/app/core/models/enums/task-priority.enum';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TaskModalData } from 'src/app/pages/boards-section/board/modals/task-modal/task-modal.component';
 
 @Component({
     selector: 'app-task-modal',
@@ -13,28 +15,30 @@ import { TaskPriority } from 'src/app/core/models/enums/task-priority.enum';
     imports: [CommonModule, ReactiveFormsModule]
 })
 export class TaskModalComponent implements OnInit {
-  @Input() task?: Task;
-  @Input() isOpen = false;
-  @Output() saveTask = new EventEmitter<Task>();
-  @Output() closeModal = new EventEmitter<void>();
-
   taskForm!: FormGroup;
   taskStatuses = Object.values(TaskStatus);
   taskPriorities = Object.values(TaskPriority);
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    public dialogRef: MatDialogRef<TaskModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: TaskModalData
+
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
   }
 
+  public task?: Task;
+
   ngOnChanges(): void {
-    if (this.isOpen) {
-      this.initForm();
-    }
+    this.initForm();
   }
 
   private initForm(): void {
+    this.task = this.data.task;
+
     this.taskForm = this.fb.group({
       title: [this.task?.title || '', [Validators.required, Validators.minLength(3)]],
       description: [this.task?.description || ''],
@@ -66,7 +70,7 @@ export class TaskModalComponent implements OnInit {
           ...taskData,
           updatedAt: new Date()
         };
-        this.saveTask.emit(updatedTask);
+        this.dialogRef.close(updatedTask);
       } else {
         // Создание новой задачи
         const newTask = {
@@ -74,13 +78,13 @@ export class TaskModalComponent implements OnInit {
           createdAt: new Date(),
           updatedAt: new Date()
         };
-        this.saveTask.emit(newTask as Task);
+        this.dialogRef.close(newTask as Task);
       }
     }
   }
 
   onClose(): void {
-    this.closeModal.emit();
+    this.dialogRef.close();
   }
 
   onBackdropClick(event: Event): void {

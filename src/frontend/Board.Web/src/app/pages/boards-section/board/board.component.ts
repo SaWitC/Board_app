@@ -114,11 +114,10 @@ export class BoardComponent implements OnInit {
   onAddTask(data: {boardColumnId: string}): void {
     this.dialogService.openTaskModal({
       mode: 'create',
-      boardColumns: this.columns,
-      selectedBoardColumnId: data.boardColumnId
     }).subscribe((task) => {
       if (task) {
         const createDto = taskToCreateDto(task);
+        createDto.boardColumnId = data.boardColumnId;
         this.boardItemService.addBoardItem(createDto).subscribe({
           next: (created) => {
             this.tasks = [...this.tasks, boardItemToTask(created)];
@@ -132,14 +131,13 @@ export class BoardComponent implements OnInit {
   onEditTask(data: {task: Task, boardColumnId: string}): void {
     this.dialogService.openTaskModal({
       mode: 'edit',
-      boardColumns: this.columns,
-      selectedBoardColumnId: data.boardColumnId,
       task: data.task
     }).subscribe((updatedTask) => {
       if (updatedTask) {
         this.boardItemService.getBoardItemById(data.task.id).subscribe({
           next: (existing) => {
             const updateDto = taskToUpdateDto(existing, updatedTask);
+            updateDto.boardColumnId = data.boardColumnId;
             this.boardItemService.updateBoardItem(data.task.id, updateDto).subscribe({
               next: (res) => {
                 const mapped = boardItemToTask(res);
