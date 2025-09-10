@@ -1,4 +1,4 @@
-<div class="modal-overlay" *ngIf="isOpen" (click)="onBackdropClick($event)">
+<div class="modal-overlay" (click)="onBackdropClick($event)">
   <div class="modal-content">
     <div class="modal-header">
       <h2>{{ task ? 'Редактировать задачу' : 'Создать новую задачу' }}</h2>
