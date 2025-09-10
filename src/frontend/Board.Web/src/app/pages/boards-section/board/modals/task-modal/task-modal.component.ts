@@ -43,7 +43,7 @@ export interface TaskModalData {
 export class TaskModalComponent implements OnInit {
   task?: BoardItem;
   taskForm!: FormGroup;
-  taskPriorities = Object.values(TaskPriority) as TaskPriority[];
+  taskPriorities = Object.values(TaskPriority).filter(k => !isNaN(Number(k)))  as TaskPriority[];
   taskTypes = Object.values(TaskType).filter(k => !isNaN(Number(k))) as TaskType[];
   dialogTitle: string;
   submitButtonText: string;
