@@ -1,0 +1,40 @@
+<div class="dropdown ms-auto">
+  <button class="d-flex align-items-center profile" type="button" aria-expanded="false" id="dropdownMenuClickableInside"
+    data-bs-auto-close="outside" data-bs-toggle="dropdown">
+    <img [src]="userDetails?.picture" class="rounded-circle me-2" width="35" height="35">
+    <div class="text-start">
+      <span class="d-block text">{{userDetails?.name}}</span>
+    </div>
+    <i style="font-size: 8px;" class="mr-0 ml-0 bi bi-chevron-down ms-2 text"></i>
+  </button>
+
+  <div aria-labelledby="dropdownMenuClickableInside" class="dropdown-menu dropdown-menu-end p-3 shadow-lg profile-card">
+    <!-- Настройки -->
+    <span class="dropdown-header p-0 ps-2 text">{{'GENERAL.SETTINGS'|translate}}</span>
+    <div class="dropdown-divider"></div>
+    <!-- Язык -->
+    <div class="d-flex justify-content-between align-items-center px-2">
+      <span class="text">{{'GENERAL.LANGUAGE'|translate}}</span>
+      <ng-select (click)="$event.stopPropagation()" [(ngModel)]="selectedLanguage" [clearable]="false"
+        [items]="languages" bindLabel="description" bindValue="code" (change)="onLanguageChange($event)"
+        class="me-2 pt-1" style="width: 65%">
+      </ng-select>
+    </div>
+
+    <!-- Тема -->
+    <div class="d-flex justify-content-between align-items-center px-2 mt-3 ">
+      <span class="text">{{'GENERAL.THEME'|translate}}</span>
+      <div class="form-check form-switch" style="width: 95%;">
+        <mat-button-toggle-group (change)="changeTheme()" [(value)]="theme" style="width: 95%;">
+          <mat-button-toggle class="w-100" value="light"><i style="color: rgb(255, 196, 0);"
+              class="bi bi-brightness-high-fill"></i></mat-button-toggle>
+          <mat-button-toggle class="w-100" value="dark"><i class="bi bi-moon-stars-fill"></i></mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+    <!-- Выход -->
+    <div class="dropdown-divider"></div>
+    <div class="logout text-danger mt-2 p-0 ps-2" (click)="logout()"><i
+        class="bi bi-box-arrow-right me-2"></i>{{'GENERAL.LOGOUT'|translate}}</div>
+  </div>
+</div>

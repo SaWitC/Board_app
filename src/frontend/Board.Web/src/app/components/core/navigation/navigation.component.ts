@@ -5,6 +5,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AuthService } from '@auth0/auth0-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { ProfileComponent } from '../profile/profile.component';
 
 @Component({
   selector: 'navigation',
@@ -14,6 +15,7 @@ import { TranslateModule } from '@ngx-translate/core';
     CommonModule,
     FormsModule,
     TranslateModule,
+    ProfileComponent
   ],
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],

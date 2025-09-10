@@ -1,0 +1,26 @@
+@import '../../../../styles.scss';
+
+.profile {
+  background-color: var(--background-secondary);
+  border: none;
+}
+
+.profile-card {
+  background-color: var(--background-secondary);
+  border: solid 1px var(--profile-border-color);
+  width: 310px;
+  border-radius: 12px;
+  height: auto;
+}
+
+.text {
+  color: var(--text-color)
+}
+
+.logout{
+  transition: 0.2s ease all;
+}
+.logout:hover {
+  cursor: pointer;
+  color: rgb(161, 34, 34) !important;
+}

@@ -2,16 +2,19 @@ using Board.Application.DTOs;
 using Board.Application.Interfaces;
 using Board.Domain.Entities;
 using FastEndpoints;
+using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.BoardItems.GetBoardItemById;
 
 public class GetBoardItemByIdEndpoint : EndpointWithoutRequest
 {
     private readonly IRepository<BoardItem> _repository;
+    private readonly IMapper _mapper;
 
-    public GetBoardItemByIdEndpoint(IRepository<BoardItem> repository)
+    public GetBoardItemByIdEndpoint(IRepository<BoardItem> repository, IMapper mapper)
     {
         _repository = repository;
+        _mapper = mapper;
     }
     public override void Configure()
     {
@@ -29,18 +32,7 @@ public class GetBoardItemByIdEndpoint : EndpointWithoutRequest
             await Send.OkAsync(null, cancellationToken);
         }
 
-        BoardItemDto response = new BoardItemDto
-        {
-            Id = entity.Id,
-            Title = entity.Title,
-            Description = entity.Description,
-            BoardColumnId = entity.BoardColumnId,
-            Priority = entity.Priority,
-            AssigneeId = entity.AssigneeId,
-            DueDate = entity.DueDate,
-            ModificationDate = entity.ModificationDate,
-            CreatedTime = entity.CreatedTime
-        };
+        var response = _mapper.Map<BoardItemDto>(entity);
         await Send.OkAsync(response, cancellationToken);
     }
 }

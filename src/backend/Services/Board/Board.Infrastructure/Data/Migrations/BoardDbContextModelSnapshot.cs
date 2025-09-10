@@ -28,9 +28,6 @@ namespace Board.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.PrimitiveCollection<string>("Admins")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(10000)
@@ -39,16 +36,10 @@ namespace Board.Infrastructure.Data.Migrations
                     b.Property<DateTimeOffset>("ModificationDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.PrimitiveCollection<string>("Owners")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
-
-                    b.PrimitiveCollection<string>("Users")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -122,6 +113,29 @@ namespace Board.Infrastructure.Data.Migrations
                     b.ToTable("BoardItems");
                 });
 
+            modelBuilder.Entity("Board.Domain.Entities.BoardUser", b =>
+                {
+                    b.Property<Guid>("BoardId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.HasKey("BoardId", "Email");
+
+                    b.HasIndex("BoardId")
+                        .HasDatabaseName("IX_BoardUsers_BoardId");
+
+                    b.HasIndex("Email")
+                        .HasDatabaseName("IX_BoardUsers_Email");
+
+                    b.ToTable("BoardUser");
+                });
+
             modelBuilder.Entity("Board.Domain.Entities.Tag", b =>
                 {
                     b.Property<Guid>("Id")
@@ -165,6 +179,15 @@ namespace Board.Infrastructure.Data.Migrations
                     b.Navigation("BoardColumn");
                 });
 
+            modelBuilder.Entity("Board.Domain.Entities.BoardUser", b =>
+                {
+                    b.HasOne("Board.Domain.Entities.Board", null)
+                        .WithMany("BoardUsers")
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Board.Domain.Entities.Tag", b =>
                 {
                     b.HasOne("Board.Domain.Entities.BoardItem", null)
@@ -175,6 +198,8 @@ namespace Board.Infrastructure.Data.Migrations
             modelBuilder.Entity("Board.Domain.Entities.Board", b =>
                 {
                     b.Navigation("BoardColumns");
+
+                    b.Navigation("BoardUsers");
                 });
 
             modelBuilder.Entity("Board.Domain.Entities.BoardColumn", b =>

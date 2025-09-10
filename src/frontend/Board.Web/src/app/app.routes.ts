@@ -1,8 +1,7 @@
 import { Routes } from '@angular/router';
-import { BoardsListComponent } from './components/pages/boards-list/boards-list.component';
-import { BoardComponent } from './components/pages/board/board.component';
-import { InfoComponent } from './components/pages/info/info.component';
-import { AppComponent } from './app.component';
+import { BoardComponent } from './pages/boards-section/board/board.component';
+import { BoardsListComponent } from './pages/boards-section/boards-list/boards-list.component';
+import { InfoComponent } from './pages/info/info.component';
 
 export const routes: Routes =  [{
   path: '',
