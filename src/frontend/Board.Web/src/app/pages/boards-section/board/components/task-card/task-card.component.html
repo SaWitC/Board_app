@@ -1,11 +1,10 @@
 <div class="task-card"
-     [class.overdue]="isOverdue()"
      [class.dragging]="isDragging"
      draggable="true"
      (dragstart)="onDragStart($event)"
      (dragend)="onDragEnd($event)">
   <div class="task-header">
-    <h3 class="task-title">{{ task.title }}</h3>
+    <h3 class="task-title" [class.overdue]="isOverdue()">{{ task.title }}</h3>
     <div class="task-actions">
       <button class="btn-icon" (click)="onEdit()" title="Редактировать">
         <i class="material-icons">edit</i>
