@@ -1,5 +1,5 @@
 export enum UserAccess {
-	User = 7,
-	Admin = 127,
-	Owner = 1023
-} 
+	USER = 7,
+	ADMIN = 127,
+	OWNER = 1023
+}

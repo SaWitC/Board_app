@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Task, AddBoardDTO, BoardDetailsDTO, UpdateBoardDTO } from '../models';
+import { BoardItem, AddBoardDTO, BoardDetailsDTO, UpdateBoardDTO } from '../models';
 import { Observable } from 'rxjs';
 import { TaskModalComponent, TaskModalData } from 'src/app/pages/boards-section/board/modals/task-modal/task-modal.component';
 import { CreateBoardModalComponent, CreateBoardModalData } from 'src/app/pages/boards-section/boards-list/modals/create-board-modal/create-board-modal.component';
@@ -12,7 +12,7 @@ export class DialogService {
 
   constructor(private dialog: MatDialog) { }
 
-  openTaskModal(taskModalData: TaskModalData): Observable<Task | undefined> {
+  openTaskModal(taskModalData: TaskModalData): Observable<BoardItem | undefined> {
     const dialogRef: MatDialogRef<TaskModalComponent> = this.dialog.open(TaskModalComponent, {
       width: '1200px',
       maxWidth: '90vw',

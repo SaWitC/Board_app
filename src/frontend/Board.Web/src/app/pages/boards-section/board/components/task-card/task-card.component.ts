@@ -1,7 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input, Output, EventEmitter } from "@angular/core";
-import { Task } from "src/app/core/models";
+import { TaskTypeIconComponent } from "src/app/components/shared/story-icon/task-type-icon.component";
+import { BoardItem } from "src/app/core/models";
 import { TaskPriority } from "src/app/core/models/enums/task-priority.enum";
+import { TaskType } from "src/app/core/models/enums/task-type.enum";
 
 
 @Component({
@@ -9,16 +11,25 @@ import { TaskPriority } from "src/app/core/models/enums/task-priority.enum";
     templateUrl: './task-card.component.html',
     styleUrls: ['./task-card.component.scss'],
     standalone: true,
-    imports: [CommonModule]
+    imports: [CommonModule, TaskTypeIconComponent]
 })
 export class TaskCardComponent {
-  @Input() task!: Task;
-  @Output() editTask = new EventEmitter<Task>();
+  @Input() task!: BoardItem;
+  @Output() editTask = new EventEmitter<BoardItem>();
   @Output() deleteTask = new EventEmitter<string>();
   @Output() moveTask = new EventEmitter<{taskId: string, newStatus: string}>();
 
-  priorities = Object.values(TaskPriority);
-  isDragging = false;
+  public taskTypes = TaskType;
+  public priorities = Object.values(TaskPriority);
+  public isDragging = false;
+
+  public taskTypeClassMap: Record<TaskType, string> = {
+    [TaskType.BUG]: 'bug',
+    [TaskType.HOT_FIX]: 'hot-fix',
+    [TaskType.USER_STORY]: 'user-story'
+  };
+
+
 
     onDragStart(event: DragEvent): void {
     if (event.dataTransfer) {

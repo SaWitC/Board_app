@@ -69,28 +69,14 @@
 
 .board-content {
   overflow-x: auto;
-  overflow-y: scroll; // вертикальный скролл убираем, пусть тянется
-  flex: 1;            // занимает всё доступное пространство
+  overflow-y: scroll;
+  flex: 1;
   display: flex;
 
   .board-columns {
     display: flex;
     gap: 8px;
     height: fit-content;
-    align-items: stretch; // ключевой момент
-    // background-color: red;
+    align-items: stretch;
   }
-
-  // .board-columns > * {
-  //   flex: 1 1 0;
-  //   display: flex;
-  //   background-color: red;
-  //   flex-direction: column; // чтобы внутрянка не ломалась
-  // }
 }
-
-
-app-board{
-  height: 100%;
-}
-

@@ -3,18 +3,31 @@
 <mat-dialog-content>
   <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
     <div class="form-container">
-      <mat-form-field appearance="outline" class="full-width w-100">
-        <input class="w-100" matInput formControlName="title" placeholder="Название">
-        <mat-error *ngIf="taskForm.get('title')?.hasError('required')">
-          Название обязательно
-        </mat-error>
-        <mat-error *ngIf="taskForm.get('title')?.hasError('minlength')">
-          Минимум 3 символа
-        </mat-error>
-      </mat-form-field>
+      <div class="form-row row pt-2">
+        <!--Story type-->
+        <mat-form-field appearance="outline" class="pe-2 col">
+          <mat-label class="form-label">Type</mat-label>
+          <mat-select formControlName="taskType">
+            <mat-option *ngFor="let taskType of taskTypes" [value]="taskType">
+            <app-task-type-icon [taskType]="taskType"></app-task-type-icon>
+            {{  getTaskTypeLabel(taskType) }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width col-10">
+          <input class="w-100" matInput formControlName="title" placeholder="Название">
+          <mat-error *ngIf="taskForm.get('title')?.hasError('required')">
+            Название обязательно
+          </mat-error>
+          <mat-error *ngIf="taskForm.get('title')?.hasError('minlength')">
+            Минимум 3 символа
+          </mat-error>
+        </mat-form-field>
+      </div>
 
       <div class="form-row">
-        <mat-form-field appearance="outline" class="pe-2">
+        <mat-form-field appearance="outline"  class="pe-2">
           <mat-label class="form-label">Исполнитель</mat-label>
           <input matInput formControlName="assignee" placeholder="Введите имя исполнителя">
         </mat-form-field>

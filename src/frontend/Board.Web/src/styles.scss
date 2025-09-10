@@ -160,3 +160,20 @@ ng-select.ng-select-disabled .ng-select-container {
 ng-select input {
   color: var(--text-color) !important;
 }
+
+.wrap-text {
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.icon{
+  color: var(--text-color);
+}

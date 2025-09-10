@@ -8,6 +8,18 @@
   position: relative;
   cursor: grab;
 
+  &.bug {
+    border-left : 4px solid var(--border-color-negative-tint) !important;
+  }
+
+  &.hot-fix {
+    border-left : 4px solid var(--border-color-negative) !important;
+  }
+
+  &.user-story {
+    border-left : 4px solid var(--border-color-accent) !important;
+  }
+
   &:active {
     cursor: grabbing;
   }
@@ -23,11 +35,6 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   }
 
-  &.overdue {
-    border-left-color: var(--background-negative);
-    background-color: var(--background-negative-tint);
-  }
-
   .task-header {
     display: flex;
     justify-content: space-between;
@@ -41,6 +48,10 @@
       color: var(--text-color);
       flex: 1;
       line-height: 1.4;
+
+      &.overdue {
+        color: var(--text-color-negative);
+      }
     }
 
     .task-actions {
