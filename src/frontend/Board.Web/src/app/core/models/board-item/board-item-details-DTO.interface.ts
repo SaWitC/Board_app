@@ -1,3 +1,5 @@
+import { TaskType } from "../enums/task-type.enum";
+
 export interface BoardItemDetailsDTO {
   id: string;
   title: string;
@@ -8,4 +10,5 @@ export interface BoardItemDetailsDTO {
   dueDate: string;
   modificationDate?: string;
   createdTime?: string;
+  taskType: TaskType;
 }

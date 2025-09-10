@@ -10,12 +10,13 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-import { Task } from 'src/app/core/models/task.interface';
-import { BoardColumnLookupDTO } from 'src/app/core/models';
+import { BoardItem } from 'src/app/core/models/board-item.interface';
 import { TaskPriority } from 'src/app/core/models/enums/task-priority.enum';
+import { TaskType } from 'src/app/core/models/enums/task-type.enum';
+import { TaskTypeIconComponent } from 'src/app/components/shared/story-icon/task-type-icon.component';
 
 export interface TaskModalData {
-  task?: Task;
+  task?: BoardItem;
   mode: 'create' | 'edit';
 }
 
@@ -35,13 +36,15 @@ export interface TaskModalData {
         MatDatepickerModule,
         MatNativeDateModule,
         MatIconModule,
-        MatChipsModule
+        MatChipsModule,
+        TaskTypeIconComponent
     ]
 })
 export class TaskModalComponent implements OnInit {
-  task?: Task;
+  task?: BoardItem;
   taskForm!: FormGroup;
-  taskPriorities = Object.values(TaskPriority);
+  taskPriorities = Object.values(TaskPriority) as TaskPriority[];
+  taskTypes = Object.values(TaskType).filter(k => !isNaN(Number(k))) as TaskType[];
   dialogTitle: string;
   submitButtonText: string;
 
@@ -68,18 +71,20 @@ export class TaskModalComponent implements OnInit {
       priority: [this.task?.priority || TaskPriority.MEDIUM, Validators.required],
       assignee: [this.task?.assignee || ''],
       dueDate: [this.task?.dueDate ? new Date(this.task.dueDate) : undefined],
-      tags: [this.task?.tags?.join(', ') || '']
+      tags: [this.task?.tags?.join(', ') || ''],
+      taskType: [this.task?.taskType || TaskType.USER_STORY, Validators.required]
     });
   }
 
   onSubmit(): void {
     if (this.taskForm.valid) {
       const formValue = this.taskForm.value;
-      const taskData: Partial<Task> = {
+      const taskData: Partial<BoardItem> = {
         title: formValue.title,
         description: formValue.description,
         columnId: formValue.columnId,
         priority: formValue.priority,
+        taskType: formValue.taskType,
         assignee: formValue.assignee || undefined,
         dueDate: formValue.dueDate ? new Date(formValue.dueDate) : undefined,
         tags: formValue.tags ? formValue.tags.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag) : undefined
@@ -87,7 +92,7 @@ export class TaskModalComponent implements OnInit {
 
       if (this.task) {
         // Редактирование существующей задачи
-        const updatedTask: Task = {
+        const updatedTask: BoardItem = {
           ...this.task,
           ...taskData,
           updatedAt: new Date()
@@ -100,22 +105,31 @@ export class TaskModalComponent implements OnInit {
           createdAt: new Date(),
           updatedAt: new Date()
         };
-        this.dialogRef.close(newTask as Task);
+        this.dialogRef.close(newTask as BoardItem);
       }
     }
   }
 
-  onClose(): void {
+  public onClose(): void {
     this.dialogRef.close();
   }
 
-  getPriorityLabel(priority: TaskPriority): string {
+  public getPriorityLabel(priority: TaskPriority): string {
     const labels = {
       [TaskPriority.LOW]: 'Низкий',
       [TaskPriority.MEDIUM]: 'Средний',
       [TaskPriority.HIGH]: 'Высокий',
       [TaskPriority.URGENT]: 'Срочный'
     };
-    return labels[priority] || priority;
+    return labels[priority] || priority.toString();
+  }
+
+  public getTaskTypeLabel(taskType: TaskType): string {
+    const labels = {
+      [TaskType.BUG]: 'Bug',
+      [TaskType.HOT_FIX]: 'Hot Fix',
+      [TaskType.USER_STORY]: 'User Story'
+    };
+    return labels[taskType] || taskType.toString();
   }
 }

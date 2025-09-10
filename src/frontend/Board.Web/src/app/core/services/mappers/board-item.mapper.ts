@@ -1,4 +1,4 @@
-import { Task } from '../../models';
+import { BoardItem } from '../../models';
 import { AddBoardItemDTO } from '../../models/board-item/add-board-item-DTO.interface';
 import { UpdateBoardItemDTO } from '../../models/board-item/update-board-item-DTO.interface';
 import { BoardItemDetailsDTO } from '../../models/board-item/board-item-details-DTO.interface';
@@ -26,7 +26,7 @@ export function mapPriorityFromNumber(value: number | string | undefined): TaskP
 	}
 }
 
-export function boardItemToTask(source: BoardItemDetailsDTO | BoardItemLookupDTO): Task {
+export function boardItemToTask(source: BoardItemDetailsDTO | BoardItemLookupDTO): BoardItem {
 	return {
 		id: String(source.id),
 		title: source.title,
@@ -38,10 +38,11 @@ export function boardItemToTask(source: BoardItemDetailsDTO | BoardItemLookupDTO
 		updatedAt: new Date((source as any).modificationDate ?? Date.now()),
 		dueDate: (source as any).dueDate ? new Date((source as any).dueDate) : undefined,
 		tags: [],
+		taskType: source.taskType,
 	};
 }
 
-export function taskToCreateDto(task: Partial<Task>): AddBoardItemDTO {
+export function taskToCreateDto(task: Partial<BoardItem>): AddBoardItemDTO {
 	return {
 		title: task.title ?? '',
 		description: task.description ?? '',
@@ -49,10 +50,11 @@ export function taskToCreateDto(task: Partial<Task>): AddBoardItemDTO {
 		priority: mapPriorityToNumber(task.priority),
 		assigneeId: EMPTY_GUID,
 		dueDate: task.dueDate ? new Date(task.dueDate).toISOString() : new Date().toISOString(),
+		taskType: task.taskType!,
 	};
 }
 
-export function taskToUpdateDto(existing: BoardItemDetailsDTO, updates: Partial<Task>): UpdateBoardItemDTO {
+export function taskToUpdateDto(existing: BoardItemDetailsDTO, updates: Partial<BoardItem>): UpdateBoardItemDTO {
 	return {
 		id: existing.id,
 		title: updates.title ?? existing.title,
@@ -61,5 +63,6 @@ export function taskToUpdateDto(existing: BoardItemDetailsDTO, updates: Partial<
 		priority: updates.priority ? mapPriorityToNumber(updates.priority) : (existing as any).priority,
 		assigneeId: existing.assigneeId ?? EMPTY_GUID,
 		dueDate: updates.dueDate ? new Date(updates.dueDate).toISOString() : existing.dueDate,
+		taskType: updates.taskType ?? existing.taskType,
 	};
 }

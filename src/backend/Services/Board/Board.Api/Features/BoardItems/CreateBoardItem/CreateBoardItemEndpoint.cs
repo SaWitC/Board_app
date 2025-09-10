@@ -34,11 +34,12 @@ public class CreateBoardItemEndpoint : Endpoint<CreateBoardItemRequest>
             AssigneeId = request.AssigneeId,
             DueDate = request.DueDate,
             CreatedTime = DateTime.UtcNow,
-            ModificationDate = DateTimeOffset.UtcNow
+            ModificationDate = DateTimeOffset.UtcNow,
+            TaskType = request.TaskType
         };
 
         BoardItem created = await _repository.AddAsync(entity, cancellationToken);
-        var response = _mapper.Map<BoardItemDto>(created);
+        BoardItemDto response = _mapper.Map<BoardItemDto>(created);
 
         await Send.OkAsync(response, cancellationToken);
     }

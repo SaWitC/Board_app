@@ -10,5 +10,7 @@ public class CreateBoardItemValidator : Validator<CreateBoardItemRequest>
         RuleFor(i => i.Title).NotNull().NotEmpty().MaximumLength(500);
         RuleFor(i => i.Description).MaximumLength(1000000);
         RuleFor(i => i.Priority).IsInEnum();
+        RuleFor(i => i.TaskType).IsInEnum();
+        RuleFor(i => i.BoardColumnId).NotEmpty();
     }
 }

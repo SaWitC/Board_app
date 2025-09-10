@@ -8,6 +8,18 @@
   position: relative;
   cursor: grab;
 
+  &.bug {
+    border-left : 4px solid var(--border-color-negative-tint) !important;
+  }
+
+  &.hot-fix {
+    border-left : 4px solid var(--border-color-negative) !important;
+  }
+
+  &.user-story {
+    border-left : 4px solid var(--border-color-accent) !important;
+  }
+
   &:active {
     cursor: grabbing;
   }

@@ -1,3 +1,5 @@
+import { TaskType } from "../enums/task-type.enum";
+
 export interface AddBoardItemDTO {
   title: string;
   description: string;
@@ -5,4 +7,5 @@ export interface AddBoardItemDTO {
   priority: number;
   assigneeId: string;
   dueDate: string;
+  taskType: TaskType;
 }
