@@ -19,7 +19,7 @@ export class DialogService {
       height: '800px',
       maxHeight: '90vh',
       data: taskModalData,
-      disableClose: false,
+      disableClose: true,
       autoFocus: true,
       panelClass: 'task-modal-dialog'
     });
@@ -35,7 +35,7 @@ export class DialogService {
       data: {
         mode: 'create'
       } as CreateBoardModalData,
-      disableClose: false,
+      disableClose: true,
       autoFocus: true,
       panelClass: 'create-board-modal-dialog'
     });
@@ -52,7 +52,7 @@ export class DialogService {
         mode: 'edit',
         board
       } as CreateBoardModalData,
-      disableClose: false,
+      disableClose: true,
       autoFocus: true,
       panelClass: 'create-board-modal-dialog'
     });

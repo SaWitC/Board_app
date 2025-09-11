@@ -7,9 +7,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-import { UserSelectorComponent } from 'src/app/components/shared/user-selector/user-selector.component';
-import { BoardDetailsDTO, UpdateBoardDTO, BoardColumnDTO, AddBoardDTO } from 'src/app/core/models';
-import { UserLookupDTO } from 'src/app/core/models/user/user-lookup-DTO.model';
+import { BoardDetailsDTO, UpdateBoardDTO, AddBoardDTO } from 'src/app/core/models';
+import { UserAccess } from 'src/app/core/models/enums/user-access.enum';
+import { UserService } from 'src/app/core/services/auth/user.service';
+import { ToastrService } from 'ngx-toastr';
 
 export interface CreateBoardModalData {
   mode: 'create' | 'edit';
@@ -30,7 +31,6 @@ export interface CreateBoardModalData {
     MatInputModule,
     MatIconModule,
     MatChipsModule,
-    UserSelectorComponent
   ]
 })
 export class CreateBoardModalComponent implements OnInit {
@@ -38,12 +38,16 @@ export class CreateBoardModalComponent implements OnInit {
   dialogTitle = 'Create New Board';
   submitButtonText = 'Create';
 
-  selectedUsers: UserLookupDTO[] = [];
-  selectedAdmins: UserLookupDTO[] = [];
+  readonly separatorKeysCodes = [13] as const;
+
+  selectedUsers: string[] = [];
+  selectedAdmins: string[] = [];
 
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<CreateBoardModalComponent>,
+    private userService: UserService,
+    private toastr: ToastrService,
     @Inject(MAT_DIALOG_DATA) public data: CreateBoardModalData
   ) { }
 
@@ -59,10 +63,6 @@ export class CreateBoardModalComponent implements OnInit {
         boardDescription: this.data.board.description
       });
 
-      // Preselect users/admins by role based on boardUsers
-      const boardUsers = this.data.board.boardUsers ?? [];
-      this.selectedUsers = boardUsers.filter(u => u.role === 7).map(u => ({ id: u.email, email: u.email }));
-      this.selectedAdmins = boardUsers.filter(u => u.role === 127).map(u => ({ id: u.email, email: u.email }));
 
       // Prefill columns with existing values
       const arr = this.boardForm.get('boardColumns') as FormArray;
@@ -90,7 +90,9 @@ export class CreateBoardModalComponent implements OnInit {
     this.boardForm = this.fb.group({
       boardTitle: ['', Validators.required],
       boardDescription: ['', Validators.required],
-      boardColumns: new FormArray([])
+      boardColumns: new FormArray([]),
+      boardUser: ['',[Validators.email]],
+      boardAdmin: ['',[Validators.email]]
     });
   }
 
@@ -107,15 +109,10 @@ export class CreateBoardModalComponent implements OnInit {
     (this.boardForm.controls['boardColumns'] as FormArray).removeAt(index);
   }
 
-  onUsersChange(users: UserLookupDTO[]): void {
-    this.selectedUsers = users;
-  }
-
-  onAdminsChange(admins: UserLookupDTO[]): void {
-    this.selectedAdmins = admins;
-  }
-
   onSubmit(): void {
+    if(!this.isAllUserEmailsValid()){
+      return;
+    }
     if (this.boardForm.valid) {
       const formValue = this.boardForm.value;
 
@@ -130,9 +127,9 @@ export class CreateBoardModalComponent implements OnInit {
           id: this.data.board.id,
           title: formValue.boardTitle,
           description: formValue.boardDescription,
-          boardUsers: [
-            ...this.selectedUsers.map(u => ({ email: u.email, role: 7 })),
-            ...this.selectedAdmins.map(a => ({ email: a.email, role: 127 }))
+          boardUsers:[
+            ...this.selectedUsers.map(u => ({ email: u, role: UserAccess.USER })),
+            ...this.selectedAdmins.map(a => ({ email: a, role: UserAccess.ADMIN }))
           ],
           boardColumns: boardColumns
         };
@@ -149,9 +146,10 @@ export class CreateBoardModalComponent implements OnInit {
       const boardData: AddBoardDTO = {
         title: formValue.boardTitle,
         description: formValue.boardDescription,
-        boardUsers: [
-          ...this.selectedUsers.map(u => ({ email: u.email, role: 7 })),
-          ...this.selectedAdmins.map(a => ({ email: a.email, role: 127 }))
+        boardUsers:[
+          ...this.selectedUsers.map(u => ({ email: u, role: UserAccess.USER })),
+          ...this.selectedAdmins.map(a => ({ email: a, role: UserAccess.ADMIN }))
+        ,{ email: this.userService.getCurrentUserEmail(), role: UserAccess.OWNER }
         ],
         boardColumns: boardColumns
       };
@@ -172,5 +170,67 @@ export class CreateBoardModalComponent implements OnInit {
     return this.boardForm.valid &&
       this.selectedUsers.length > 0 &&
       this.selectedAdmins.length > 0;
+  }
+
+
+  private normalize(email: string): string {
+    return (email || '').trim().toLowerCase();
+  }
+
+  private isAllUserEmailsValid(): boolean {
+    const current = this.normalize(this.userService.getCurrentUserEmail());
+
+    const admins = this.selectedAdmins.map(this.normalize).filter(Boolean);
+    const users  = this.selectedUsers.map(this.normalize).filter(Boolean);
+
+    if (admins.includes(current) || users.includes(current)) {
+      this.toastr.error('You cannot add yourself as an admin or user');
+      return false;
+    }
+
+    const hasDuplicates = (arr: string[]) => new Set(arr).size !== arr.length;
+    if (hasDuplicates(admins) || hasDuplicates(users)) {
+      this.toastr.error('You cannot add duplicate emails as an admin or user');
+      return false;
+    }
+
+    const adminSet = new Set(admins);
+    for (const u of users) {
+      this.toastr.error('You cannot add the same email as an admin and user');
+      if (adminSet.has(u)) return false;
+    }
+
+    return true;
+  }
+
+  addUser(): void {
+    if(this.boardForm.get('boardUser')?.valid) {
+      let value = this.boardForm.get('boardUser')?.value;
+      if (value) {
+        this.selectedUsers.push(value);
+      }
+
+      this.boardForm.get('boardUser')?.reset();
+    }
+  }
+
+  removeUser(user: string): void {
+    this.selectedUsers = this.selectedUsers.filter(u => u !== user);
+  }
+
+
+  addAdmin(): void {
+    if(this.boardForm.get('boardAdmin')?.valid) {
+      let value = this.boardForm.get('boardAdmin')?.value;
+      if (value) {
+        this.selectedAdmins.push(value);
+      }
+
+      this.boardForm.get('boardAdmin')?.reset();
+    }
+  }
+
+  removeAdmin(admin: string): void {
+    this.selectedAdmins = this.selectedAdmins.filter(a => a !== admin);
   }
 }
