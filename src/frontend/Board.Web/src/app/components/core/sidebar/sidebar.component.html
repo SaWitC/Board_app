@@ -10,19 +10,24 @@
     </button>
   </div>
 
-  <nav class="sidebar-nav">
-    <ul class="nav-list">
+  <nav class="sidebar-nav ">
+    <ul class="nav-list sidebar-font-size ">
       <li class="nav-item">
-        <button class="nav-btn" (click)="onMyProjectsClick()">
-          <span class="nav-icon"[class.compact]="!isOpen"><i class="lar la-folder"></i></span>
+        <a class="nav-link"
+           routerLink="/boards"
+           routerLinkActive="active">
+          <span class="nav-icon" [class.compact]="!isOpen"><i class="lar la-folder"></i></span>
           {{ 'SIDEBAR.MY_PROJECTS' | translate }}
-        </button>
+        </a>
       </li>
+
       <li class="nav-item">
-        <button class="nav-btn" (click)="onInfoClick()">
-          <span class="nav-icon"[class.compact]="!isOpen"><i class="las la-info-circle"></i></span>
+        <a class="nav-link"
+           routerLink="/info"
+           routerLinkActive="active">
+          <span class="nav-icon" [class.compact]="!isOpen"><i class="las la-info-circle"></i></span>
           {{ 'SIDEBAR.INFO' | translate }}
-        </button>
+        </a>
       </li>
     </ul>
   </nav>

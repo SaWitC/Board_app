@@ -4,6 +4,7 @@
 }
 
 .board-container {
+
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -11,11 +12,11 @@
 
 .board-header {
   height: 10%;
-  background: var(--background-content);
+  background: var(--board-header-background-color);
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -78,5 +79,6 @@
     gap: 8px;
     height: fit-content;
     align-items: stretch;
+    min-height: 100%;
   }
 }

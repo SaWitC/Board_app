@@ -13,10 +13,10 @@ app-sidebar {
   background-color: var(--background-secondary) !important;
   border: 1px solid var(--background);
   color: var(--text-color);
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   transform: translateX(-74%);
   transition: transform 0.3s ease-in-out;
+  box-shadow: 1px 1px 7px var(--box-shadow-color-secondary);
 }
 
 :host {
@@ -91,7 +91,7 @@ app-navigation {
   padding: 16px;
   background-color: var(--background-secondary);
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   overflow: hidden;
 
   &__wrapper {

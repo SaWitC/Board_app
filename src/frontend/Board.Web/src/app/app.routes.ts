@@ -8,7 +8,7 @@ export const routes: Routes =  [{
   children: [
     {
       path: '',
-      component: BoardComponent,
+      component: BoardsListComponent,
     },
     {
       path: 'board/:id',
