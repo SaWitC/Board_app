@@ -1,0 +1,12 @@
+<div>
+    <ngx-editor-menu [editor]="editor"
+                    [toolbar]="toolbar"
+                    class="editor-menu">
+    </ngx-editor-menu>
+    <div class="editor-container">
+        <ngx-editor [placeholder]="'Description...'"
+                    [editor]="editor"
+                    [formControl]="formControl"
+                    class="description">
+        </ngx-editor>
+</div>

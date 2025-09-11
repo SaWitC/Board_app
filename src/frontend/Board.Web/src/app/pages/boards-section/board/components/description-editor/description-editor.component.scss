@@ -1,0 +1,40 @@
+.editor-menu {
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+  }
+  
+  .editor-container {
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+    height: 16em;
+    display: flex;
+    flex-direction: column;
+    margin: 1em 0em 1em 0em;
+  }
+  
+  ngx-editor.description {
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto;
+    display: block;
+    flex: 1;
+    
+    ::ng-deep .NgxEditor {
+      height: 100% !important;
+      min-height: 100% !important;
+      max-height: 100% !important;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    ::ng-deep .NgxEditor__Content {
+      height: 100% !important;
+      min-height: 100% !important;
+      max-height: 100% !important;
+      overflow-y: auto;
+      flex: 1;
+    }
+  }

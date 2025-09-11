@@ -1,6 +1,6 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,6 +14,8 @@ import { BoardItem } from 'src/app/core/models/board-item.interface';
 import { TaskPriority } from 'src/app/core/models/enums/task-priority.enum';
 import { TaskType } from 'src/app/core/models/enums/task-type.enum';
 import { TaskTypeIconComponent } from 'src/app/components/shared/story-icon/task-type-icon.component';
+import { DescriptionEditorComponent } from '../../components/description-editor/description-editor.component';
+import { Editor, NgxEditorComponent, NgxEditorMenuComponent, Toolbar } from 'ngx-editor';
 
 export interface TaskModalData {
   task?: BoardItem;
@@ -37,7 +39,8 @@ export interface TaskModalData {
         MatNativeDateModule,
         MatIconModule,
         MatChipsModule,
-        TaskTypeIconComponent
+        TaskTypeIconComponent,
+        DescriptionEditorComponent
     ]
 })
 export class TaskModalComponent implements OnInit {
@@ -131,5 +134,9 @@ export class TaskModalComponent implements OnInit {
       [TaskType.USER_STORY]: 'User Story'
     };
     return labels[taskType] || taskType.toString();
+  }
+
+  public getControl(controlName: string): FormControl {
+    return this.taskForm.get(controlName) as FormControl;
   }
 }

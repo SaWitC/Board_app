@@ -50,9 +50,10 @@
       </div>
 
       <label class="form-label">Описание</label>
-      <mat-form-field appearance="outline" class="full-width w-100">
-        <textarea matInput formControlName="description" placeholder="Введите описание задачи" rows="10"></textarea>
-      </mat-form-field>
+      <app-description-editor [placeholder]="'Description...'"
+                              [formControl]="getControl('description')">
+                              
+      </app-description-editor>
 
       <mat-form-field appearance="outline" class="full-width w-100">
         <mat-label class="form-label">Теги</mat-label>
