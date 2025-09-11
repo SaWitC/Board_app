@@ -19,6 +19,7 @@
   --background-negative-tint: rgb(238, 177, 177);
   --background-warning: rgb(255, 244, 229);
   --box-shadow-color-secondary: #e2e2e2;
+  --icon-active-color: #C63031;
 
   //TEXT
   --text-color: black;
@@ -37,7 +38,7 @@
 
 
   //BOARD
-  --board-background-color: #2a2a2a;
+  --board-background-color: #eaeaea;
   --board-header-background-color: #f9f9f9;
 
   //BOARD COLUMN
@@ -50,7 +51,8 @@
   --bs-custom-btn-color: #fff !important;
   --bs-custom-btn-bg: #0d6efd !important;
   --bs-custom-btn-border-color: #0d6efd !important;
-  --bs-custom-btn-hover-bg: #3375d8 !important;
+  --bs-custom-btn-hover-bg: #eee!important;
+  --bs-custom-btn-hover-border-color: #e1e1e1e1;
   --bs-custom-btn-hover-border-color: #0a58ca;
   --bs-border-color: #ecebe5;
   --bs-heading-color: var(--text-color);

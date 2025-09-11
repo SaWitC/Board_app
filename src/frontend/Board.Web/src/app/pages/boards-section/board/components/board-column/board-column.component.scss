@@ -46,7 +46,7 @@
       }
 
       .task-count {
-        background: var(--background-accent);
+        background: var(--background-accent-themed);
         color: var(--btn-primary-text);
         padding: 2px 8px;
         border-radius: 12px;
@@ -58,7 +58,7 @@
     }
 
     .btn-add-task {
-      background: var(--background-accent);
+      background: var(--background-accent-themed);
       color: var(--btn-primary-text);
       border: none;
       border-radius: 50%;

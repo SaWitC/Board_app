@@ -18,6 +18,7 @@
   --background-negative-tint: rgb(126, 65, 61);
   --background-warning: rgb(154, 89, 1);
   --box-shadow-color-secondary: #242424;
+  --icon-active-color: #C63031;
 
   //TEXT
   --text-color: #e2e7f7;
@@ -48,8 +49,8 @@
   --bs-custom-btn-color: #e2e7f7 !important;
   --bs-custom-btn-bg: #da7b3c !important;
   --bs-custom-btn-border-color: #da8248 !important;
-  --bs-custom-btn-hover-bg: #d88d5a !important;
-  --bs-custom-btn-hover-border-color: #d88d5a;
+  --bs-custom-btn-hover-bg: #777!important;
+  --bs-custom-btn-hover-border-color: #888;
   --bs-border-color: #666666;
   --bs-heading-color: var(--text-color);
 

@@ -27,6 +27,12 @@
   &:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
+
+    .task-header{
+      .task-actions{
+        visibility: visible;
+      }
+    }
   }
 
   &.dragging {
@@ -34,6 +40,7 @@
     transform: rotate(5deg);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   }
+
 
   .task-header {
     display: flex;
@@ -48,14 +55,11 @@
       color: var(--text-color);
       flex: 1;
       line-height: 1.4;
-
-      &.overdue {
-        color: var(--text-color-negative);
-      }
     }
 
     .task-actions {
       display: flex;
+      visibility: hidden;
       gap: 4px;
 
       .btn-icon {
@@ -132,7 +136,7 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      font-size: 12px;
+      font-size: 14px;
       color: var(--text-color);
       opacity: 0.7;
 
@@ -141,8 +145,8 @@
       }
 
       span.overdue {
-        color: var(--background-negative);
-        font-weight: 500;
+        color: var(--text-color-negative);
+        font-weight:500;
         opacity: 1;
       }
     }
