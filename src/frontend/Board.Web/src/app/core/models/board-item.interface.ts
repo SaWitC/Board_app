@@ -1,7 +1,7 @@
 import { TaskPriority } from "./enums/task-priority.enum";
-import { TaskStatus } from "./enums/task-status.enum";
+import { TaskType } from "./enums/task-type.enum";
 
-export interface Task {
+export interface BoardItem {
   id: string;
   title: string;
   description?: string;
@@ -12,5 +12,5 @@ export interface Task {
   updatedAt: Date;
   dueDate?: Date;
   tags?: string[];
-  status?: any; //TODO: REMOVE
+  taskType: TaskType;
 }

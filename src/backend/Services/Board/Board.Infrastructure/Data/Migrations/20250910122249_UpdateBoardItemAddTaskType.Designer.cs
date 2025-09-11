@@ -4,6 +4,7 @@ using Board.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Board.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(BoardDbContext))]
-    partial class BoardDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250910122249_UpdateBoardItemAddTaskType")]
+    partial class UpdateBoardItemAddTaskType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,35 +121,6 @@ namespace Board.Infrastructure.Data.Migrations
                     b.ToTable("BoardItems");
                 });
 
-            modelBuilder.Entity("Board.Domain.Entities.BoardTemplate", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BoardId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(10000)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BoardId");
-
-                    b.ToTable("BoardTemplates");
-                });
-
             modelBuilder.Entity("Board.Domain.Entities.BoardUser", b =>
                 {
                     b.Property<Guid>("BoardId")
@@ -211,17 +185,6 @@ namespace Board.Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("BoardColumn");
-                });
-
-            modelBuilder.Entity("Board.Domain.Entities.BoardTemplate", b =>
-                {
-                    b.HasOne("Board.Domain.Entities.Board", "Board")
-                        .WithMany()
-                        .HasForeignKey("BoardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Board");
                 });
 
             modelBuilder.Entity("Board.Domain.Entities.BoardUser", b =>

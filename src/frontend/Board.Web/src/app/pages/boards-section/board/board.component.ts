@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Task } from 'src/app/core/models/task.interface';
+import { BoardItem } from 'src/app/core/models/board-item.interface';
 import { TranslateModule } from '@ngx-translate/core';
 import { BoardColumnLookupDTO, BoardDetailsDTO, DragDropEvent } from 'src/app/core/models';
 import { BoardColumnApiService, BoardItemApiService, BoardApiService } from 'src/app/core/services/api-services';
@@ -18,7 +18,7 @@ import { BoardColumnComponent } from './components/board-column/board-column.com
     imports: [CommonModule, BoardColumnComponent, TranslateModule]
 })
 export class BoardComponent implements OnInit {
-  tasks: Task[] = [];
+  tasks: BoardItem[] = [];
   columns: BoardColumnLookupDTO[] = [];
   loading = false;
   error: string | null = null;
@@ -107,18 +107,17 @@ export class BoardComponent implements OnInit {
     });
   }
 
-  getTasksByStatus(columnId: string): Task[] {
+  getTasksByStatus(columnId: string): BoardItem[] {
     return this.tasks.filter(task => task.columnId === columnId);
   }
 
   onAddTask(data: {boardColumnId: string}): void {
     this.dialogService.openTaskModal({
       mode: 'create',
-      boardColumns: this.columns,
-      selectedBoardColumnId: data.boardColumnId
     }).subscribe((task) => {
       if (task) {
         const createDto = taskToCreateDto(task);
+        createDto.boardColumnId = data.boardColumnId;
         this.boardItemService.addBoardItem(createDto).subscribe({
           next: (created) => {
             this.tasks = [...this.tasks, boardItemToTask(created)];
@@ -129,17 +128,16 @@ export class BoardComponent implements OnInit {
     });
   }
 
-  onEditTask(data: {task: Task, boardColumnId: string}): void {
+  onEditTask(data: {task: BoardItem, boardColumnId: string}): void {
     this.dialogService.openTaskModal({
       mode: 'edit',
-      boardColumns: this.columns,
-      selectedBoardColumnId: data.boardColumnId,
       task: data.task
     }).subscribe((updatedTask) => {
       if (updatedTask) {
         this.boardItemService.getBoardItemById(data.task.id).subscribe({
           next: (existing) => {
             const updateDto = taskToUpdateDto(existing, updatedTask);
+            updateDto.boardColumnId = data.boardColumnId;
             this.boardItemService.updateBoardItem(data.task.id, updateDto).subscribe({
               next: (res) => {
                 const mapped = boardItemToTask(res);

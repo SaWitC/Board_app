@@ -1,5 +1,5 @@
 
-export { Task } from './task.interface';
+export { BoardItem } from './board-item.interface';
 export { DragDropEvent } from './drag-drop-event.interface';
 // Board Item models
 export { BoardItemLookupDTO } from './board-item/board-item-lookup-DTO.interface';
