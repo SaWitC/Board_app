@@ -46,7 +46,7 @@
       }
 
       .task-count {
-        background: var(--background-accent-themed);
+        background: var(--background-light-gray);
         color: var(--btn-primary-text);
         padding: 2px 8px;
         border-radius: 12px;
@@ -62,8 +62,8 @@
       color: var(--btn-primary-text);
       border: none;
       border-radius: 50%;
-      width: 32px;
-      height: 32px;
+      width: 26px;
+      height: 26px;
       cursor: pointer;
       display: flex;
       align-items: center;
