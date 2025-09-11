@@ -30,15 +30,14 @@ public class UpdateBoardTemplateEndpoint : Endpoint<UpdateBoardTemplateRequest>
 
         entity.Title = request.Title;
         entity.Description = request.Description;
-        entity.BoardId = request.BoardId;
+        entity.Id = request.BoardId;
 
         BoardTemplate updated = await _repository.UpdateAsync(entity, ct);
         BoardTemplateDto response = new BoardTemplateDto
         {
-            Id = updated.Id,
             Title = updated.Title,
             Description = updated.Description,
-            BoardId = updated.BoardId
+            BoardId = updated.Id
         };
 
         await Send.OkAsync(response, ct);

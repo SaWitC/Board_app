@@ -4,10 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BoardItem } from 'src/app/core/models/board-item.interface';
 import { TranslateModule } from '@ngx-translate/core';
 import { BoardColumnLookupDTO, BoardDetailsDTO, DragDropEvent } from 'src/app/core/models';
+import { AddBoardTemplateDTO } from 'src/app/core/models/board-template/add-board-template-DTO.interface';
 import { BoardColumnApiService, BoardItemApiService, BoardApiService } from 'src/app/core/services/api-services';
+import { BoardTemplateServiceApi } from 'src/app/core/services/api-services/board-template-api.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { boardItemToTask, taskToCreateDto, taskToUpdateDto } from 'src/app/core/services/mappers/board-item.mapper';
 import { BoardColumnComponent } from './components/board-column/board-column.component';
+import { devOnlyGuardedExpression } from '@angular/compiler';
 
 
 @Component({
@@ -15,7 +18,8 @@ import { BoardColumnComponent } from './components/board-column/board-column.com
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss'],
     standalone: true,
-    imports: [CommonModule, BoardColumnComponent, TranslateModule]
+    imports: [CommonModule, BoardColumnComponent, TranslateModule],
+    providers: [BoardTemplateServiceApi]
 })
 export class BoardComponent implements OnInit {
   tasks: BoardItem[] = [];
@@ -24,12 +28,14 @@ export class BoardComponent implements OnInit {
   error: string | null = null;
   currentBoardId: string | null = null;
   currentBoard: BoardDetailsDTO | null = null;
+  isTemplate: boolean = false;
 
   constructor(
     private boardColumnService: BoardColumnApiService,
     private boardItemService: BoardItemApiService,
     private dialogService: DialogService,
     private boardApiService: BoardApiService,
+    private boardTemplateServiceApi: BoardTemplateServiceApi,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -216,6 +222,25 @@ export class BoardComponent implements OnInit {
     const [movedColumn] = columns.splice(fromIndex, 1);
     columns.splice(toIndex, 0, movedColumn);
     this.columns = columns;
+  }
+
+  OnCheckTemplate(): void {
+    this.isTemplate = !this.isTemplate;
+    if(this.isTemplate){
+      const dto: AddBoardTemplateDTO = { title: this.currentBoard?.title + ' Template', description: this.currentBoard?.description ?? '', isActive: true, boardId: this.currentBoardId ?? ''};
+      console.log(dto);
+      this.boardTemplateServiceApi.addBoardtTmplate(dto).subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+        error: (err) => {
+          console.error('Error adding board template', err);
+        }
+      });
+    }
+    if(!this.isTemplate){
+      //TODO: search existing template
+    }
   }
 
   getTaskCount(): number {

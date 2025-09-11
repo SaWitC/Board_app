@@ -2,7 +2,20 @@
 
 <form [formGroup]="boardForm" (ngSubmit)="onSubmit()">
   <mat-dialog-content>
+    <mat-form-field appearance="outline" class="pe-2 col">
+      <mat-label class="form-label">Вариант создания борды</mat-label>
+      <mat-select formControlName="creationOption">
+        <mat-option *ngFor="let creationOption of templateCreationOptions" [value]="creationOption">
+        {{  getTemplateCreationOptionsLabel(creationOption) }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
     <div class="form-container">
+
+
+      <ng-template></ng-template>
+
       <label class="form-label">Название доски *</label>
       <mat-form-field appearance="outline" class="full-width">
         <!-- <mat-label>Название доски *</mat-label> -->

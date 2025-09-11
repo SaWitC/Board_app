@@ -9,8 +9,15 @@ public class BoardTemplateMappingConfiguration : IEntityTypeConfiguration<BoardT
     public void Configure(EntityTypeBuilder<BoardTemplate> builder)
     {
         builder
-            .Property(t => t.Id)
-            .IsRequired();
+            .HasKey(t => t.Id);
+
+        builder.Property(t => t.Id)
+            .ValueGeneratedNever();
+
+        builder
+            .HasOne(t => t.Board)
+            .WithOne(b => b.BoardTemplate)
+            .HasForeignKey<BoardTemplate>(t => t.Id);
 
         builder
             .Property(t => t.Title)
@@ -21,11 +28,6 @@ public class BoardTemplateMappingConfiguration : IEntityTypeConfiguration<BoardT
             .Property(t => t.Description)
             .IsRequired()
             .HasMaxLength(10000);
-
-        builder
-            .HasOne(t => t.Board)
-            .WithMany()
-            .HasForeignKey(t => t.BoardId);
     }
 }
 

@@ -1,4 +1,4 @@
-﻿using Board.Application.DTOs;
+using Board.Application.DTOs;
 using Board.Application.Interfaces;
 using Board.Domain.Entities;
 using FastEndpoints;
@@ -23,10 +23,9 @@ public class GetBoardTemplatesEndpoint : EndpointWithoutRequest
     {
         IList<BoardTemplateDto> templates = await _repository.GetAllAsync(null, t => new BoardTemplateDto
         {
-            Id = t.Id,
             Title = t.Title,
             Description = t.Description,
-            BoardId = t.BoardId
+            BoardId = t.Id
         }, ct);
 
         await Send.OkAsync(templates, ct);

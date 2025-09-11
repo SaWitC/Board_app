@@ -1,4 +1,4 @@
-﻿using Board.Application.Interfaces;
+using Board.Application.Interfaces;
 using Board.Domain.Entities;
 using FastEndpoints;
 

@@ -1,4 +1,4 @@
-﻿using Board.Application.DTOs;
+using Board.Application.DTOs;
 using Board.Application.Interfaces;
 using Board.Domain.Entities;
 using FastEndpoints;
@@ -27,10 +27,9 @@ public class GetBoardTemplateByIdEndpoint : EndpointWithoutRequest
             ? null
             : new BoardTemplateDto
             {
-                Id = entity.Id,
                 Title = entity.Title,
                 Description = entity.Description,
-                BoardId = entity.BoardId
+                BoardId = entity.Id
             };
 
         await Send.OkAsync(response, ct);

@@ -1,8 +1,13 @@
 <div class="board-container">
   <div class="board-header">
-    <div class="board-title">
-      <h1>{{ currentBoard?.title || 'PROJECT TITLE' }}</h1>
+    <div class="board-title d-flex">
+      <h1 class="me-2">{{ currentBoard?.title || 'PROJECT TITLE' }}</h1>
+      <input class="form-check-input me-1" type="checkbox" (change)="OnCheckTemplate()">
+      <label class="form-check-label" for="flexCheckDefault">
+        Make it teplate
+      </label>
     </div>
+
 
     <div class="board-stats">
       <div class="stat-item">

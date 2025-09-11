@@ -10,6 +10,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { UserSelectorComponent } from 'src/app/components/shared/user-selector/user-selector.component';
 import { BoardDetailsDTO, UpdateBoardDTO, BoardColumnDTO, AddBoardDTO } from 'src/app/core/models';
 import { UserLookupDTO } from 'src/app/core/models/user/user-lookup-DTO.model';
+import { BoardCreationOptions } from 'src/app/core/models/enums/board-creation-options.enum';
+import { MatSelectModule } from '@angular/material/select';
 
 export interface CreateBoardModalData {
   mode: 'create' | 'edit';
@@ -30,7 +32,8 @@ export interface CreateBoardModalData {
     MatInputModule,
     MatIconModule,
     MatChipsModule,
-    UserSelectorComponent
+    UserSelectorComponent,
+    MatSelectModule
   ]
 })
 export class CreateBoardModalComponent implements OnInit {
@@ -40,6 +43,18 @@ export class CreateBoardModalComponent implements OnInit {
 
   selectedUsers: UserLookupDTO[] = [];
   selectedAdmins: UserLookupDTO[] = [];
+  Templates: string = 'none';
+
+  templateCreationOptions = Object.values(BoardCreationOptions).filter(k => !isNaN(Number(k))) as BoardCreationOptions[];
+
+
+  public getTemplateCreationOptionsLabel(template: BoardCreationOptions): string {
+    const labels = {
+      [BoardCreationOptions.EMPTY]: 'Empty',
+      [BoardCreationOptions.TEMPLATE]: 'Template'
+    };
+    return labels[template] || template.toString();
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -90,7 +105,8 @@ export class CreateBoardModalComponent implements OnInit {
     this.boardForm = this.fb.group({
       boardTitle: ['', Validators.required],
       boardDescription: ['', Validators.required],
-      boardColumns: new FormArray([])
+      boardColumns: new FormArray([]),
+      creationOption: [BoardCreationOptions.EMPTY, Validators.required]
     });
   }
 

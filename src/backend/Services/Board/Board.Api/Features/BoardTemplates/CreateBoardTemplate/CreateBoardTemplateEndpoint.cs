@@ -23,19 +23,18 @@ public class CreateBoardTemplateEndpoint : Endpoint<CreateBoardTemplateRequest>
     {
         BoardTemplate entity = new BoardTemplate
         {
-            Id = Guid.NewGuid(),
             Title = request.Title,
             Description = request.Description,
-            BoardId = request.BoardId
+            Id = request.BoardId,
+            IsActive = true
         };
 
         BoardTemplate created = await _repository.AddAsync(entity, ct);
         BoardTemplateDto response = new BoardTemplateDto
         {
-            Id = created.Id,
             Title = created.Title,
             Description = created.Description,
-            BoardId = created.BoardId
+            BoardId = created.Id
         };
 
         await Send.OkAsync(response, ct);
