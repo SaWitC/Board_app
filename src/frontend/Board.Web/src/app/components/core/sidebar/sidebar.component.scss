@@ -50,8 +50,9 @@ app-sidebar.open {
     width: 100%;
     background: none;
     border: none;
+    border-radius: 8px;
     color: var(--text-color);
-    padding: 15px 20px;
+    padding: 15px 15px;
     text-align: left;
     cursor: pointer;
     transition: background-color 0.2s;
@@ -104,13 +105,8 @@ a {
 
   border-left-color: var(--icon-active-color);
   border-left-style: solid;
-  border-left-width: 2px;
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
 
   a {
-    margin-left: 7px;
-    margin-right: 7px;
     border-radius: 8px;
     background-color: var(--side-menu-active) !important;
     color: var(--text-color) !important;
