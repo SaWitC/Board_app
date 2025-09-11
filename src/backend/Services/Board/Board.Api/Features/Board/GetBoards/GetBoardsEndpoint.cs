@@ -10,7 +10,6 @@ public class GetBoardsEndpoint : EndpointWithoutRequest
     public override void Configure()
     {
         Get("/api/boards");
-        AllowAnonymous();
     }
 
     private readonly IRepository<Domain.Entities.Board> _repository;
@@ -23,8 +22,8 @@ public class GetBoardsEndpoint : EndpointWithoutRequest
     }
     public override async Task HandleAsync(CancellationToken cancellationToken)
     {
-        var entities = await _repository.GetAllAsync(cancellationToken, true, b => b.BoardColumns, b => b.BoardUsers);
-        var boards = _mapper.Map<IList<BoardDto>>(entities);
+        IList<Domain.Entities.Board> entities = await _repository.GetAllAsync(cancellationToken, true, b => b.BoardColumns, b => b.BoardUsers);
+        IList<BoardDto> boards = _mapper.Map<IList<BoardDto>>(entities);
         await Send.OkAsync(boards, cancellationToken);
     }
 }

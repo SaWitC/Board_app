@@ -10,7 +10,6 @@ public class GetBoardByIdEndpoint : EndpointWithoutRequest
     public override void Configure()
     {
         Get("/api/boards/{id}");
-        AllowAnonymous();
     }
 
     private readonly IRepository<Domain.Entities.Board> _repository;

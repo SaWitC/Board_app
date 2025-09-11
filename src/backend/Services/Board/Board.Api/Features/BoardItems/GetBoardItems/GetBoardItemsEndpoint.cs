@@ -20,13 +20,12 @@ public class GetBoardItemsEndpoint : EndpointWithoutRequest
     public override void Configure()
     {
         Get("/api/boarditems");
-        AllowAnonymous();
     }
 
     public override async Task HandleAsync(CancellationToken cancellationToken)
     {
-        var entities = await _repository.GetAllAsync(cancellationToken, true);
-        var items = _mapper.Map<IList<BoardItemDto>>(entities);
+        IList<BoardItem> entities = await _repository.GetAllAsync(cancellationToken, true);
+        IList<BoardItemDto> items = _mapper.Map<IList<BoardItemDto>>(entities);
         await Send.OkAsync(items, cancellationToken);
     }
 }

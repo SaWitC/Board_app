@@ -19,7 +19,6 @@ public class GetBoardItemByIdEndpoint : EndpointWithoutRequest
     public override void Configure()
     {
         Get("/api/boarditems/{id}");
-        AllowAnonymous();
     }
 
     public override async Task HandleAsync(CancellationToken cancellationToken)
@@ -32,7 +31,7 @@ public class GetBoardItemByIdEndpoint : EndpointWithoutRequest
             await Send.OkAsync(null, cancellationToken);
         }
 
-        var response = _mapper.Map<BoardItemDto>(entity);
+        BoardItemDto response = _mapper.Map<BoardItemDto>(entity);
         await Send.OkAsync(response, cancellationToken);
     }
 }
