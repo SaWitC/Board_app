@@ -19,7 +19,6 @@ public class UpdateBoardItemEndpoint : Endpoint<UpdateBoardItemRequest>
     public override void Configure()
     {
         Put("/api/boarditems/{id}");
-        AllowAnonymous();
     }
 
     public override async Task HandleAsync(UpdateBoardItemRequest request, CancellationToken cancellationToken)
@@ -38,10 +37,11 @@ public class UpdateBoardItemEndpoint : Endpoint<UpdateBoardItemRequest>
         entity.Priority = request.Priority;
         entity.AssigneeId = request.AssigneeId;
         entity.DueDate = request.DueDate;
+        entity.TaskType = request.TaskType;
         entity.ModificationDate = DateTimeOffset.UtcNow;
 
         BoardItem updated = await _repository.UpdateAsync(entity, cancellationToken);
-        var response = _mapper.Map<BoardItemDto>(updated);
+        BoardItemDto response = _mapper.Map<BoardItemDto>(updated);
 
         await Send.OkAsync(response, cancellationToken);
     }

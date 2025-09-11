@@ -18,13 +18,12 @@ public class CreateBoardEndpoint : Endpoint<CreateBoardRequest>
     public override void Configure()
     {
         Post("/api/boards");
-        AllowAnonymous();
     }
 
     public override async Task HandleAsync(CreateBoardRequest request, CancellationToken cancellationToken)
     {
-        var boardId = Guid.NewGuid();
-        var entity = new Domain.Entities.Board
+        Guid boardId = Guid.NewGuid();
+        Domain.Entities.Board entity = new Domain.Entities.Board
         {
             Id = boardId,
             Title = request.Title,
@@ -45,9 +44,9 @@ public class CreateBoardEndpoint : Endpoint<CreateBoardRequest>
             ModificationDate = DateTimeOffset.UtcNow
         };
 
-        var createdBoard = await _repository.AddAsync(entity, cancellationToken);
+        Domain.Entities.Board createdBoard = await _repository.AddAsync(entity, cancellationToken);
 
-        var response = _mapper.Map<BoardDto>(createdBoard);
+        BoardDto response = _mapper.Map<BoardDto>(createdBoard);
 
         await Send.OkAsync(response, cancellationToken);
     }

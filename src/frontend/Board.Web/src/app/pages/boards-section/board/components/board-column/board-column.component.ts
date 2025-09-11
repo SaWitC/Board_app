@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { TaskCardComponent } from '../task-card/task-card.component';
 import {MatDialog} from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
-import { Task } from 'src/app/core/models/task.interface';
+import { BoardItem } from 'src/app/core/models/board-item.interface';
 import { DragDropEvent, BoardColumnDetailsDTO } from 'src/app/core/models';
 import { BoardColumnApiService } from 'src/app/core/services/api-services';
 
@@ -19,10 +19,10 @@ export class BoardColumnComponent implements OnInit, OnDestroy {
   @Input() columnId: string = '1';
   @Input() boardId: string = '1';
 
-  @Input() allTasks: Task[] = [];
-  @Input() columnTasks: Task[] = [];
+  @Input() allTasks: BoardItem[] = [];
+  @Input() columnTasks: BoardItem[] = [];
   @Output() addTask = new EventEmitter<{boardColumnId: string}>();
-  @Output() editTask = new EventEmitter<{task: Task, boardColumnId: string}>();
+  @Output() editTask = new EventEmitter<{task: BoardItem, boardColumnId: string}>();
   @Output() deleteTask = new EventEmitter<string>();
   @Output() moveTask = new EventEmitter<{taskId: string, newStatus: string}>();
   @Output() dropTask = new EventEmitter<DragDropEvent>();
@@ -54,7 +54,7 @@ export class BoardColumnComponent implements OnInit, OnDestroy {
     this.addTask.emit({boardColumnId: targetColumnId});
   }
 
-  onEditTask(task: Task): void {
+  onEditTask(task: BoardItem): void {
     const targetColumnId = this.columnData?.id ?? this.columnId;
     this.editTask.emit({task: task, boardColumnId: targetColumnId});
   }

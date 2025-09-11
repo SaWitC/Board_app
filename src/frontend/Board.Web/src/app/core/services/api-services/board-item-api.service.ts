@@ -46,6 +46,7 @@ export class BoardItemApiService {
 					priority: item.priority,
 					assigneeId: item.assigneeId,
 					dueDate: item.dueDate,
+					taskType: item.taskType,
 				};
 				return this.updateBoardItem(itemId, updatePayload);
 			})

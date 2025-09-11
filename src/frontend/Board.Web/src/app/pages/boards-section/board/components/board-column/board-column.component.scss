@@ -7,7 +7,7 @@
 .board-column {
   width: 300px;
   min-height: 100%;
-  background: var(--background-content);
+  background: var(--board-column-background-color);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -46,7 +46,7 @@
       }
 
       .task-count {
-        background: var(--background-accent);
+        background: var(--background-light-gray);
         color: var(--btn-primary-text);
         padding: 2px 8px;
         border-radius: 12px;
@@ -58,12 +58,12 @@
     }
 
     .btn-add-task {
-      background: var(--background-accent);
+      background: var(--background-accent-themed);
       color: var(--btn-primary-text);
       border: none;
       border-radius: 50%;
-      width: 32px;
-      height: 32px;
+      width: 26px;
+      height: 26px;
       cursor: pointer;
       display: flex;
       align-items: center;

@@ -17,4 +17,5 @@ public class BoardItem : IEntity
     public DateTime DueDate { get; set; }
     public DateTime CreatedTime { get; set; }
     public ICollection<BoardItem> SubItems { get; set; }
+    public TaskTypeEnum TaskType { get; set; }
 }

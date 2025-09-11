@@ -8,6 +8,18 @@
   position: relative;
   cursor: grab;
 
+  &.bug {
+    border-left : 4px solid var(--border-color-negative-tint) !important;
+  }
+
+  &.hot-fix {
+    border-left : 4px solid var(--border-color-negative) !important;
+  }
+
+  &.user-story {
+    border-left : 4px solid var(--border-color-accent) !important;
+  }
+
   &:active {
     cursor: grabbing;
   }
@@ -15,6 +27,12 @@
   &:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
+
+    .task-header{
+      .task-actions{
+        visibility: visible;
+      }
+    }
   }
 
   &.dragging {
@@ -23,10 +41,6 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   }
 
-  &.overdue {
-    border-left-color: var(--background-negative);
-    background-color: var(--background-negative-tint);
-  }
 
   .task-header {
     display: flex;
@@ -45,6 +59,7 @@
 
     .task-actions {
       display: flex;
+      visibility: hidden;
       gap: 4px;
 
       .btn-icon {
@@ -97,6 +112,22 @@
         font-weight: 500;
         color: white;
         text-transform: uppercase;
+
+        &.priority-color-low {
+          background-color: var(--priority-color-low);
+        }
+
+        &.priority-color-medium {
+          background-color: var(--priority-color-medium);
+        }
+
+        &.priority-color-high {
+          background-color: var(--priority-color-high);
+        }
+
+        &.priority-color-urgent {
+          background-color: var(--priority-color-urgent);
+        }
       }
     }
 
@@ -105,7 +136,7 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      font-size: 12px;
+      font-size: 14px;
       color: var(--text-color);
       opacity: 0.7;
 
@@ -114,8 +145,8 @@
       }
 
       span.overdue {
-        color: var(--background-negative);
-        font-weight: 500;
+        color: var(--text-color-negative);
+        font-weight:500;
         opacity: 1;
       }
     }

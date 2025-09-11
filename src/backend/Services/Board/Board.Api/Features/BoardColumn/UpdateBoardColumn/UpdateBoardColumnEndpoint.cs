@@ -19,7 +19,6 @@ public class UpdateBoardColumnEndpoint : Endpoint<UpdateBoardColumnRequest>
     public override void Configure()
     {
         Put("/api/boards/{boardId}/columns");
-        AllowAnonymous();
     }
 
     public override async Task HandleAsync(UpdateBoardColumnRequest request, CancellationToken cancellationToken)

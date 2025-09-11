@@ -89,7 +89,7 @@ namespace Board.Infrastructure.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(10000)
+                        .HasMaxLength(1000000)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DueDate")
@@ -101,10 +101,15 @@ namespace Board.Infrastructure.Data.Migrations
                     b.Property<int>("Priority")
                         .HasColumnType("int");
 
+                    b.Property<int>("TaskType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(2);
+
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 

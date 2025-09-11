@@ -10,4 +10,6 @@ public class CreateBoardItemRequest
     public BoardItemPriorityEnum Priority { get; set; }
     public Guid AssigneeId { get; set; }
     public DateTime DueDate { get; set; }
+    public TaskTypeEnum TaskType { get; set; }
+
 }

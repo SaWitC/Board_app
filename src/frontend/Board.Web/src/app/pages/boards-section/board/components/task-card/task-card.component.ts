@@ -1,7 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input, Output, EventEmitter } from "@angular/core";
-import { Task } from "src/app/core/models";
+import { TaskTypeIconComponent } from "src/app/components/shared/story-icon/task-type-icon.component";
+import { BoardItem } from "src/app/core/models";
 import { TaskPriority } from "src/app/core/models/enums/task-priority.enum";
+import { TaskType } from "src/app/core/models/enums/task-type.enum";
 
 
 @Component({
@@ -9,16 +11,33 @@ import { TaskPriority } from "src/app/core/models/enums/task-priority.enum";
     templateUrl: './task-card.component.html',
     styleUrls: ['./task-card.component.scss'],
     standalone: true,
-    imports: [CommonModule]
+    imports: [CommonModule, TaskTypeIconComponent]
 })
 export class TaskCardComponent {
-  @Input() task!: Task;
-  @Output() editTask = new EventEmitter<Task>();
+  @Input() task!: BoardItem;
+  @Output() editTask = new EventEmitter<BoardItem>();
   @Output() deleteTask = new EventEmitter<string>();
   @Output() moveTask = new EventEmitter<{taskId: string, newStatus: string}>();
 
-  priorities = Object.values(TaskPriority);
-  isDragging = false;
+  public taskTypes = TaskType;
+  public priorities = Object.values(TaskPriority);
+  public isDragging = false;
+
+  public taskTypeClassMap: Record<TaskType, string> = {
+    [TaskType.BUG]: 'bug',
+    [TaskType.HOT_FIX]: 'hot-fix',
+    [TaskType.USER_STORY]: 'user-story'
+  };
+
+  public taskTypeClassMapPriority: Record<TaskPriority, string> = {
+    [TaskPriority.LOW]: 'priority-color-low',
+    [TaskPriority.MEDIUM]: 'priority-color-medium',
+    [TaskPriority.HIGH]: 'priority-color-high',
+    [TaskPriority.URGENT]: 'priority-color-urgent'
+  };
+
+
+
 
     onDragStart(event: DragEvent): void {
     if (event.dataTransfer) {
@@ -32,16 +51,6 @@ export class TaskCardComponent {
     this.isDragging = false;
   }
 
-  getPriorityColor(priority: TaskPriority): string {
-    const colors = {
-      [TaskPriority.LOW]: '#4caf50',
-      [TaskPriority.MEDIUM]: '#ff9800',
-      [TaskPriority.HIGH]: '#f44336',
-      [TaskPriority.URGENT]: '#9c27b0'
-    };
-    return colors[priority] || '#757575';
-  }
-
   getPriorityLabel(priority: TaskPriority): string {
     const labels = {
       [TaskPriority.LOW]: 'Низкий',
@@ -49,6 +58,7 @@ export class TaskCardComponent {
       [TaskPriority.HIGH]: 'Высокий',
       [TaskPriority.URGENT]: 'Срочный'
     };
+
     return labels[priority] || 'Неизвестно';
   }
 

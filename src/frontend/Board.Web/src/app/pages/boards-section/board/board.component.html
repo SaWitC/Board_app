@@ -1,6 +1,7 @@
 <div class="board-container">
   <div class="board-header">
-    <div class="board-title">
+    <div class="board-title d-flex">
+      <i class="material-icons icon me-2 settings-icon" (click)="openSettings()">settings</i>
       <h1>{{ currentBoard?.title || 'PROJECT TITLE' }}</h1>
     </div>
 
