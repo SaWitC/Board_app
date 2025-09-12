@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { BoardItem, AddBoardDTO, BoardDetailsDTO, UpdateBoardDTO } from '../models';
+import { BoardItem, AddBoardDTO, BoardDetailsDTO, UpdateBoardDTO } from '../../models';
 import { Observable } from 'rxjs';
 import { TaskModalComponent, TaskModalData } from 'src/app/pages/boards-section/board/modals/task-modal/task-modal.component';
 import { CreateBoardModalComponent, CreateBoardModalData } from 'src/app/pages/boards-section/boards-list/modals/create-board-modal/create-board-modal.component';

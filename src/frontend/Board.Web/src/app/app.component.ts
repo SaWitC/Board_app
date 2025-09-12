@@ -7,13 +7,14 @@ import { AuthService } from '@auth0/auth0-angular';
 import { UserService } from './core/services/auth/user.service';
 import { tap } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
+import { HttpLoaderComponent } from './components/core/http-loader/http-loader.component';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     standalone: true,
-    imports: [CommonModule, NavigationComponent, SidebarComponent, RouterOutlet]
+    imports: [CommonModule, NavigationComponent, SidebarComponent, RouterOutlet, HttpLoaderComponent]
 })
 export class AppComponent implements OnInit {
   title = 'BoardAppClient';

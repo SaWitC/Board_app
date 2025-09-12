@@ -4,15 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BoardItem } from 'src/app/core/models/board-item.interface';
 import { TranslateModule } from '@ngx-translate/core';
 import { BoardColumnLookupDTO, BoardDetailsDTO, DragDropEvent, UpdateBoardDTO } from 'src/app/core/models';
-import { AddBoardTemplateDTO } from 'src/app/core/models/board-template/add-board-template-DTO.interface';
 import { BoardColumnApiService, BoardItemApiService, BoardApiService } from 'src/app/core/services/api-services';
 import { BoardTemplateServiceApi } from 'src/app/core/services/api-services/board-template-api.service';
-import { DialogService } from 'src/app/core/services/dialog.service';
-import { boardItemToTask, taskToCreateDto, taskToUpdateDto } from 'src/app/core/services/mappers/board-item.mapper';
+import { DialogService } from 'src/app/core/services/other/dialog.service';
 import { BoardColumnComponent } from './components/board-column/board-column.component';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { boardItemToTask, taskToCreateDto, taskToUpdateDto } from 'src/app/core/mappers/board-item.mapper';
 
 
 @Component({
@@ -31,8 +29,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 export class BoardComponent implements OnInit {
   tasks: BoardItem[] = [];
   columns: BoardColumnLookupDTO[] = [];
-  loading = false;
-  error: string | null = null;
   currentBoardId: string | null = null;
   currentBoard: BoardDetailsDTO | null = null;
   isActiveTemplate: boolean = false;
@@ -78,7 +74,6 @@ export class BoardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading boards:', error);
-        this.error = 'Failed to load boards';
       }
     });
   }
@@ -99,22 +94,16 @@ export class BoardComponent implements OnInit {
       next: (columns) => this.columns = columns,
       error: (error) => {
         console.error('Error loading columns:', error);
-        this.error = 'Failed to load columns';
       }
     });
   }
 
   private loadTasks(): void {
-    this.loading = true;
-    this.error = null;
     this.boardItemService.getBoardItems().subscribe({
       next: (items) => {
         this.tasks = items.map(boardItemToTask);
-        this.loading = false;
       },
       error: (err) => {
-        this.error = 'Failed to load task';
-        this.loading = false;
         console.error(err);
       }
     });

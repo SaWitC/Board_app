@@ -14,10 +14,7 @@
   </div>
 
   <div class="board-content">
-    <div *ngIf="loading" class="loading">Загрузка задач...</div>
-    <div *ngIf="!loading && error" class="error">{{ error }}</div>
-
-    <div class="board-columns " *ngIf="!loading && !error">
+    <div class="board-columns">
       <app-board-column
         *ngFor="let column of columns"
         [columnId]="column.id"
