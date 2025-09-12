@@ -109,32 +109,45 @@
           </div>
 
           <div formArrayName="boardColumns" class="columns-list">
-            <div *ngFor="let column of boardColumnsArray.controls; let i = index" [formGroupName]="i"
-              class="column-item">
-              <div class="column-form-row">
-                <mat-form-field appearance="outline">
-                  <mat-label>Название колонки</mat-label>
-                  <input matInput formControlName="columnTitle" placeholder="Название колонки" />
-                  <mat-error *ngIf="column.get('columnTitle')?.hasError('required')">
-                    Название обязательно
-                  </mat-error>
-                </mat-form-field>
+            <div *ngFor="let column of boardColumnsArray.controls; let i = index" [formGroupName]="i">
+              <div class="column-item"
+                   [class.drag-over]="draggedIndex !== null && draggedIndex !== i"
+                   [class.dragging]="draggedIndex === i"
+                   (dragover)="onDragOver($event, i)"
+                   (dragenter)="onDragEnter($event)"
+                   (dragstart)="onDragStart($event, i)"
+                   (dragend)="onDragEnd($event)"
+                   (drop)="onDrop($event, i)"
+                   draggable="true">
+                <div class="column-form-row">
+                  <div class="drag-handle"
+                       title="Перетащите для изменения порядка">
+                    <mat-icon>drag_indicator</mat-icon>
+                  </div>
 
-                <mat-form-field appearance="outline">
-                  <mat-label>Описание колонки</mat-label>
-                  <input matInput formControlName="columnDescription" placeholder="Описание колонки" />
-                  <mat-error *ngIf="
-                      column.get('columnDescription')?.hasError('required')
-                    ">
-                    Описание обязательно
-                  </mat-error>
-                </mat-form-field>
-
-                <button type="button" class="delete-icon" mat-icon-button color="warn" (click)="removeColumn(i)"
-                  [disabled]="boardColumnsArray.length <= 1">
-                  <mat-icon>delete</mat-icon>
-                </button>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Название колонки</mat-label>
+                    <input matInput formControlName="columnTitle" placeholder="Название колонки" />
+                    <mat-error *ngIf="column.get('columnTitle')?.hasError('required')">
+                      Название обязательно
+                    </mat-error>
+                  </mat-form-field>
+  
+                  <mat-form-field appearance="outline">
+                    <mat-label>Описание колонки</mat-label>
+                    <input matInput formControlName="columnDescription" placeholder="Описание колонки" />
+                    <mat-error *ngIf="column.get('columnDescription')?.hasError('required')">
+                      Описание обязательно
+                    </mat-error>
+                  </mat-form-field>
+  
+                  <button type="button" class="delete-icon" mat-icon-button color="warn" (click)="removeColumn(i)"
+                    [disabled]="boardColumnsArray.length <= 1">
+                    <mat-icon>delete</mat-icon>
+                  </button>
               </div>
+              </div>
+              <hr *ngIf="hoveredIndex !== null && hoveredIndex === i" class="order-line">
             </div>
           </div>
         </div>
