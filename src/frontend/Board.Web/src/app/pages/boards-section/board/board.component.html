@@ -1,7 +1,8 @@
 <div class="board-container">
   <div class="board-header">
-    <div class="board-title">
-      <h1>{{ currentBoard?.title || 'PROJECT TITLE' }}</h1>
+    <div class="board-title d-flex">
+      <i class="material-icons icon me-2 settings-icon" (click)="openSettings()">settings</i>
+      <h1 class="me-2">{{ currentBoard?.title || 'PROJECT TITLE' }}</h1>
     </div>
 
     <div class="board-stats">
@@ -13,10 +14,7 @@
   </div>
 
   <div class="board-content">
-    <div *ngIf="loading" class="loading">Загрузка задач...</div>
-    <div *ngIf="!loading && error" class="error">{{ error }}</div>
-
-    <div class="board-columns " *ngIf="!loading && !error">
+    <div class="board-columns">
       <app-board-column
         *ngFor="let column of columns"
         [columnId]="column.id"

@@ -17,7 +17,6 @@ public class CreateBoardColumnEndpoint : Endpoint<CreateBoardItemRequest>
     public override void Configure()
     {
         Post("/api/boards/{boardId}/columns");
-        AllowAnonymous();
     }
 
     public override async Task HandleAsync(CreateBoardItemRequest request, CancellationToken cancellationToken)

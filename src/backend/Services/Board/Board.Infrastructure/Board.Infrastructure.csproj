@@ -1,5 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="$(MSBuildThisFileDirectory)../../../../../shared/shared.csproj" />
+	<ItemGroup>
+	  <Compile Remove="HRM\**" />
+	  <EmbeddedResource Remove="HRM\**" />
+	  <None Remove="HRM\**" />
+	</ItemGroup>
 
 	<ItemGroup>
     <ProjectReference Include="..\Board.Domain\Board.Domain.csproj" />

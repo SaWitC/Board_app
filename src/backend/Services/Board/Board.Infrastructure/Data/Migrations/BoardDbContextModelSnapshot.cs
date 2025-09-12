@@ -118,6 +118,29 @@ namespace Board.Infrastructure.Data.Migrations
                     b.ToTable("BoardItems");
                 });
 
+            modelBuilder.Entity("Board.Domain.Entities.BoardTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(10000)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BoardTemplates");
+                });
+
             modelBuilder.Entity("Board.Domain.Entities.BoardUser", b =>
                 {
                     b.Property<Guid>("BoardId")
@@ -184,6 +207,17 @@ namespace Board.Infrastructure.Data.Migrations
                     b.Navigation("BoardColumn");
                 });
 
+            modelBuilder.Entity("Board.Domain.Entities.BoardTemplate", b =>
+                {
+                    b.HasOne("Board.Domain.Entities.Board", "Board")
+                        .WithOne("BoardTemplate")
+                        .HasForeignKey("Board.Domain.Entities.BoardTemplate", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Board");
+                });
+
             modelBuilder.Entity("Board.Domain.Entities.BoardUser", b =>
                 {
                     b.HasOne("Board.Domain.Entities.Board", null)
@@ -203,6 +237,8 @@ namespace Board.Infrastructure.Data.Migrations
             modelBuilder.Entity("Board.Domain.Entities.Board", b =>
                 {
                     b.Navigation("BoardColumns");
+
+                    b.Navigation("BoardTemplate");
 
                     b.Navigation("BoardUsers");
                 });

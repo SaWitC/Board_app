@@ -19,7 +19,6 @@ public class CreateBoardItemEndpoint : Endpoint<CreateBoardItemRequest>
     public override void Configure()
     {
         Post("/api/boarditems");
-        AllowAnonymous();
     }
 
     public override async Task HandleAsync(CreateBoardItemRequest request, CancellationToken cancellationToken)

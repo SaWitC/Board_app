@@ -15,7 +15,6 @@ public class DeleteBoardItemEndpoint : EndpointWithoutRequest
     public override void Configure()
     {
         Delete("/api/boarditems/{id}");
-        AllowAnonymous();
     }
 
     public override async Task HandleAsync(CancellationToken cancellationToken)

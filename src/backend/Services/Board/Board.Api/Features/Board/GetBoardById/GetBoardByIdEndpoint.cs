@@ -10,7 +10,6 @@ public class GetBoardByIdEndpoint : EndpointWithoutRequest
     public override void Configure()
     {
         Get("/api/boards/{id}");
-        AllowAnonymous();
     }
 
     private readonly IRepository<Domain.Entities.Board> _repository;
@@ -25,13 +24,16 @@ public class GetBoardByIdEndpoint : EndpointWithoutRequest
     public override async Task HandleAsync(CancellationToken cancellationToken)
     {
         Guid id = Route<Guid>("id");
-        Domain.Entities.Board entity = await _repository.GetAsync(x => x.Id == id, cancellationToken, true, x => x.BoardColumns, x => x.BoardUsers);
+        Domain.Entities.Board entity = await _repository.GetAsync(x => x.Id == id, cancellationToken, true, x => x.BoardColumns, x => x.BoardUsers, x => x.BoardTemplate);
         if (entity == null)
         {
             await Send.OkAsync(null, cancellationToken);
         }
 
-        var response = _mapper.Map<BoardDto>(entity);
+        BoardDto response = _mapper.Map<BoardDto>(entity);
+        response.IsActiveTemplate = entity?.BoardTemplate?.IsActive ?? false;
+        response.IsTemplate = entity.BoardTemplate != null;
+
         await Send.OkAsync(response, cancellationToken);
     }
 }

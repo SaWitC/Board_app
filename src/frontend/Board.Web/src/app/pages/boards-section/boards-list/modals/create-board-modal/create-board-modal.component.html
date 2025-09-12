@@ -1,12 +1,40 @@
 <h2 mat-dialog-title>{{ dialogTitle }}</h2>
 
-<form [formGroup]="boardForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="boardForm">
   <mat-dialog-content>
+    <div *ngIf="isNew()">
+      <mat-radio-group formControlName="boardType" aria-label="Select an option">
+        <mat-radio-button checked value="{{ boardCreationOptions.EMPTY }}">Пустая борда</mat-radio-button>
+        <mat-radio-button value="{{ boardCreationOptions.TEMPLATE }}">На основе шаблона</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div *ngIf="!isNew()">
+      <button *ngIf="data.board?.IsTemplate; else notTemplate" mat-stroked-button color="primary" class="text-white"
+        type="button" (click)="createTemplatebasedOnThisBoard()">
+        Make it template
+      </button>
+
+      <ng-template #notTemplate>
+        <mat-checkbox (change)="onChangeTemplateActive($event)" class="example-margin">is template active</mat-checkbox>
+      </ng-template>
+    </div>
     <div class="form-container">
+      <div class="mb-2" *ngIf="
+          boardForm.get('boardType')?.value == boardCreationOptions.TEMPLATE
+        ">
+        <ng-select formControlName="boardTemplateId" [items]="boardTemplates$ | async" bindLabel="title" bindValue="id"
+          [searchable]="true" [clearable]="false" [typeahead]="searchTerm$" (search)="onSearch($event)"
+          placeholder="Выберите шаблон" class="w-100">
+          <ng-template ng-option-tmp let-item="item">
+            {{ item.title }}
+          </ng-template>
+        </ng-select>
+      </div>
+
       <label class="form-label">Название доски *</label>
       <mat-form-field appearance="outline" class="full-width">
-        <!-- <mat-label>Название доски *</mat-label> -->
-        <input matInput formControlName="boardTitle" placeholder="Введите название доски">
+        <input matInput formControlName="boardTitle" placeholder="Введите название доски" />
         <mat-error *ngIf="boardForm.get('boardTitle')?.hasError('required')">
           Название обязательно
         </mat-error>
@@ -23,67 +51,102 @@
         </mat-form-field>
       </div>
 
+      <!-- Admins selector start -->
+      <mat-form-field appearance="outline" class="full-width mt-2">
+        <mat-label>Администраторы</mat-label>
+        <input matInput formControlName="boardAdmin" (keydown.enter)="addAdmin()"
+          placeholder="Введите email администратора" />
+        <mat-button matSuffix (click)="addAdmin()">
+          <mat-icon>add</mat-icon>
+        </mat-button>
 
-      <!-- Компонент выбора пользователей -->
-      <div class="mt-2">
-        <app-user-selector [label]="'Пользователи *'" [placeholder]="'Поиск пользователей...'" [required]="true"
-          [selectedUsers]="selectedUsers" (usersChange)="onUsersChange($event)">
-        </app-user-selector>
-      </div>
+        <mat-error class="mt-0" *ngIf="boardForm.get('boardAdmin')?.hasError('email')">
+          Некорректный email
+        </mat-error>
+      </mat-form-field>
 
-      <div class="mt-2">
-        <!-- Компонент выбора администраторов -->
-        <app-user-selector class="mt-3" [label]="'Администраторы *'" [placeholder]="'Поиск администраторов...'"
-          [required]="true" [selectedUsers]="selectedAdmins" (usersChange)="onAdminsChange($event)">
-        </app-user-selector>
-      </div>
+      @for (admin of selectedAdmins; track admin) {
+      <mat-chip-row (removed)="removeAdmin(admin)">
+        {{ admin }}
+        <button matChipRemove [attr.aria-label]="'remove ' + admin">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+      }
 
+      <!-- Admins selector end -->
 
+      <!-- Users selector start -->
+      <mat-form-field appearance="outline" class="full-width mt-2">
+        <mat-label>Пользователи</mat-label>
+        <input matInput formControlName="boardUser" (keydown.enter)="addUser()"
+          placeholder="Введите email пользователя" />
+        <mat-button matSuffix (click)="addUser()">
+          <mat-icon>add</mat-icon>
+        </mat-button>
+        <mat-error class="mt-0" *ngIf="boardForm.get('boardUser')?.hasError('email')">
+          Некорректный email
+        </mat-error>
+      </mat-form-field>
 
-      <div class="columns-section">
-        <div class="columns-header">
-          <h3>Колонки доски</h3>
-          <button type="button" mat-mini-fab color="primary" (click)="addColumn()">
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
+      @for (user of selectedUsers; track user) {
+      <mat-chip-row (removed)="removeUser(user)">
+        {{ user }}
+        <button matChipRemove [attr.aria-label]="'remove ' + user">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+      }
+      <!-- Users selector end -->
+      <!-- Empty board columns configuration start -->
+      <div *ngIf="boardForm.get('boardType')?.value == boardCreationOptions.EMPTY">
+        <div class="columns-section">
+          <div class="columns-header">
+            <h3>Колонки доски</h3>
+            <button type="button" mat-mini-fab color="primary" (click)="addColumn()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
 
-        <div formArrayName="boardColumns" class="columns-list">
-          <div *ngFor="let column of boardColumnsArray.controls; let i = index" [formGroupName]="i" class="column-item">
-            <div class="column-form-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Название колонки</mat-label>
-                <input matInput formControlName="columnTitle" placeholder="Название колонки">
-                <mat-error *ngIf="column.get('columnTitle')?.hasError('required')">
-                  Название обязательно
-                </mat-error>
-              </mat-form-field>
+          <div formArrayName="boardColumns" class="columns-list">
+            <div *ngFor="let column of boardColumnsArray.controls; let i = index" [formGroupName]="i"
+              class="column-item">
+              <div class="column-form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Название колонки</mat-label>
+                  <input matInput formControlName="columnTitle" placeholder="Название колонки" />
+                  <mat-error *ngIf="column.get('columnTitle')?.hasError('required')">
+                    Название обязательно
+                  </mat-error>
+                </mat-form-field>
 
-              <mat-form-field appearance="outline">
-                <mat-label>Описание колонки</mat-label>
-                <input matInput formControlName="columnDescription" placeholder="Описание колонки">
-                <mat-error *ngIf="column.get('columnDescription')?.hasError('required')">
-                  Описание обязательно
-                </mat-error>
-              </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Описание колонки</mat-label>
+                  <input matInput formControlName="columnDescription" placeholder="Описание колонки" />
+                  <mat-error *ngIf="
+                      column.get('columnDescription')?.hasError('required')
+                    ">
+                    Описание обязательно
+                  </mat-error>
+                </mat-form-field>
 
-              <button type="button" class="delete-icon" mat-icon-button color="warn" (click)="removeColumn(i)"
-                [disabled]="boardColumnsArray.length <= 1">
-                <mat-icon>delete</mat-icon>
-              </button>
+                <button type="button" class="delete-icon" mat-icon-button color="warn" (click)="removeColumn(i)"
+                  [disabled]="boardColumnsArray.length <= 1">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <!-- Empty board columns configuration end -->
     </div>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
     <div class="pe-4">
-      <button mat-button (click)="onClose()">
-        Отмена
-      </button>
-      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="boardForm.invalid">
+      <button mat-button type="button" (click)="onClose()">Отмена</button>
+      <button mat-raised-button color="primary" type="submit" (click)="onSubmit()" [disabled]="boardForm.invalid">
         {{ submitButtonText }}
       </button>
     </div>
