@@ -59,6 +59,9 @@ export class CreateBoardModalComponent implements OnInit {
   selectedUsers: string[] = [];
   selectedAdmins: string[] = [];
 
+  public draggedIndex: number | null = null;
+  public hoveredIndex: number | null = null;
+
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<CreateBoardModalComponent>,
@@ -305,4 +308,57 @@ export class CreateBoardModalComponent implements OnInit {
     this.searchTerm$.next(event.term);
   }
 
+  onDragStart(event: DragEvent, index: number): void {
+    if (event.dataTransfer) {
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', index.toString());
+      this.draggedIndex = index;
+    }
+  }
+
+  onDragEnd(event: DragEvent): void {
+    this.draggedIndex = null;
+    this.hoveredIndex = null;
+  }
+
+  onDragOver(event: DragEvent, index: number): void {
+    event.preventDefault();
+
+    this.hoveredIndex = index;
+
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move';
+    }
+
+    if (this.draggedIndex === null || this.draggedIndex === index) {
+      return;
+    }
+
+    const draggedItem = this.boardColumnsArray.at(this.draggedIndex);
+    
+    this.boardColumnsArray.removeAt(this.draggedIndex);
+    this.boardColumnsArray.insert(index, draggedItem);
+
+    this.onDragStart(event, index);
+  }
+
+  onDragEnter(event: DragEvent): void {
+    event.preventDefault();
+  }
+
+  onDrop(event: DragEvent, dropIndex: number): void {
+    event.preventDefault();
+
+    if (this.draggedIndex === null || this.draggedIndex === dropIndex) {
+      return;
+    }
+
+    const draggedItem = this.boardColumnsArray.at(this.draggedIndex);
+    
+    this.boardColumnsArray.removeAt(this.draggedIndex);
+    this.boardColumnsArray.insert(dropIndex, draggedItem);
+
+    this.draggedIndex = null;
+    this.hoveredIndex = null;
+  }
 }
