@@ -16,7 +16,6 @@ public class GetBoardTemplatesEndpoint : EndpointWithoutRequest
     public override void Configure()
     {
         Get("/api/boardtemplates");
-        AllowAnonymous();
     }
 
     public override async Task HandleAsync(CancellationToken ct)

@@ -12,19 +12,17 @@
 
   <nav class="sidebar-nav ">
     <ul class="nav-list sidebar-font-size ">
-      <li class="nav-item">
+      <li class="nav-item"  routerLinkActive="active">
         <a class="nav-link"
-           routerLink="/boards"
-           routerLinkActive="active">
+           routerLink="/boards">
           <span class="nav-icon" [class.compact]="!isOpen"><i class="lar la-folder"></i></span>
           {{ 'SIDEBAR.MY_PROJECTS' | translate }}
         </a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item" routerLinkActive="active">
         <a class="nav-link"
-           routerLink="/info"
-           routerLinkActive="active">
+           routerLink="/info">
           <span class="nav-icon" [class.compact]="!isOpen"><i class="las la-info-circle"></i></span>
           {{ 'SIDEBAR.INFO' | translate }}
         </a>

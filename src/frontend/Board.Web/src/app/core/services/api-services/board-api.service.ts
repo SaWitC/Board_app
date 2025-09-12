@@ -54,7 +54,9 @@ export class BoardApiService {
 			title: source.title,
 			description: source.description,
 			boardUsers: source.boardUsers ?? [],
-			modificationDate: source.modificationDate ? new Date(source.modificationDate) : undefined
+			modificationDate: source.modificationDate ? new Date(source.modificationDate) : undefined,
+			IsTemplate: source.IsTemplate,
+			IsActiveTemplate: source.IsActiveTemplate
 		};
 	}
 
@@ -65,7 +67,9 @@ export class BoardApiService {
 			description: source.description,
 			boardUsers: source.boardUsers ?? [],
 			boardColumns: (source.boardColumns ?? []).map((c: any) => ({ id: String(c.id), title: c.title, description: c.description })),
-			modificationDate: new Date(source.modificationDate)
+			modificationDate: new Date(source.modificationDate),
+			IsTemplate: source.IsTemplate,
+			IsActiveTemplate: source.IsActiveTemplate
 		};
 	}
 }

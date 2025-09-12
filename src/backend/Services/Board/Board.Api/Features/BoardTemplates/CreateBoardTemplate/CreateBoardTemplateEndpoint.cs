@@ -16,7 +16,6 @@ public class CreateBoardTemplateEndpoint : Endpoint<CreateBoardTemplateRequest>
     public override void Configure()
     {
         Post("/api/boardtemplates");
-        AllowAnonymous();
     }
 
     public override async Task HandleAsync(CreateBoardTemplateRequest request, CancellationToken ct)

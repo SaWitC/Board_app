@@ -15,7 +15,6 @@ public class DeleteBoardTemplateEndpoint : EndpointWithoutRequest
     public override void Configure()
     {
         Delete("/api/boardtemplates/{id}");
-        AllowAnonymous();
     }
 
     public override async Task HandleAsync(CancellationToken ct)

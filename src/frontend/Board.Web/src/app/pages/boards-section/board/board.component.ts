@@ -3,14 +3,16 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BoardItem } from 'src/app/core/models/board-item.interface';
 import { TranslateModule } from '@ngx-translate/core';
-import { BoardColumnLookupDTO, BoardDetailsDTO, DragDropEvent } from 'src/app/core/models';
+import { BoardColumnLookupDTO, BoardDetailsDTO, DragDropEvent, UpdateBoardDTO } from 'src/app/core/models';
 import { AddBoardTemplateDTO } from 'src/app/core/models/board-template/add-board-template-DTO.interface';
 import { BoardColumnApiService, BoardItemApiService, BoardApiService } from 'src/app/core/services/api-services';
 import { BoardTemplateServiceApi } from 'src/app/core/services/api-services/board-template-api.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { boardItemToTask, taskToCreateDto, taskToUpdateDto } from 'src/app/core/services/mappers/board-item.mapper';
 import { BoardColumnComponent } from './components/board-column/board-column.component';
-import { devOnlyGuardedExpression } from '@angular/compiler';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 @Component({
@@ -18,7 +20,12 @@ import { devOnlyGuardedExpression } from '@angular/compiler';
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss'],
     standalone: true,
-    imports: [CommonModule, BoardColumnComponent, TranslateModule],
+    imports: [CommonModule,
+      BoardColumnComponent,
+      TranslateModule,
+      MatButtonModule,
+      MatFormFieldModule
+    ],
     providers: [BoardTemplateServiceApi]
 })
 export class BoardComponent implements OnInit {
@@ -28,7 +35,7 @@ export class BoardComponent implements OnInit {
   error: string | null = null;
   currentBoardId: string | null = null;
   currentBoard: BoardDetailsDTO | null = null;
-  isTemplate: boolean = false;
+  isActiveTemplate: boolean = false;
 
   constructor(
     private boardColumnService: BoardColumnApiService,
@@ -224,26 +231,22 @@ export class BoardComponent implements OnInit {
     this.columns = columns;
   }
 
-  OnCheckTemplate(): void {
-    this.isTemplate = !this.isTemplate;
-    if(this.isTemplate){
-      const dto: AddBoardTemplateDTO = { title: this.currentBoard?.title + ' Template', description: this.currentBoard?.description ?? '', isActive: true, boardId: this.currentBoardId ?? ''};
-      console.log(dto);
-      this.boardTemplateServiceApi.addBoardtTmplate(dto).subscribe({
-        next: (res) => {
-          console.log(res);
-        },
-        error: (err) => {
-          console.error('Error adding board template', err);
-        }
-      });
-    }
-    if(!this.isTemplate){
-      //TODO: search existing template
-    }
-  }
 
   getTaskCount(): number {
     return this.tasks.length;
+  }
+
+  openSettings(): void {
+    this.dialogService.openEditBoardModal(this.currentBoard as BoardDetailsDTO).subscribe((updateDto?: UpdateBoardDTO) => {
+      if (updateDto) {
+        this.boardApiService.updateBoard(updateDto).subscribe(()=>{
+          this.boardApiService.getBoardById(this.currentBoardId as string).subscribe({
+            next: (board) => {
+              this.currentBoard = board;
+            }
+          });
+        });
+      }
+    });
   }
 }

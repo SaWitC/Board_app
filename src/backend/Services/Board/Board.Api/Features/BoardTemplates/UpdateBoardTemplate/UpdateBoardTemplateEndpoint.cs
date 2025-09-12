@@ -16,7 +16,6 @@ public class UpdateBoardTemplateEndpoint : Endpoint<UpdateBoardTemplateRequest>
     public override void Configure()
     {
         Put("/api/boardtemplates/{id}");
-        AllowAnonymous();
     }
 
     public override async Task HandleAsync(UpdateBoardTemplateRequest request, CancellationToken ct)

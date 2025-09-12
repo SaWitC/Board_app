@@ -19,7 +19,6 @@ public class UpdateBoardItemEndpoint : Endpoint<UpdateBoardItemRequest>
     public override void Configure()
     {
         Put("/api/boarditems/{id}");
-        AllowAnonymous();
     }
 
     public override async Task HandleAsync(UpdateBoardItemRequest request, CancellationToken cancellationToken)
