@@ -19,7 +19,6 @@ import { BoardCreationOptions } from 'src/app/core/models/enums/board-creation-o
 import { debounceTime, distinctUntilChanged, filter, Observable, of, Subject, switchMap } from 'rxjs';
 import { BoardTemplateDTO } from 'src/app/core/models/board-template/board-template-DTO.interface';
 import { MatSelectModule } from '@angular/material/select';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { NgSelectComponent } from '@ng-select/ng-select';
 
 export interface CreateBoardModalData {
@@ -44,7 +43,6 @@ export interface CreateBoardModalData {
     MatRadioModule,
     MatCheckboxModule,
     MatSelectModule,
-    NgxMatSelectSearchModule,
     NgSelectComponent
   ]
 })
