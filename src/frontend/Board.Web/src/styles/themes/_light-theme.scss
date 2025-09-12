@@ -52,7 +52,7 @@
   --bs-custom-btn-color: #fff !important;
   --bs-custom-btn-bg: #0d6efd !important;
   --bs-custom-btn-border-color: #0d6efd !important;
-  --bs-custom-btn-hover-bg: #eee!important;
+  --bs-custom-btn-hover-bg: #ccc!important;
   --bs-custom-btn-hover-border-color: #e1e1e1e1;
   --bs-custom-btn-hover-border-color: #0a58ca;
   --bs-border-color: #ecebe5;
@@ -134,12 +134,23 @@
 
 
   /* Light theme scrollbar styles */
-  --scrollbar-bg: #f1f1f1;
+  --scrollbar-bg: #f9f9f9;
   /* Light track background */
   --scrollbar-thumb: #a9a9a9;
   /* Light thumb color */
   --scrollbar-thumb-hover: #555;
   /* Thumb hover color */
+
+
+
+  --mat-sys-primary: var(--background-accent-themed);
+  --mat-sys-on-secondary-container: var(--background-secondary);
+  --mat-sys-on-error: var(--text-color);
+  --mat-sys-on-primary: var(--text-color);
+  --mat-sys-on-error-container: var(--text-color-negative);
+  --mat-sys-background: var(--background);
+  --mat-sys-error: var(--text-color-negative);
+  --mat-sys-error-container: var(--background-negative-tint);
 
 }
 

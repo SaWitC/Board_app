@@ -92,8 +92,8 @@
   /* Light gray for placeholder text */
 
   --ng-select-disabled-background:  #777676;
-
   --side-menu-active: #3F3F3F;
+
   --mat-standard-button-toggle-divider-color: #444444;
   --mat-standard-button-toggle-selected-state-text-color: #e2e7f7;
   --mat-table-even-row:#3F3F3F;
@@ -106,7 +106,7 @@
   --mat-paginator-container-background-color: #2d2d2d;
   --mat-paginator-container-text-color: var(--text-color);
   --mat-sys-on-surface: var(--text-color);
-  --mdc-dialog-container-color: #222121;
+  --mdc-dialog-container-color: var(--board-column-background-color);
   --mdc-text-button-label-text-color: #d2cb5c;
   --mat-select-panel-background-color: #444;
   --mat-option-selected-state-label-text-color: var(--text-color);
@@ -119,15 +119,26 @@
   --mat-paginator-enabled-icon-color: var(--ng-select-text-color);
   --mat-paginator-disabled-icon-color: var(--ng-select-disabled-option-color);
 
+  --mdc-outlined-text-field-label-text-color: var(--text-color);
+  --mat-icon-color: var(--text-color);
 
-
-
-  /* Dark theme scrollbar styles */
-  --scrollbar-bg: #333;
-  /* Dark track background */
-  --scrollbar-thumb: #888686;
-  /* Dark thumb color */
-  --scrollbar-thumb-hover: #696969;
+  /* Light theme scrollbar styles */
+  --scrollbar-bg: #393939;
+  /* Light track background */
+  --scrollbar-thumb: #a9a9a9;
+  /* Light thumb color */
+  --scrollbar-thumb-hover: #555;
   /* Thumb hover color */
+
+
+
+  --mat-sys-primary: var(--background-accent-themed);
+  --mat-sys-on-secondary-container: var(--background-secondary);
+  --mat-sys-on-error: var(--text-color);
+  --mat-sys-on-primary: var(--text-color);
+  --mat-sys-on-error-container: var(--text-color-negative);
+  --mat-sys-background: var(--background);
+  --mat-sys-error: var(--text-color-negative);
+  --mat-sys-error-container: var(--background-negative-tint);
 
 }
