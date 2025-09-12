@@ -5,7 +5,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { TranslateModule } from '@ngx-translate/core';
 import { BoardLookupDTO, AddBoardDTO, BoardDetailsDTO, UpdateBoardDTO } from 'src/app/core/models';
 import { BoardApiService } from 'src/app/core/services/api-services';
-import { DialogService } from 'src/app/core/services/dialog.service';
+import { DialogService } from 'src/app/core/services/other/dialog.service';
+import { Observable, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-boards-list',
@@ -16,7 +17,6 @@ import { DialogService } from 'src/app/core/services/dialog.service';
 })
 export class BoardsListComponent implements OnInit {
   boards: BoardLookupDTO[] = [];
-  loading = false;
   error: string | null = null;
   selectedBoard: BoardLookupDTO | null = null;
 
@@ -35,25 +35,15 @@ export class BoardsListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadBoards();
+    this.loadBoards().subscribe();
   }
 
-  loadBoards(): void {
-    this.loading = true;
-    this.error = null;
-
-    this.boardApiService.getBoards().subscribe({
-      next: (boards) => {
-        this.boards = boards;
-        this.loading = false;
-      },
-      error: (error) => {
-        this.error = 'Failed to load boards';
-        this.loading = false;
-        console.error('Error loading boards:', error);
-      }
-    });
+  loadBoards(): Observable<BoardLookupDTO[]> {
+    return this.boardApiService.getBoards().pipe(
+      tap(boards => this.boards = boards)
+    );
   }
+
 
   onBoardClick(board: BoardLookupDTO): void {
     this.router.navigate(['/board', board.id]);
@@ -62,23 +52,7 @@ export class BoardsListComponent implements OnInit {
   onCreateBoard(): void {
     this.dialogService.openCreateBoardModal().subscribe((boardData) => {
       if (boardData) {
-        this.boardApiService.addBoard(boardData as AddBoardDTO).subscribe({
-          next: (newBoard) => {
-            const newBoardLookup: BoardLookupDTO = {
-              id: newBoard.id,
-              title: newBoard.title,
-              description: newBoard.description,
-              modificationDate: newBoard.modificationDate,
-              boardUsers: newBoard.boardUsers ?? []
-            };
-            this.boards = [...this.boards, newBoardLookup];
-            console.log('Board created successfully:', newBoard);
-          },
-          error: (error) => {
-            console.error('Error creating board:', error);
-            this.error = 'Failed to create board';
-          }
-        });
+        this.boardApiService.addBoard(boardData as AddBoardDTO).pipe(switchMap(()=>this.loadBoards())).subscribe();
       }
     });
   }
@@ -107,27 +81,9 @@ export class BoardsListComponent implements OnInit {
       next: (boardDetails: BoardDetailsDTO) => {
         this.dialogService.openEditBoardModal(boardDetails).subscribe((updateDto?: UpdateBoardDTO) => {
           if (updateDto) {
-            this.boardApiService.updateBoard(updateDto).subscribe({
-              next: (updated) => {
-                this.boards = this.boards.map(b => b.id === updated.id ? ({
-                  id: updated.id,
-                  title: updated.title,
-                  description: updated.description,
-                  modificationDate: updated.modificationDate,
-                  boardUsers: updated.boardUsers ?? []
-                }) : b);
-              },
-              error: (err) => {
-                console.error('Error updating board:', err);
-                this.error = 'Failed to update board';
-              }
-            });
+            this.boardApiService.updateBoard(updateDto).pipe(switchMap(()=>this.loadBoards())).subscribe();
           }
         });
-      },
-      error: (err) => {
-        console.error('Error loading board details:', err);
-        this.error = 'Failed to load board details';
       }
     });
   }

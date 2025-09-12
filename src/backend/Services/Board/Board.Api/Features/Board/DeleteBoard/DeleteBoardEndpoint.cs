@@ -8,7 +8,6 @@ public class DeleteBoardEndpoint : EndpointWithoutRequest
     public override void Configure()
     {
         Delete("/api/boards/{id}");
-        AllowAnonymous();
     }
 
     private readonly IRepository<Domain.Entities.Board> _repository;

@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslateModule,RouterModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
@@ -24,13 +24,10 @@ export class SidebarComponent {
 
   onMyProjectsClick(): void {
     this.router.navigate(['/boards']);
-
-    // this.closeSidebar.emit();
   }
 
   onInfoClick(): void {
     this.router.navigate(['/info']);
-    // this.closeSidebar.emit();
   }
 
   onCloseClick(): void {

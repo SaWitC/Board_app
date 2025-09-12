@@ -14,7 +14,6 @@ public class DeleteBoardColumnEndpoint : EndpointWithoutRequest
     public override void Configure()
     {
         Delete("/api/boards/{boardId}/columns/{id}");
-        AllowAnonymous();
     }
 
     public override async Task HandleAsync(CancellationToken cancellationToken)

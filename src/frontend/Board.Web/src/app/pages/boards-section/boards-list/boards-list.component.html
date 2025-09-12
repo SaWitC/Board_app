@@ -8,27 +8,18 @@
   </div>
 
   <div class="boards-content">
-    <div *ngIf="loading" class="loading">
-      <div class="spinner"></div>
-      <p>{{ 'BOARDS_LIST.LOADING' | translate }}</p>
-    </div>
-
     <div *ngIf="error" class="error">
       <p>{{ error }}</p>
       <button class="retry-btn" (click)="loadBoards()">{{ 'COMMON.RETRY' | translate }}</button>
     </div>
 
-    <div *ngIf="!loading && !error && boards.length === 0" class="empty-state">
+    <div *ngIf="boards.length === 0" class="empty-state">
       <div class="empty-icon">📋</div>
       <h3>{{ 'BOARDS_LIST.EMPTY_TITLE' | translate }}</h3>
       <p>{{ 'BOARDS_LIST.EMPTY_SUBTITLE' | translate }}</p>
-      <button class="create-board-btn primary" (click)="onCreateBoard()">
-        <span class="btn-icon">+</span>
-        {{ 'BOARDS_LIST.CREATE_BOARD' | translate }}
-      </button>
     </div>
 
-    <div *ngIf="!loading && !error && boards.length > 0" class="boards-grid">
+    <div *ngIf="boards.length > 0" class="boards-grid">
       <div
         *ngFor="let board of boards"
         class="board-card"

@@ -6,7 +6,7 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
-import { LoaderService } from '../services/loader.service';
+import { LoaderService } from '../services/other/loader.service';
 
 
 @Injectable()
