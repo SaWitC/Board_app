@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { BoardItem, AddBoardDTO, BoardDetailsDTO, UpdateBoardDTO } from '../models';
+import { BoardItem, AddBoardDTO, BoardDetailsDTO, UpdateBoardDTO } from '../../models';
 import { Observable } from 'rxjs';
 import { TaskModalComponent, TaskModalData } from 'src/app/pages/boards-section/board/modals/task-modal/task-modal.component';
 import { CreateBoardModalComponent, CreateBoardModalData } from 'src/app/pages/boards-section/boards-list/modals/create-board-modal/create-board-modal.component';
@@ -19,7 +19,7 @@ export class DialogService {
       height: '800px',
       maxHeight: '90vh',
       data: taskModalData,
-      disableClose: false,
+      disableClose: true,
       autoFocus: true,
       panelClass: 'task-modal-dialog'
     });
@@ -35,7 +35,7 @@ export class DialogService {
       data: {
         mode: 'create'
       } as CreateBoardModalData,
-      disableClose: false,
+      disableClose: true,
       autoFocus: true,
       panelClass: 'create-board-modal-dialog'
     });
@@ -52,7 +52,7 @@ export class DialogService {
         mode: 'edit',
         board
       } as CreateBoardModalData,
-      disableClose: false,
+      disableClose: true,
       autoFocus: true,
       panelClass: 'create-board-modal-dialog'
     });

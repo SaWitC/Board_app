@@ -3,11 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BoardItem } from 'src/app/core/models/board-item.interface';
 import { TranslateModule } from '@ngx-translate/core';
-import { BoardColumnLookupDTO, BoardDetailsDTO, DragDropEvent } from 'src/app/core/models';
+import { BoardColumnLookupDTO, BoardDetailsDTO, DragDropEvent, UpdateBoardDTO } from 'src/app/core/models';
 import { BoardColumnApiService, BoardItemApiService, BoardApiService } from 'src/app/core/services/api-services';
-import { DialogService } from 'src/app/core/services/dialog.service';
-import { boardItemToTask, taskToCreateDto, taskToUpdateDto } from 'src/app/core/services/mappers/board-item.mapper';
+import { BoardTemplateServiceApi } from 'src/app/core/services/api-services/board-template-api.service';
+import { DialogService } from 'src/app/core/services/other/dialog.service';
 import { BoardColumnComponent } from './components/board-column/board-column.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { boardItemToTask, taskToCreateDto, taskToUpdateDto } from 'src/app/core/mappers/board-item.mapper';
 
 
 @Component({
@@ -15,21 +18,27 @@ import { BoardColumnComponent } from './components/board-column/board-column.com
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss'],
     standalone: true,
-    imports: [CommonModule, BoardColumnComponent, TranslateModule]
+    imports: [CommonModule,
+      BoardColumnComponent,
+      TranslateModule,
+      MatButtonModule,
+      MatFormFieldModule
+    ],
+    providers: [BoardTemplateServiceApi]
 })
 export class BoardComponent implements OnInit {
   tasks: BoardItem[] = [];
   columns: BoardColumnLookupDTO[] = [];
-  loading = false;
-  error: string | null = null;
   currentBoardId: string | null = null;
   currentBoard: BoardDetailsDTO | null = null;
+  isActiveTemplate: boolean = false;
 
   constructor(
     private boardColumnService: BoardColumnApiService,
     private boardItemService: BoardItemApiService,
     private dialogService: DialogService,
     private boardApiService: BoardApiService,
+    private boardTemplateServiceApi: BoardTemplateServiceApi,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -65,7 +74,6 @@ export class BoardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading boards:', error);
-        this.error = 'Failed to load boards';
       }
     });
   }
@@ -86,22 +94,16 @@ export class BoardComponent implements OnInit {
       next: (columns) => this.columns = columns,
       error: (error) => {
         console.error('Error loading columns:', error);
-        this.error = 'Failed to load columns';
       }
     });
   }
 
   private loadTasks(): void {
-    this.loading = true;
-    this.error = null;
     this.boardItemService.getBoardItems().subscribe({
       next: (items) => {
         this.tasks = items.map(boardItemToTask);
-        this.loading = false;
       },
       error: (err) => {
-        this.error = 'Failed to load task';
-        this.loading = false;
         console.error(err);
       }
     });
@@ -218,7 +220,22 @@ export class BoardComponent implements OnInit {
     this.columns = columns;
   }
 
+
   getTaskCount(): number {
     return this.tasks.length;
+  }
+
+  openSettings(): void {
+    this.dialogService.openEditBoardModal(this.currentBoard as BoardDetailsDTO).subscribe((updateDto?: UpdateBoardDTO) => {
+      if (updateDto) {
+        this.boardApiService.updateBoard(updateDto).subscribe(()=>{
+          this.boardApiService.getBoardById(this.currentBoardId as string).subscribe({
+            next: (board) => {
+              this.currentBoard = board;
+            }
+          });
+        });
+      }
+    });
   }
 }

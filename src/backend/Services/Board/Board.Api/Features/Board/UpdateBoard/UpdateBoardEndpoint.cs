@@ -18,7 +18,6 @@ public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
     public override void Configure()
     {
         Put("/api/boards/{id}");
-        AllowAnonymous();
     }
 
 
@@ -67,7 +66,7 @@ public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
         );
 
         Domain.Entities.Board updated = await _repository.UpdateAsync(entity, cancellationToken);
-        var response = _mapper.Map<BoardDto>(updated);
+        BoardDto response = _mapper.Map<BoardDto>(updated);
 
         await Send.OkAsync(response, cancellationToken);
     }

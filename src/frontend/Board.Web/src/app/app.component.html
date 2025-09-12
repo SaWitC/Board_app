@@ -1,7 +1,7 @@
 <navigation (openSidebar)="onOpenSidebar()"></navigation>
 
-<!-- <ng-container *ngIf="isAuthenticated"> -->
-  <ng-container>
+  <ng-container *ngIf="isAuthenticated">
+    <app-http-loader></app-http-loader>
   <div class="layout">
     <div
       class="sidebar desktop"

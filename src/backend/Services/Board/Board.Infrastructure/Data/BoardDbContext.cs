@@ -8,6 +8,7 @@ public class BoardDbContext : DbContext
     public DbSet<Domain.Entities.Board> Boards { get; set; }
     public DbSet<BoardItem> BoardItems { get; set; }
     public DbSet<BoardColumn> BoardColumns { get; set; }
+    public DbSet<BoardTemplate> BoardTemplates { get; set; }
     public BoardDbContext(DbContextOptions<BoardDbContext> options) : base(options)
     {
     }

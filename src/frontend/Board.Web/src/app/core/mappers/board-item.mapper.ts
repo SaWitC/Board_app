@@ -1,8 +1,8 @@
-import { BoardItem } from '../../models';
-import { AddBoardItemDTO } from '../../models/board-item/add-board-item-DTO.interface';
-import { UpdateBoardItemDTO } from '../../models/board-item/update-board-item-DTO.interface';
-import { BoardItemDetailsDTO } from '../../models/board-item/board-item-details-DTO.interface';
-import { BoardItemLookupDTO } from '../../models/board-item/board-item-lookup-DTO.interface';
+import { BoardItem } from '../models';
+import { AddBoardItemDTO } from '../models/board-item/add-board-item-DTO.interface';
+import { UpdateBoardItemDTO } from '../models/board-item/update-board-item-DTO.interface';
+import { BoardItemDetailsDTO } from '../models/board-item/board-item-details-DTO.interface';
+import { BoardItemLookupDTO } from '../models/board-item/board-item-lookup-DTO.interface';
 
 const EMPTY_GUID = '00000000-0000-0000-0000-000000000000';
 

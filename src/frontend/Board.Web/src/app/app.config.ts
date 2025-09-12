@@ -68,18 +68,13 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(
-      ...(environment.auth.isBypassAuthorization ? [] : [withInterceptors([authHttpInterceptorFn])]),
-      withInterceptorsFromDi()
-    ),
     provideClientHydration(withEventReplay()),
     provideNativeDateAdapter(),
     provideAnimationsAsyncMaterial(),
     provideAnimations(), // required animations providers
     provideToastr({
       preventDuplicates: true,
-    }), // Toastr providers
-    // provideTranslations(),
+    }),
     provideAnimationsAsync(),
     importProvidersFrom(
       TranslateModule.forRoot({
@@ -103,22 +98,16 @@ export const appConfig: ApplicationConfig = {
 
       authorizationParams: {
         redirect_uri: window.location.origin,
-
-        // Request this audience at user authentication time
         audience: environment.auth.audience,
         scope: 'openid profile email',
       },
 
-
-      // Specify configuration for the interceptor
       httpInterceptor: {
         allowedList: [
           {
-            // Match any request that starts 'https://localhost:7069' (note the asterisk)
             uri: environment.auth.access_token_uri,
             tokenOptions: {
               authorizationParams: {
-                // The attached token should target this audience
                 audience: environment.auth.audience,
                 scope: 'openid profile email',
               },
@@ -130,6 +119,11 @@ export const appConfig: ApplicationConfig = {
         ? { cacheLocation: 'localstorage', useRefreshTokens: true, authorizationParams: { ...{ redirect_uri: window.location.origin }, audience: environment.auth.audience, scope: 'openid profile email' } }
         : {}),
     }),
+
+    provideHttpClient(
+      ...(environment.auth.isBypassAuthorization ? [] : [withInterceptors([authHttpInterceptorFn])]),
+      withInterceptorsFromDi()
+    ),
 
     //Interceptors
     {

@@ -19,7 +19,6 @@ public class GetBoardColumnByIdEndpoint : EndpointWithoutRequest
     public override void Configure()
     {
         Get("/api/boards/{boardId}/columns/{id}");
-        AllowAnonymous();
     }
 
     public override async Task HandleAsync(CancellationToken cancellationToken)
