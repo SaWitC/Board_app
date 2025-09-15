@@ -138,8 +138,9 @@ export class CreateBoardModalComponent implements OnInit {
       }
     }
     else { //Empty board
-      if(!this.boardForm.get('boardColumns')?.value){
+      if(!this.boardForm.get('boardColumns')?.value) {
         this.toastr.error('Columns are required');
+      }
 
         if (this.boardForm.valid) {
           const formValue = this.boardForm.value;
@@ -184,7 +185,7 @@ export class CreateBoardModalComponent implements OnInit {
 
           this.dialogRef.close(boardData);
         }
-      }
+      
     }
   }
 
