@@ -36,9 +36,6 @@ export class TaskCardComponent {
     [TaskPriority.URGENT]: 'priority-color-urgent'
   };
 
-
-
-
     onDragStart(event: DragEvent): void {
     if (event.dataTransfer) {
       event.dataTransfer.setData('text/plain', this.task.id);
