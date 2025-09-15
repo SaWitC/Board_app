@@ -1,5 +1,5 @@
+using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
-using Board.Application.Interfaces;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;
 
@@ -12,16 +12,17 @@ public class GetBoardsEndpoint : EndpointWithoutRequest
         Get("/api/boards");
     }
 
-    private readonly IRepository<Domain.Entities.Board> _repository;
+    private readonly IBoardRepository _repository;
     private readonly IMapper _mapper;
 
-    public GetBoardsEndpoint(IRepository<Domain.Entities.Board> repository, IMapper mapper)
+    public GetBoardsEndpoint(IBoardRepository repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
     }
     public override async Task HandleAsync(CancellationToken cancellationToken)
     {
+
         IList<Domain.Entities.Board> entities = await _repository.GetAllAsync(cancellationToken, true, b => b.BoardColumns, b => b.BoardUsers);
         IList<BoardDto> boards = _mapper.Map<IList<BoardDto>>(entities);
         await Send.OkAsync(boards, cancellationToken);

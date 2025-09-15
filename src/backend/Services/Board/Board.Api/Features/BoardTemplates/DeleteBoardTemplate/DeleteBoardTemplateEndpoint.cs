@@ -1,4 +1,4 @@
-using Board.Application.Interfaces;
+using Board.Application.Abstractions.Repositories;
 using Board.Domain.Entities;
 using FastEndpoints;
 
@@ -6,9 +6,9 @@ namespace Board.Api.Features.BoardTemplates.DeleteBoardTemplate;
 
 public class DeleteBoardTemplateEndpoint : EndpointWithoutRequest
 {
-    private readonly IRepository<BoardTemplate> _repository;
+    private readonly IBoardTemplateRepository _repository;
 
-    public DeleteBoardTemplateEndpoint(IRepository<BoardTemplate> repository)
+    public DeleteBoardTemplateEndpoint(IBoardTemplateRepository repository)
     {
         _repository = repository;
     }

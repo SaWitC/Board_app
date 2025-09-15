@@ -1,5 +1,6 @@
 using Board.Api.Configuration;
 using Board.Api.Features.Board.CreateBoard;
+using Board.Application.DI;
 using Board.Application.Mapping;
 using Board.Domain.Options;
 using Board.Infrastructure;
@@ -41,7 +42,8 @@ services.ConfigureAuth(authOptions)
     .AddFastEndpoints()
     .ConfigureSwagger(configuration)
     .AddHttpContextAccessor()
-    .AddInfrastructure(configuration);
+    .AddInfrastructure(configuration)
+    .ConfigureApplication();
 
 WebApplication app = builder.Build();
 

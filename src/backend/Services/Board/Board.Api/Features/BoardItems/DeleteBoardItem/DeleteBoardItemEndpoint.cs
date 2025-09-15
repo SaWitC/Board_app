@@ -1,4 +1,4 @@
-using Board.Application.Interfaces;
+using Board.Application.Abstractions.Repositories;
 using Board.Domain.Entities;
 using FastEndpoints;
 
@@ -6,9 +6,9 @@ namespace Board.Api.Features.BoardItems.DeleteBoardItem;
 
 public class DeleteBoardItemEndpoint : EndpointWithoutRequest
 {
-    private readonly IRepository<BoardItem> _repository;
+    private readonly IBoardItemRepository _repository;
 
-    public DeleteBoardItemEndpoint(IRepository<BoardItem> repository)
+    public DeleteBoardItemEndpoint(IBoardItemRepository repository)
     {
         _repository = repository;
     }

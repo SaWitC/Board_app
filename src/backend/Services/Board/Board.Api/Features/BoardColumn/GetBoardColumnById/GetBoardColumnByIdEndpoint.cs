@@ -1,5 +1,5 @@
+using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
-using Board.Application.Interfaces;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;
 
@@ -8,10 +8,10 @@ namespace Board.Api.Features.BoardColumn.GetBoardColumnById;
 public class GetBoardColumnByIdEndpoint : EndpointWithoutRequest
 {
 
-    private readonly IRepository<Domain.Entities.BoardColumn> _repository;
+    private readonly IBoardColumnRepository _repository;
     private readonly IMapper _mapper;
 
-    public GetBoardColumnByIdEndpoint(IRepository<Domain.Entities.BoardColumn> repository, IMapper mapper)
+    public GetBoardColumnByIdEndpoint(IBoardColumnRepository repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;

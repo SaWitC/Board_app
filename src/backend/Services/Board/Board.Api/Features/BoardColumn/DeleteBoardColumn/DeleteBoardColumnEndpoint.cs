@@ -1,13 +1,13 @@
-using Board.Application.Interfaces;
+using Board.Application.Abstractions.Repositories;
 using FastEndpoints;
 
 namespace Board.Api.Features.BoardColumn.DeleteBoardColumn;
 
 public class DeleteBoardColumnEndpoint : EndpointWithoutRequest
 {
-    private readonly IRepository<Domain.Entities.BoardColumn> _repository;
+    private readonly IBoardColumnRepository _repository;
 
-    public DeleteBoardColumnEndpoint(IRepository<Domain.Entities.BoardColumn> repository)
+    public DeleteBoardColumnEndpoint(IBoardColumnRepository repository)
     {
         _repository = repository;
     }
