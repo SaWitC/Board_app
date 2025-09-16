@@ -10,7 +10,7 @@ public class BoardRepository : Repository<Domain.Entities.Board>, IBoardReposito
     {
     }
 
-    public async Task<BoardUser?> GetBoardOwnerAsync(Guid boardId, CancellationToken cancellationToken)
+    public async Task<BoardUser> GetBoardOwnerAsync(Guid boardId, CancellationToken cancellationToken)
     {
         return await _context.Boards
             .Where(b => b.Id == boardId)

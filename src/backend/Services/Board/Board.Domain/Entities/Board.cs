@@ -10,6 +10,6 @@ public class Board : IEntity
     public ICollection<BoardUser> BoardUsers { get; set; }
     public ICollection<BoardColumn> BoardColumns { get; set; }
     public DateTimeOffset ModificationDate { get; set; }
-    public BoardTemplate? BoardTemplate { get; set; }
+    public BoardTemplate BoardTemplate { get; set; }
 }
 

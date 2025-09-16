@@ -14,11 +14,11 @@ public sealed class EmployeeSearchModel
     public required string LastNameEn { get; init; }
 
     [JsonPropertyName("firstNameRu")]
-    public string? FirstNameRu { get; set; }
+    public string FirstNameRu { get; set; }
 
     [JsonPropertyName("lastNameRu")]
-    public string? LastNameRu { get; set; }
+    public string LastNameRu { get; set; }
 
     [JsonPropertyName("linkProfilePictureMini")]
-    public string? LinkProfilePictureMini { get; set; }
+    public string LinkProfilePictureMini { get; set; }
 }

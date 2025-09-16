@@ -16,7 +16,7 @@ public class CreateBoardEndpoint : Endpoint<CreateBoardRequest>
     {
         _repository = repository;
         _mapper = mapper;
-        currentUserProvider = _currentUserProvider;
+        _currentUserProvider = currentUserProvider;
     }
     public override void Configure()
     {
@@ -26,7 +26,7 @@ public class CreateBoardEndpoint : Endpoint<CreateBoardRequest>
     public override async Task HandleAsync(CreateBoardRequest request, CancellationToken cancellationToken)
     {
         Guid boardId = Guid.NewGuid();
-        Domain.Entities.Board entity = new Domain.Entities.Board
+        Domain.Entities.Board entity = new()
         {
             Id = boardId,
             Title = request.Title,
