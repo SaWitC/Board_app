@@ -118,6 +118,9 @@ export class CreateBoardModalComponent implements OnInit {
       boardUser: ['',[Validators.email]],
       boardAdmin: ['',[Validators.email]],
 
+      boardAdmins: new FormArray([]),
+      boardUsers: new FormArray([]),
+
       boardTemplateId: [null],
       boardType: [BoardCreationOptions.EMPTY, Validators.required]
     });
@@ -137,56 +140,66 @@ export class CreateBoardModalComponent implements OnInit {
         //TODO add logic to create board based on template
       }
     }
-    else { //Empty board
-      if(!this.boardForm.get('boardColumns')?.value) {
-        this.toastr.error('Columns are required');
+    else if (!this.boardForm.get('boardColumns')?.value) {
+      this.toastr.error('Columns are required');
+    }
+    else if(this.boardForm.valid) { 
+
+      if (this.data?.mode === 'edit' && this.data.board) {
+        const updateData = this.getUpdateBoardDTO(this.boardForm);
+        this.dialogRef.close(updateData);
+        return;
       }
 
-        if (this.boardForm.valid) {
-          const formValue = this.boardForm.value;
-
-          if (this.data?.mode === 'edit' && this.data.board) {
-            const boardColumns = formValue.boardColumns.map((column: any) => ({
-              id: column.id,
-              title: column.columnTitle,
-              description: column.columnDescription
-            }));
-
-            const updateData: UpdateBoardDTO = {
-              id: this.data.board.id,
-              title: formValue.boardTitle,
-              description: formValue.boardDescription,
-              boardUsers:[
-                ...this.selectedUsers.map(u => ({ email: u, role: UserAccess.USER })),
-                ...this.selectedAdmins.map(a => ({ email: a, role: UserAccess.ADMIN }))
-              ],
-              boardColumns: boardColumns
-            };
-            this.dialogRef.close(updateData);
-            return;
-          }
-
-          const boardColumns: any[] = formValue.boardColumns.map((column: any) => ({
-            id: column.id,
-            title: column.columnTitle,
-            description: column.columnDescription
-          }));
-
-          const boardData: AddBoardDTO = {
-            title: formValue.boardTitle,
-            description: formValue.boardDescription,
-            boardUsers:[
-              ...this.selectedUsers.map(u => ({ email: u, role: UserAccess.USER })),
-              ...this.selectedAdmins.map(a => ({ email: a, role: UserAccess.ADMIN }))
-            ,{ email: this.userService.getCurrentUserEmail(), role: UserAccess.OWNER }
-            ],
-            boardColumns: boardColumns
-          };
-
-          this.dialogRef.close(boardData);
-        }
-      
+      const boardData = this.getAddBoardDTO(this.boardForm);
+      this.dialogRef.close(boardData);
     }
+  }
+
+  private getUpdateBoardDTO(boardForm: FormGroup<any>): UpdateBoardDTO {
+    const formValue = this.boardForm.value;
+
+    const boardColumns = formValue.boardColumns.map((column: any) => ({
+      id: column.id,
+      title: column.columnTitle,
+      description: column.columnDescription
+    }));
+
+    const updateData: UpdateBoardDTO = {
+      id: this.data.board!.id,
+      title: formValue.boardTitle,
+      description: formValue.boardDescription,
+      boardUsers:[
+        ...this.selectedUsers.map(u => ({ email: u, role: UserAccess.USER })),
+        ...this.selectedAdmins.map(a => ({ email: a, role: UserAccess.ADMIN }))
+      ],
+      boardColumns: boardColumns
+    };
+
+    return updateData;
+  }
+
+  private getAddBoardDTO(boardForm: FormGroup<any>): AddBoardDTO {
+    const formValue = this.boardForm.value;
+
+    const boardColumns: any[] = formValue.boardColumns.map((column: any) => ({
+      id: column.id,
+      title: column.columnTitle,
+      description: column.columnDescription
+    }));
+
+    const boardData: AddBoardDTO = {
+      title: formValue.boardTitle,
+      description: formValue.boardDescription,
+      boardUsers:[
+        ...this.selectedUsers.map(u => ({ email: u, role: UserAccess.USER })),
+        ...this.selectedAdmins.map(a => ({ email: a, role: UserAccess.ADMIN }))
+      ,{ email: this.userService.getCurrentUserEmail(), role: UserAccess.OWNER }
+      ],
+      boardColumns: boardColumns
+    };
+
+    return boardData;
   }
 
   onClose(): void {
@@ -195,6 +208,10 @@ export class CreateBoardModalComponent implements OnInit {
 
   get boardColumnsArray() {
     return this.boardForm.get('boardColumns') as FormArray;
+  }
+
+  get boardAdmins() {
+    return this.boardForm.get('boardAdmins') as FormArray;
   }
 
   //Form validation
@@ -264,14 +281,24 @@ export class CreateBoardModalComponent implements OnInit {
 
 
   addAdmin(): void {
-    if(this.boardForm.get('boardAdmin')?.valid) {
-      let value = this.boardForm.get('boardAdmin')?.value;
-      if (value) {
-        this.selectedAdmins.push(value);
-      }
+    // Old logic
+    // const boardAdmin = this.boardForm.get('boardAdmin');
 
-      this.boardForm.get('boardAdmin')?.reset();
-    }
+    // if(boardAdmin?.valid) {
+    //   let value = boardAdmin?.value;
+    //   if (value) {
+    //     this.selectedAdmins.push(value);
+    //   }
+
+    //   boardAdmin?.reset();
+    // }
+
+    const adminForm = this.fb.group({
+      adminEmail: ['', [Validators.email, Validators.required]]
+    });
+
+    const boardAdminForms = this.boardAdmins;
+    boardAdminForms.push(adminForm);
   }
 
   removeAdmin(admin: string): void {
