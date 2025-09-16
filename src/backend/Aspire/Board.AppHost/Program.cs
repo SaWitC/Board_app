@@ -29,7 +29,7 @@ var boardApi = builder.AddProject<Projects.Board_Api>("board-api")
 // Add Frontend
 builder.AddNpmApp("board-web", "../../../frontend/Board.Web")
     .WithReference(boardApi)
-    .WithHttpEndpoint(port: 3001, targetPort: 4200, name: "frontend", env: "PORT");
+    .WithHttpEndpoint(port: 4203, targetPort: 4200, name: "frontend", env: "PORT");
     //.PublishAsDockerFile();
 
 builder.Build().Run();
