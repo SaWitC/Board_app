@@ -1,5 +1,6 @@
+using Board.Application.Abstractions.Repositories;
+using Board.Application.Abstractions.Services;
 using Board.Application.DTOs;
-using Board.Application.Interfaces;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;
 
@@ -7,13 +8,15 @@ namespace Board.Api.Features.Board.CreateBoard;
 
 public class CreateBoardEndpoint : Endpoint<CreateBoardRequest>
 {
-    private readonly IRepository<Domain.Entities.Board> _repository;
+    private readonly IBoardRepository _repository;
     private readonly IMapper _mapper;
+    private readonly ICurrentUserProvider _currentUserProvider;
 
-    public CreateBoardEndpoint(IRepository<Domain.Entities.Board> repository, IMapper mapper)
+    public CreateBoardEndpoint(IBoardRepository repository, IMapper mapper, ICurrentUserProvider currentUserProvider)
     {
         _repository = repository;
         _mapper = mapper;
+        currentUserProvider = _currentUserProvider;
     }
     public override void Configure()
     {

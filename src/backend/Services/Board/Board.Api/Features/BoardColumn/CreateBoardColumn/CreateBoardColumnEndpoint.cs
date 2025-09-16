@@ -1,15 +1,15 @@
+using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
-using Board.Application.Interfaces;
 using FastEndpoints;
 
 namespace Board.Api.Features.BoardColumn.CreateBoardColumn;
 
 public class CreateBoardColumnEndpoint : Endpoint<CreateBoardItemRequest>
 {
-    private readonly IRepository<Domain.Entities.BoardColumn> _columnRepository;
-    private readonly IRepository<Domain.Entities.Board> _boardRepository;
+    private readonly IBoardColumnRepository _columnRepository;
+    private readonly IBoardRepository _boardRepository;
 
-    public CreateBoardColumnEndpoint(IRepository<Domain.Entities.BoardColumn> columnRepository, IRepository<Domain.Entities.Board> boardRepository)
+    public CreateBoardColumnEndpoint(IBoardColumnRepository columnRepository, IBoardRepository boardRepository)
     {
         _columnRepository = columnRepository;
         _boardRepository = boardRepository;

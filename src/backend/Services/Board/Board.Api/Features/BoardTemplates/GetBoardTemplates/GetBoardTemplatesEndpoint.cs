@@ -1,15 +1,14 @@
+using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
-using Board.Application.Interfaces;
-using Board.Domain.Entities;
 using FastEndpoints;
 
 namespace Board.Api.Features.BoardTemplates.GetBoardTemplates;
 
 public class GetBoardTemplatesEndpoint : EndpointWithoutRequest
 {
-    private readonly IRepository<BoardTemplate> _repository;
+    private readonly IBoardTemplateRepository _repository;
 
-    public GetBoardTemplatesEndpoint(IRepository<BoardTemplate> repository)
+    public GetBoardTemplatesEndpoint(IBoardTemplateRepository repository)
     {
         _repository = repository;
     }

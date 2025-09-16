@@ -1,4 +1,5 @@
-using Board.Application.Interfaces;
+using Board.Application.Abstractions.Repositories;
+using Board.Application.Abstractions.Services;
 using FastEndpoints;
 
 namespace Board.Api.Features.Board.DeleteBoard;
@@ -10,11 +11,12 @@ public class DeleteBoardEndpoint : EndpointWithoutRequest
         Delete("/api/boards/{id}");
     }
 
-    private readonly IRepository<Domain.Entities.Board> _repository;
-
-    public DeleteBoardEndpoint(IRepository<Domain.Entities.Board> repository)
+    private readonly IBoardRepository _repository;
+    private readonly ICurrentUserProvider _currentUserProvider;
+    public DeleteBoardEndpoint(IBoardRepository repository, ICurrentUserProvider currentUserProvider)
     {
         _repository = repository;
+        _currentUserProvider = currentUserProvider;
     }
 
     public override async Task HandleAsync(CancellationToken cancellationToken)
@@ -22,9 +24,11 @@ public class DeleteBoardEndpoint : EndpointWithoutRequest
         Guid id = Route<Guid>("id");
 
         Domain.Entities.Board entity = await _repository.GetAsync(x => x.Id == id, cancellationToken);
-        if (entity == null)
+
+        Domain.Entities.BoardUser boardOwner = await _repository.GetBoardOwnerAsync(entity.Id, cancellationToken);
+        if (boardOwner.Email != _currentUserProvider.GetCurrentUserEmail())
         {
-            await Send.OkAsync(false, cancellationToken);
+            throw new Exception("You can not remove this board");
         }
 
         await _repository.DeleteAsync(entity, cancellationToken);

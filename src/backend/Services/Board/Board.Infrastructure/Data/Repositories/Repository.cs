@@ -1,12 +1,12 @@
 using System.Linq.Expressions;
-using Board.Application.Interfaces;
+using Board.Application.Abstractions.Repositories;
 using Board.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Board.Infrastructure.Data.Repositories;
 
-public class Repository<T> : IRepository<T>
+public abstract class Repository<T> : IRepository<T>
         where T : class
 {
     protected BoardDbContext _context;

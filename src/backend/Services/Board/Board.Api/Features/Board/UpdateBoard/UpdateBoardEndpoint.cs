@@ -1,5 +1,5 @@
+using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
-using Board.Application.Interfaces;
 using Board.Infrastructure.Data.Extensions;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;
@@ -8,9 +8,9 @@ namespace Board.Api.Features.Board.UpdateBoard;
 
 public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
 {
-    private readonly IRepository<Domain.Entities.Board> _repository;
+    private readonly IBoardRepository _repository;
     private readonly IMapper _mapper;
-    public UpdateBoardEndpoint(IRepository<Domain.Entities.Board> repository, IMapper mapper)
+    public UpdateBoardEndpoint(IBoardRepository repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
@@ -19,7 +19,6 @@ public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
     {
         Put("/api/boards/{id}");
     }
-
 
     public override async Task HandleAsync(UpdateBoardRequest request, CancellationToken cancellationToken)
     {

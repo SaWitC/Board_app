@@ -1,5 +1,5 @@
+using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
-using Board.Application.Interfaces;
 using Board.Domain.Entities;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;
@@ -8,10 +8,10 @@ namespace Board.Api.Features.BoardItems.UpdateBoardItem;
 
 public class UpdateBoardItemEndpoint : Endpoint<UpdateBoardItemRequest>
 {
-    private readonly IRepository<BoardItem> _repository;
+    private readonly IBoardItemRepository _repository;
     private readonly IMapper _mapper;
 
-    public UpdateBoardItemEndpoint(IRepository<BoardItem> repository, IMapper mapper)
+    public UpdateBoardItemEndpoint(IBoardItemRepository repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
