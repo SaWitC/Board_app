@@ -8,7 +8,6 @@ public static class RepositoriesConfiguration
     public static IServiceCollection ConfigureRepositories(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IBoardRepository, BoardRepository>();
-        services.AddScoped<IBoardUsersRepository, BoardUsersRepository>();
         services.AddScoped<IBoardColumnRepository, BoardColumnRepository>();
         services.AddScoped<IBoardItemRepository, BoardItemRepository>();
         services.AddScoped<ITagRepository, TagRepository>();

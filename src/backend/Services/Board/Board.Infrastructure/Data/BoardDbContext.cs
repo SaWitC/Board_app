@@ -9,7 +9,6 @@ public class BoardDbContext : DbContext
     public DbSet<BoardItem> BoardItems { get; set; }
     public DbSet<BoardColumn> BoardColumns { get; set; }
     public DbSet<BoardTemplate> BoardTemplates { get; set; }
-    public DbSet<BoardUser> BoardUsers { get; set; }
     public BoardDbContext(DbContextOptions<BoardDbContext> options) : base(options)
     {
     }

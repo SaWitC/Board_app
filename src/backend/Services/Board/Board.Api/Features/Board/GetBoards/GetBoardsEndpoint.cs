@@ -22,7 +22,6 @@ public class GetBoardsEndpoint : EndpointWithoutRequest
     }
     public override async Task HandleAsync(CancellationToken cancellationToken)
     {
-
         IList<Domain.Entities.Board> entities = await _repository.GetAllAsync(cancellationToken, true, b => b.BoardColumns, b => b.BoardUsers);
         IList<BoardDto> boards = _mapper.Map<IList<BoardDto>>(entities);
         await Send.OkAsync(boards, cancellationToken);

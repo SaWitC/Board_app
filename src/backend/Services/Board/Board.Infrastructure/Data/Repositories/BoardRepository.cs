@@ -10,11 +10,11 @@ public class BoardRepository : Repository<Domain.Entities.Board>, IBoardReposito
     {
     }
 
-    public async Task<BoardUser?> GetBoardOwner(Guid boardId)
+    public async Task<BoardUser?> GetBoardOwnerAsync(Guid boardId, CancellationToken cancellationToken)
     {
-        return await _context.BoardUsers
-            .Where(u => u.BoardId == boardId && u.Role == UserAccessEnum.Owner)
-            .FirstOrDefaultAsync();
+        return await _context.Boards
+            .Where(b => b.Id == boardId)
+            .SelectMany(b => b.BoardUsers)
+            .FirstOrDefaultAsync(u => u.Role == UserAccessEnum.Owner, cancellationToken: cancellationToken);
     }
-
 }
