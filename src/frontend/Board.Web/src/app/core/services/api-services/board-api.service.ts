@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable, map } from "rxjs";
+import { Observable, map, switchMap, of } from "rxjs";
 import { ApiService } from "./api.service";
 import {
   BoardLookupDTO,
@@ -7,6 +7,7 @@ import {
   AddBoardDTO,
   UpdateBoardDTO
 } from "../../models";
+import { UserAccess } from "../../models/enums/user-access.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -32,8 +33,20 @@ export class BoardApiService {
 	}
 
 	public updateBoard(board: UpdateBoardDTO): Observable<BoardDetailsDTO> {
-		const payload = { title: board.title, description: board.description, boardUsers: board.boardUsers, boardColumns: board.boardColumns };
-		return this.api.put<any>(`/boards/${board.id}`, payload).pipe(map(x => this.mapBoardDetails(x)));
+		const basePayload = { title: board.title, description: board.description, boardUsers: board.boardUsers, boardColumns: board.boardColumns };
+
+		// If boardUsers is empty or undefined, preserve the current owner from server state
+		if (!basePayload.boardUsers || basePayload.boardUsers.length === 0) {
+			return this.getById(board.id).pipe(
+				switchMap(current => {
+					const owner = (current.boardUsers || []).find(u => u.role === UserAccess.OWNER);
+					const payload = owner ? { ...basePayload, boardUsers: [owner] } : basePayload;
+					return this.api.put<any>(`/boards/${board.id}`, payload).pipe(map(x => this.mapBoardDetails(x)));
+				})
+			);
+		}
+
+		return this.api.put<any>(`/boards/${board.id}`, basePayload).pipe(map(x => this.mapBoardDetails(x)));
 	}
 
 	public getById(id: string): Observable<BoardDetailsDTO> {

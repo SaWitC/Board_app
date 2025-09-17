@@ -7,4 +7,4 @@ public class BoardUserDto
     public required string Email { get; set; }
 
     public required UserAccessEnum Role { get; set; }
-} 
+}

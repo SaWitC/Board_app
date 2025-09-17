@@ -28,7 +28,7 @@
         <div class="board-header">
           <h3 class="board-title">{{ board.title }}</h3>
           <div class="board-actions">
-            <button class="action-btn" (click)="onOpenMenu($event, board)" [matMenuTriggerFor]="cardMenu">
+            <button *ngIf="canSeeActions(board)" class="action-btn" (click)="onOpenMenu($event, board)" [matMenuTriggerFor]="cardMenu">
               <span>⋮</span>
             </button>
           </div>
@@ -41,8 +41,8 @@
       </div>
 
       <mat-menu #cardMenu="matMenu">
-        <button mat-menu-item (click)="$event.stopPropagation(); onEditSelected()">{{ 'COMMON.EDIT' | translate }}</button>
-        <button mat-menu-item (click)="$event.stopPropagation(); selectedBoard && onDeleteBoard(selectedBoard.id)">{{ 'COMMON.DELETE' | translate }}</button>
+        <button *ngIf="selectedBoard && canEdit(selectedBoard)" mat-menu-item (click)="$event.stopPropagation(); onEditSelected()">{{ 'COMMON.EDIT' | translate }}</button>
+        <button *ngIf="selectedBoard && canDelete(selectedBoard)" mat-menu-item (click)="$event.stopPropagation(); selectedBoard && onDeleteBoard(selectedBoard.id)">{{ 'COMMON.DELETE' | translate }}</button>
       </mat-menu>
     </div>
   </div>
