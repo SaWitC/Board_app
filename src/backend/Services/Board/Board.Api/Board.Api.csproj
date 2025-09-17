@@ -32,4 +32,22 @@
 		<ProjectReference Include="..\Board.Infrastructure\Board.Infrastructure.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="Resources\SharedResources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>SharedResources.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Resources\SharedResources.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>SharedResources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\SharedResources.ru.resx">
+	    <CustomToolNamespace>ResXFileCodeGenerator</CustomToolNamespace>
+	  </EmbeddedResource>
+	</ItemGroup>
+
 </Project>
