@@ -1,4 +1,7 @@
+using Board.Api.Security;
 using Board.Application.Abstractions.Repositories;
+using Board.Domain.Contracts.Enums;
+using Board.Domain.Contracts.Security;
 using Board.Domain.Entities;
 using FastEndpoints;
 
@@ -15,6 +18,7 @@ public class DeleteBoardItemEndpoint : EndpointWithoutRequest
     public override void Configure()
     {
         Delete("/api/boarditems/{id}");
+        Policies(Auth.BuildPermissionPolicy(Permission.Delete, Context.BoardItem, "id"));
     }
 
     public override async Task HandleAsync(CancellationToken cancellationToken)

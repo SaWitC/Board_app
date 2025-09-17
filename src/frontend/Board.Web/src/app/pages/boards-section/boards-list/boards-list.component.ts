@@ -7,6 +7,8 @@ import { BoardLookupDTO, AddBoardDTO, BoardDetailsDTO, UpdateBoardDTO } from 'sr
 import { BoardApiService } from 'src/app/core/services/api-services';
 import { DialogService } from 'src/app/core/services/other/dialog.service';
 import { Observable, switchMap, tap } from 'rxjs';
+import { UserService } from 'src/app/core/services/auth/user.service';
+import { UserAccess } from 'src/app/core/models/enums/user-access.enum';
 
 @Component({
   selector: 'app-boards-list',
@@ -31,7 +33,8 @@ export class BoardsListComponent implements OnInit {
   constructor(
     private boardApiService: BoardApiService,
     private router: Router,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -86,5 +89,32 @@ export class BoardsListComponent implements OnInit {
         });
       }
     });
+  }
+
+  private getCurrentUserRole(board: BoardLookupDTO): UserAccess | null {
+    const currentEmail = (this.userService.getCurrentUserEmail() || '').toLowerCase();
+    const membership = (board.boardUsers ?? []).find(u => (u.email || '').toLowerCase() === currentEmail);
+    if (!membership) { return null; }
+    switch (membership.role) {
+      case UserAccess.USER: return UserAccess.USER;
+      case UserAccess.ADMIN: return UserAccess.ADMIN;
+      case UserAccess.OWNER: return UserAccess.OWNER;
+      default: return null;
+    }
+  }
+
+  canSeeActions(board: BoardLookupDTO): boolean {
+    const role = this.getCurrentUserRole(board);
+    return role === UserAccess.ADMIN || role === UserAccess.OWNER;
+  }
+
+  canEdit(board: BoardLookupDTO): boolean {
+    const role = this.getCurrentUserRole(board);
+    return role === UserAccess.ADMIN || role === UserAccess.OWNER;
+  }
+
+  canDelete(board: BoardLookupDTO): boolean {
+    const role = this.getCurrentUserRole(board);
+    return role === UserAccess.OWNER;
   }
 }

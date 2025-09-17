@@ -1,5 +1,8 @@
+using Board.Api.Security;
 using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
+using Board.Domain.Contracts.Enums;
+using Board.Domain.Contracts.Security;
 using Board.Domain.Entities;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;
@@ -19,6 +22,7 @@ public class CreateBoardItemEndpoint : Endpoint<CreateBoardItemRequest>
     public override void Configure()
     {
         Post("/api/boarditems");
+        Policies(Auth.BuildPermissionPolicy(Permission.Create, Context.BoardColumn, "BoardColumnId"));
     }
 
     public override async Task HandleAsync(CreateBoardItemRequest request, CancellationToken cancellationToken)

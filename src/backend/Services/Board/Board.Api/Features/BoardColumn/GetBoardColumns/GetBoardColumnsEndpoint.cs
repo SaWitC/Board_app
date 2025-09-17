@@ -1,5 +1,8 @@
+using Board.Api.Security;
 using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
+using Board.Domain.Contracts.Enums;
+using Board.Domain.Contracts.Security;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;
 
@@ -19,6 +22,7 @@ public class GetBoardColumnsEndpoint : EndpointWithoutRequest
     public override void Configure()
     {
         Get("/api/boards/{boardId}/columns");
+        Policies(Auth.BuildPermissionPolicy(Permission.Read, Context.Board, "boardId"));
     }
 
     public override async Task HandleAsync(CancellationToken cancellationToken)
