@@ -28,6 +28,8 @@ AuthOptions authOptions = configuration.GetSection(AuthOptions.SectionName).Get<
 builder.AddSharedAppSettings(args);
 builder.AddServiceDefaults();
 
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
 // Add services to the container.
 services.AddControllers();
 
@@ -50,6 +52,14 @@ services.AddSingleton<IAuthorizationPolicyProvider, BoardPermissionPolicyProvide
 services.AddScoped<IAuthorizationHandler, BoardPermissionHandler>();
 
 WebApplication app = builder.Build();
+
+var supportedCultures = new[] { "en-US", "ru-RU" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

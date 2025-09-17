@@ -1,3 +1,4 @@
+using Board.Api.Resources;
 using FastEndpoints;
 using FluentValidation;
 
@@ -9,6 +10,7 @@ public class SearchBoardTemplateValidator : Validator<SearchBoardTemplatesReques
     {
         RuleFor(x => x.SearchTerm)
             .NotEmpty()
+            .WithMessage(x => string.Format(SharedResources.FieldIsRequired, nameof(x.SearchTerm)))
             .MinimumLength(3);
     }
 }

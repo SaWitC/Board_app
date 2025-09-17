@@ -52,52 +52,63 @@
       </div>
 
       <!-- Admins selector start -->
-      <mat-form-field appearance="outline" class="full-width mt-2">
-        <mat-label>Администраторы</mat-label>
-        <input matInput formControlName="boardAdmin" (keydown.enter)="addAdmin()"
-          placeholder="Введите email администратора" />
-        <mat-button matSuffix (click)="addAdmin()">
+      <div class="user-form">
+        <label class="form-label">Администраторы</label>
+        <div formArrayName="boardAdmins">
+          <div class="user-form-row mt-2"
+              *ngFor="let boardAdmin of boardAdmins.controls; let i = index;"
+              [formGroupName]="i">
+            <mat-form-field appearance="outline" class="user-form-field">
+              <mat-label>Администратор</mat-label>
+              <input matInput formControlName="adminEmail"
+                placeholder="Введите email администратора" />
+
+              <mat-error class="mt-0" *ngIf="boardAdmin.get('adminEmail')?.hasError('email')">
+                Некорректный email
+              </mat-error>
+            </mat-form-field>
+
+            <button type="button" class="delete-icon" mat-icon-button color="warn" (click)="removeAdmin(i)">
+                <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <button type="button" mat-mini-fab color="primary" (click)="addAdmin()">
           <mat-icon>add</mat-icon>
-        </mat-button>
-
-        <mat-error class="mt-0" *ngIf="boardForm.get('boardAdmin')?.hasError('email')">
-          Некорректный email
-        </mat-error>
-      </mat-form-field>
-
-      @for (admin of selectedAdmins; track admin) {
-      <mat-chip-row (removed)="removeAdmin(admin)">
-        {{ admin }}
-        <button matChipRemove [attr.aria-label]="'remove ' + admin">
-          <mat-icon>cancel</mat-icon>
         </button>
-      </mat-chip-row>
-      }
-
+      </div>
       <!-- Admins selector end -->
 
       <!-- Users selector start -->
-      <mat-form-field appearance="outline" class="full-width mt-2">
-        <mat-label>Пользователи</mat-label>
-        <input matInput formControlName="boardUser" (keydown.enter)="addUser()"
-          placeholder="Введите email пользователя" />
-        <mat-button matSuffix (click)="addUser()">
-          <mat-icon>add</mat-icon>
-        </mat-button>
-        <mat-error class="mt-0" *ngIf="boardForm.get('boardUser')?.hasError('email')">
-          Некорректный email
-        </mat-error>
-      </mat-form-field>
+      <div class="user-form">
+        <label class="form-label">Пользователи</label>
+        <div formArrayName="boardUsers">
+          <div class="user-form-row mt-2"
+              *ngFor="let boardUser of boardUsers.controls; let i = index;"
+              [formGroupName]="i">
+            <mat-form-field appearance="outline" class="user-form-field">
+              <mat-label>Пользователи</mat-label>
+              <input matInput formControlName="userEmail"
+                placeholder="Введите email пользователя" />
 
-      @for (user of selectedUsers; track user) {
-      <mat-chip-row (removed)="removeUser(user)">
-        {{ user }}
-        <button matChipRemove [attr.aria-label]="'remove ' + user">
-          <mat-icon>cancel</mat-icon>
+              <mat-error class="mt-0" *ngIf="boardUser.get('userEmail')?.hasError('email')">
+                Некорректный email
+              </mat-error>
+            </mat-form-field>
+
+            <button type="button" class="delete-icon" mat-icon-button color="warn" (click)="removeUser(i)">
+                <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <button type="button" mat-mini-fab color="primary" (click)="addUser()">
+          <mat-icon>add</mat-icon>
         </button>
-      </mat-chip-row>
-      }
+      </div>
       <!-- Users selector end -->
+
       <!-- Empty board columns configuration start -->
       <div *ngIf="boardForm.get('boardType')?.value == boardCreationOptions.EMPTY">
         <div class="columns-section">
@@ -159,7 +170,7 @@
   <mat-dialog-actions align="end">
     <div class="pe-4">
       <button mat-button type="button" (click)="onClose()">Отмена</button>
-      <button mat-raised-button color="primary" type="submit" (click)="onSubmit()" [disabled]="boardForm.invalid">
+      <button mat-raised-button color="primary" type="submit" (click)="onSubmit()" [disabled]="!isFormValid">
         {{ submitButtonText }}
       </button>
     </div>
