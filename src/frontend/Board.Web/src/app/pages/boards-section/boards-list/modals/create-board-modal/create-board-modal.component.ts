@@ -56,9 +56,6 @@ export class CreateBoardModalComponent implements OnInit {
   public boardTemplates$: Observable<BoardTemplateDTO[]> = of([]);
   searchTerm$ = new Subject<string>();
 
-  selectedUsers: string[] = [];
-  selectedAdmins: string[] = [];
-
   public draggedIndex: number | null = null;
   public hoveredIndex: number | null = null;
 
@@ -88,6 +85,7 @@ export class CreateBoardModalComponent implements OnInit {
         boardDescription: this.data.board.description
       });
 
+      this.setUsers();
 
       const arr = this.boardForm.get('boardColumns') as FormArray;
       arr.clear();
@@ -118,9 +116,29 @@ export class CreateBoardModalComponent implements OnInit {
       boardUser: ['',[Validators.email]],
       boardAdmin: ['',[Validators.email]],
 
+      boardAdmins: new FormArray([]),
+      boardUsers: new FormArray([]),
+
       boardTemplateId: [null],
       boardType: [BoardCreationOptions.EMPTY, Validators.required]
     });
+  }
+
+  private setUsers(): void {
+    if (this.data.board === undefined) {
+      return;
+    }
+
+    const adminEmails = this.data.board?.boardUsers.filter(x => x.role === UserAccess.ADMIN).map(x => x.email);
+    const userEmails = this.data.board?.boardUsers.filter(x => x.role === UserAccess.USER).map(x => x.email);
+
+    for (let adminEmail of adminEmails) {
+      this.addAdmin(adminEmail);
+    }
+
+    for (let userEmail of userEmails) {
+      this.addUser(userEmail);
+    }
   }
 
 
@@ -137,56 +155,72 @@ export class CreateBoardModalComponent implements OnInit {
         //TODO add logic to create board based on template
       }
     }
-    else { //Empty board
-      if(!this.boardForm.get('boardColumns')?.value) {
-        this.toastr.error('Columns are required');
+    else if (!this.boardForm.get('boardColumns')?.value) {
+      this.toastr.error('Columns are required');
+    }
+    else if(this.boardForm.valid) { 
+
+      if (this.data?.mode === 'edit' && this.data.board) {
+        const updateData = this.getUpdateBoardDTO(this.boardForm);
+        this.dialogRef.close(updateData);
+        return;
       }
 
-        if (this.boardForm.valid) {
-          const formValue = this.boardForm.value;
-
-          if (this.data?.mode === 'edit' && this.data.board) {
-            const boardColumns = formValue.boardColumns.map((column: any) => ({
-              id: column.id,
-              title: column.columnTitle,
-              description: column.columnDescription
-            }));
-
-            const updateData: UpdateBoardDTO = {
-              id: this.data.board.id,
-              title: formValue.boardTitle,
-              description: formValue.boardDescription,
-              boardUsers:[
-                ...this.selectedUsers.map(u => ({ email: u, role: UserAccess.USER })),
-                ...this.selectedAdmins.map(a => ({ email: a, role: UserAccess.ADMIN }))
-              ],
-              boardColumns: boardColumns
-            };
-            this.dialogRef.close(updateData);
-            return;
-          }
-
-          const boardColumns: any[] = formValue.boardColumns.map((column: any) => ({
-            id: column.id,
-            title: column.columnTitle,
-            description: column.columnDescription
-          }));
-
-          const boardData: AddBoardDTO = {
-            title: formValue.boardTitle,
-            description: formValue.boardDescription,
-            boardUsers:[
-              ...this.selectedUsers.map(u => ({ email: u, role: UserAccess.USER })),
-              ...this.selectedAdmins.map(a => ({ email: a, role: UserAccess.ADMIN }))
-            ,{ email: this.userService.getCurrentUserEmail(), role: UserAccess.OWNER }
-            ],
-            boardColumns: boardColumns
-          };
-
-          this.dialogRef.close(boardData);
-        }
-      
+      const boardData = this.getAddBoardDTO(this.boardForm);
+      this.dialogRef.close(boardData);
     }
+  }
+
+  private getUpdateBoardDTO(boardForm: FormGroup<any>): UpdateBoardDTO {
+    const formValue = boardForm.value;
+
+    const boardColumns = formValue.boardColumns.map((column: any) => ({
+      id: column.id,
+      title: column.columnTitle,
+      description: column.columnDescription
+    }));
+
+    const adminEmails = this.adminEmails;
+    const userEmails = this.userEmails;
+
+    const updateData: UpdateBoardDTO = {
+      id: this.data.board!.id,
+      title: formValue.boardTitle,
+      description: formValue.boardDescription,
+      boardUsers:[
+        ...userEmails.map(u => ({ email: u, role: UserAccess.USER })),
+        ...adminEmails.map(a => ({ email: a, role: UserAccess.ADMIN }))
+      ],
+      boardColumns: boardColumns
+    };
+
+    return updateData;
+  }
+
+  private getAddBoardDTO(boardForm: FormGroup<any>): AddBoardDTO {
+    const formValue = boardForm.value;
+
+    const boardColumns: any[] = formValue.boardColumns.map((column: any) => ({
+      id: column.id,
+      title: column.columnTitle,
+      description: column.columnDescription
+    }));
+
+    const adminEmails = this.adminEmails;
+    const userEmails = this.userEmails;
+
+    const boardData: AddBoardDTO = {
+      title: formValue.boardTitle,
+      description: formValue.boardDescription,
+      boardUsers:[
+        ...userEmails.map(u => ({ email: u, role: UserAccess.USER })),
+        ...adminEmails.map(a => ({ email: a, role: UserAccess.ADMIN }))
+      ,{ email: this.userService.getCurrentUserEmail(), role: UserAccess.OWNER }
+      ],
+      boardColumns: boardColumns
+    };
+
+    return boardData;
   }
 
   onClose(): void {
@@ -197,11 +231,26 @@ export class CreateBoardModalComponent implements OnInit {
     return this.boardForm.get('boardColumns') as FormArray;
   }
 
-  //Form validation
+  get boardAdmins() {
+    return this.boardForm.get('boardAdmins') as FormArray;
+  }
+
+  get adminEmails() {
+    return this.boardAdmins.controls.map(x => x.get('adminEmail')?.value as string).map(this.normalize).filter(Boolean);
+  }
+
+  get userEmails() {
+    return this.boardUsers.controls.map(x => x.get('userEmail')?.value as string).map(this.normalize).filter(Boolean);
+  }
+
+  get boardUsers() {
+    return this.boardForm.get('boardUsers') as FormArray;
+  }
+
   get isFormValid(): boolean {
     return this.boardForm.valid &&
-      this.selectedUsers.length > 0 &&
-      this.selectedAdmins.length > 0;
+      this.boardAdmins.length > 0 &&
+      this.boardUsers.length > 0;
   }
 
   private normalize(email: string): string {
@@ -211,24 +260,26 @@ export class CreateBoardModalComponent implements OnInit {
   private isAllUserEmailsValid(): boolean {
     const current = this.normalize(this.userService.getCurrentUserEmail());
 
-    const admins = this.selectedAdmins.map(this.normalize).filter(Boolean);
-    const users  = this.selectedUsers.map(this.normalize).filter(Boolean);
+    const adminEmails = this.adminEmails;
+    const userEmails = this.userEmails;
 
-    if (admins.includes(current) || users.includes(current)) {
+    if (adminEmails.includes(current) || userEmails.includes(current)) {
       this.toastr.error('You cannot add yourself as an admin or user');
       return false;
     }
 
     const hasDuplicates = (arr: string[]) => new Set(arr).size !== arr.length;
-    if (hasDuplicates(admins) || hasDuplicates(users)) {
+    if (hasDuplicates(adminEmails) || hasDuplicates(userEmails)) {
       this.toastr.error('You cannot add duplicate emails as an admin or user');
       return false;
     }
 
-    const adminSet = new Set(admins);
-    for (const u of users) {
-      this.toastr.error('You cannot add the same email as an admin and user');
-      if (adminSet.has(u)) return false;
+    const adminSet = new Set(adminEmails);
+    for (const u of userEmails) {
+      if (adminSet.has(u)) {
+        this.toastr.error('You cannot add the same email as an admin and user');
+        return false;
+      } 
     }
 
     return true;
@@ -246,36 +297,29 @@ export class CreateBoardModalComponent implements OnInit {
     this.boardTemplateServiceApi.updateBoardTemplate(this.data.board?.id ?? '', event.checked).subscribe();
   }
 
-  //Users and admins configuration
-  addUser(): void {
-    if(this.boardForm.get('boardUser')?.valid) {
-      let value = this.boardForm.get('boardUser')?.value;
-      if (value) {
-        this.selectedUsers.push(value);
-      }
+  addUser(email: string = ''): void {
+    const userForm = this.fb.group({
+      userEmail: [email, [Validators.email, Validators.required]]
+    });
 
-      this.boardForm.get('boardUser')?.reset();
-    }
+    this.boardUsers.push(userForm);
   }
 
-  removeUser(user: string): void {
-    this.selectedUsers = this.selectedUsers.filter(u => u !== user);
+  removeUser(index: number): void {
+    this.boardUsers.removeAt(index);
   }
 
 
-  addAdmin(): void {
-    if(this.boardForm.get('boardAdmin')?.valid) {
-      let value = this.boardForm.get('boardAdmin')?.value;
-      if (value) {
-        this.selectedAdmins.push(value);
-      }
+  addAdmin(email: string = ''): void {
+    const adminForm = this.fb.group({
+      adminEmail: [email, [Validators.email, Validators.required]]
+    });
 
-      this.boardForm.get('boardAdmin')?.reset();
-    }
+    this.boardAdmins.push(adminForm);
   }
 
-  removeAdmin(admin: string): void {
-    this.selectedAdmins = this.selectedAdmins.filter(a => a !== admin);
+  removeAdmin(index: number): void {
+    this.boardAdmins.removeAt(index);
   }
 
   //Empty board columns configuration
