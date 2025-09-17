@@ -2,15 +2,14 @@ using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
 using Board.Infrastructure.Data.Extensions;
 using FastEndpoints;
-using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.Board.UpdateBoard;
 
 public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
 {
     private readonly IBoardRepository _repository;
-    private readonly IMapper _mapper;
-    public UpdateBoardEndpoint(IBoardRepository repository, IMapper mapper)
+    private readonly MapsterMapper.IMapper _mapper;
+    public UpdateBoardEndpoint(IBoardRepository repository, MapsterMapper.IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;

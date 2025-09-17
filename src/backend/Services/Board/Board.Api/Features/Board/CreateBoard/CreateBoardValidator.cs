@@ -2,8 +2,6 @@ using Board.Api.Resources;
 using Board.Application.DTOs;
 using FastEndpoints;
 using FluentValidation;
-using Microsoft.Extensions.Localization;
-using YamlDotNet.Serialization.BufferedDeserialization;
 
 namespace Board.Api.Features.Board.CreateBoard;
 

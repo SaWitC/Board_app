@@ -1,7 +1,6 @@
 using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
 using FastEndpoints;
-using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.Board.GetBoards;
 
@@ -13,9 +12,9 @@ public class GetBoardsEndpoint : EndpointWithoutRequest
     }
 
     private readonly IBoardRepository _repository;
-    private readonly IMapper _mapper;
+    private readonly MapsterMapper.IMapper _mapper;
 
-    public GetBoardsEndpoint(IBoardRepository repository, IMapper mapper)
+    public GetBoardsEndpoint(IBoardRepository repository, MapsterMapper.IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;

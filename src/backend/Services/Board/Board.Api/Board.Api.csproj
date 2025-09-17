@@ -11,6 +11,8 @@
 		<PackageReference Include="FastEndpoints.Swagger" />
 		<PackageReference Include="FluentValidation" />
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+		<PackageReference Include="Mapster" />
+		<PackageReference Include="Mapster.DependencyInjection" />
 		<PackageReference Include="MediatR" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" />
@@ -21,33 +23,13 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
 		<PackageReference Include="Scrutor" />
-		<PackageReference Include="Swashbuckle.AspNetCore" />
-        <PackageReference Include="AutoMapper" />
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />        
+		<PackageReference Include="Swashbuckle.AspNetCore" />        
     </ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\Aspire\Board.ServiceDefaults\Board.ServiceDefaults.csproj" />
 		<ProjectReference Include="..\Board.Application\Board.Application.csproj" />
 		<ProjectReference Include="..\Board.Infrastructure\Board.Infrastructure.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Update="Resources\SharedResources.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>SharedResources.resx</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Update="Resources\SharedResources.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	    <LastGenOutput>SharedResources.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
-	  <EmbeddedResource Update="Resources\SharedResources.ru.resx">
-	    <CustomToolNamespace>ResXFileCodeGenerator</CustomToolNamespace>
-	  </EmbeddedResource>
 	</ItemGroup>
 
 </Project>

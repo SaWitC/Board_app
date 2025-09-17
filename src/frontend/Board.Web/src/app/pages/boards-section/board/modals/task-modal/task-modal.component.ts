@@ -15,7 +15,6 @@ import { TaskPriority } from 'src/app/core/models/enums/task-priority.enum';
 import { TaskType } from 'src/app/core/models/enums/task-type.enum';
 import { TaskTypeIconComponent } from 'src/app/components/shared/story-icon/task-type-icon.component';
 import { DescriptionEditorComponent } from '../../components/description-editor/description-editor.component';
-import { Editor, NgxEditorComponent, NgxEditorMenuComponent, Toolbar } from 'ngx-editor';
 
 export interface TaskModalData {
   task?: BoardItem;

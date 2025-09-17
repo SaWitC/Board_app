@@ -1,7 +1,6 @@
 using Board.Api.Configuration;
 using Board.Api.Features.Board.CreateBoard;
 using Board.Application.DI;
-using Board.Application.Mapping;
 using Board.Domain.Options;
 using Board.Infrastructure;
 using Board.Infrastructure.Data;
@@ -9,6 +8,7 @@ using Board.ServiceDefaults;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using FluentValidation;
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -34,7 +34,9 @@ services.AddControllers();
 
 // Register Application validators and handlers
 services.AddValidatorsFromAssembly(typeof(CreateBoardValidator).Assembly);
-services.AddAutoMapper(typeof(BoardMappingProfile).Assembly);
+
+//services.AddAutoMapper(typeof(BoardMappingProfile).Assembly);
+services.AddMapster();
 
 builder.AddDatabase<BoardDbContext, ConnectionStringsOptions>(x => x.BoardDbConnectionString);
 services.ConfigureAuth(authOptions)

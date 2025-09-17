@@ -1,16 +1,15 @@
 using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
 using FastEndpoints;
-using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.BoardColumn.GetBoardColumns;
 
 public class GetBoardColumnsEndpoint : EndpointWithoutRequest
 {
     private readonly IBoardRepository _boardRepository;
-    private readonly IMapper _mapper;
+    private readonly MapsterMapper.IMapper _mapper;
 
-    public GetBoardColumnsEndpoint(IBoardRepository boardRepository, IMapper mapper)
+    public GetBoardColumnsEndpoint(IBoardRepository boardRepository, MapsterMapper.IMapper mapper)
     {
         _boardRepository = boardRepository;
         _mapper = mapper;

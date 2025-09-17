@@ -2,16 +2,15 @@ using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
 using Board.Domain.Entities;
 using FastEndpoints;
-using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.BoardTemplates.SearchBoardTemplates;
 
 public class SearchBoardTemplatesEndpoint : Endpoint<SearchBoardTemplatesRequest>
 {
-    private readonly IMapper _mapper;
+    private readonly MapsterMapper.IMapper _mapper;
     private readonly IBoardTemplateRepository _repository;
 
-    public SearchBoardTemplatesEndpoint(IBoardTemplateRepository repository, IMapper mapper)
+    public SearchBoardTemplatesEndpoint(IBoardTemplateRepository repository, MapsterMapper.IMapper mapper)
     {
         _mapper = mapper;
         _repository = repository;
