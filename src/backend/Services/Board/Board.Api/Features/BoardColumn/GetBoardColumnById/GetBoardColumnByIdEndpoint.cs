@@ -4,7 +4,6 @@ using Board.Domain.Contracts.Enums;
 using Board.Domain.Contracts.Security;
 using Board.Domain.Security;
 using FastEndpoints;
-using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.BoardColumn.GetBoardColumnById;
 
@@ -12,9 +11,9 @@ public class GetBoardColumnByIdEndpoint : EndpointWithoutRequest
 {
 
     private readonly IBoardColumnRepository _repository;
-    private readonly IMapper _mapper;
+    private readonly MapsterMapper.IMapper _mapper;
 
-    public GetBoardColumnByIdEndpoint(IBoardColumnRepository repository, IMapper mapper)
+    public GetBoardColumnByIdEndpoint(IBoardColumnRepository repository, MapsterMapper.IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;

@@ -5,16 +5,15 @@ using Board.Domain.Contracts.Security;
 using Board.Domain.Entities;
 using Board.Domain.Security;
 using FastEndpoints;
-using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.BoardItems.CreateBoardItem;
 
 public class CreateBoardItemEndpoint : Endpoint<CreateBoardItemRequest>
 {
     private readonly IBoardItemRepository _repository;
-    private readonly IMapper _mapper;
+    private readonly MapsterMapper.IMapper _mapper;
 
-    public CreateBoardItemEndpoint(IBoardItemRepository repository, IMapper mapper)
+    public CreateBoardItemEndpoint(IBoardItemRepository repository, MapsterMapper.IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;

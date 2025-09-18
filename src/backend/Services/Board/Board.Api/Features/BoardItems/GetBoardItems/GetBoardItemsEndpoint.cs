@@ -7,7 +7,6 @@ using Board.Domain.Entities;
 using Board.Domain.Security;
 using FastEndpoints;
 using Microsoft.AspNetCore.Authorization;
-using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.BoardItems.GetBoardItems;
 
@@ -16,9 +15,9 @@ public class GetBoardItemsEndpoint : EndpointWithoutRequest
 {
     private readonly IBoardItemRepository _repository;
     private readonly ICurrentUserProvider _currentUserProvider;
-    private readonly IMapper _mapper;
+    private readonly MapsterMapper.IMapper _mapper;
 
-    public GetBoardItemsEndpoint(IBoardItemRepository repository, ICurrentUserProvider currentUserProvider, IMapper mapper)
+    public GetBoardItemsEndpoint(IBoardItemRepository repository, MapsterMapper.IMapper mapper, ICurrentUserProvider currentUserProvider)
     {
         _repository = repository;
         _currentUserProvider = currentUserProvider;

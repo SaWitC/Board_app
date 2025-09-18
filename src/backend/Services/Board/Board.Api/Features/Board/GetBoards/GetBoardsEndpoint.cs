@@ -3,7 +3,6 @@ using Board.Application.Abstractions.Services;
 using Board.Application.DTOs;
 using FastEndpoints;
 using Microsoft.AspNetCore.Authorization;
-using IMapper = AutoMapper.IMapper;
 
 namespace Board.Api.Features.Board.GetBoards;
 
@@ -11,7 +10,7 @@ namespace Board.Api.Features.Board.GetBoards;
 public class GetBoardsEndpoint : EndpointWithoutRequest
 {
     private readonly IBoardRepository _repository;
-    private readonly IMapper _mapper;
+    private readonly MapsterMapper.IMapper _mapper;
     private readonly ICurrentUserProvider _currentUserProvider;
 
     public override void Configure()
@@ -19,7 +18,7 @@ public class GetBoardsEndpoint : EndpointWithoutRequest
         Get("/api/boards");
     }
 
-    public GetBoardsEndpoint(IBoardRepository repository, IMapper mapper, ICurrentUserProvider currentUserProvider)
+    public GetBoardsEndpoint(IBoardRepository repository, MapsterMapper.IMapper mapper, ICurrentUserProvider currentUserProvider)
     {
         _repository = repository;
         _mapper = mapper;
