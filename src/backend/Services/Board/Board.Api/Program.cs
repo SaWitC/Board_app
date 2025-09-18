@@ -37,7 +37,7 @@ services.AddControllers();
 services.AddValidatorsFromAssembly(typeof(CreateBoardValidator).Assembly);
 services.AddAutoMapper(typeof(BoardMappingProfile).Assembly);
 
-builder.AddDatabase<BoardDbContext, ConnectionStringsOptions>(x => x.BoardDbConnectionString);
+builder.AddDatabase<BoardDbContext, ConnectionStringsOptions>(x => x.BoardDbConnectionString, "Board.Infrastructure");
 services.ConfigureAuth(authOptions)
     .ConfigureRepositories(configuration)
     .ConfigureAuth(AllowAllCorsPolicy)
