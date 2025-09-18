@@ -5,7 +5,7 @@ export interface BoardItem {
   id: string;
   title: string;
   description?: string;
-  columnId: string;
+  boardColumnId: string;
   priority: TaskPriority;
   assignee?: string;
   createdAt: Date;

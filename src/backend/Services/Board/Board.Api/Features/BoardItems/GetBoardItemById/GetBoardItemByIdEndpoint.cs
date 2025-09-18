@@ -1,9 +1,9 @@
-using Board.Api.Security;
 using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
 using Board.Domain.Contracts.Enums;
 using Board.Domain.Contracts.Security;
 using Board.Domain.Entities;
+using Board.Domain.Security;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;
 
@@ -21,8 +21,8 @@ public class GetBoardItemByIdEndpoint : EndpointWithoutRequest
     }
     public override void Configure()
     {
-        Get("/api/boarditems/{id}");
-        Policies(Auth.BuildPermissionPolicy(Permission.Read, Context.BoardItem, "id"));
+        Get("/api/boards/{boardId}/items/{id}");
+        Policies(Auth.BuildPermissionPolicy(Permission.Read, Context.BoardItem, "boardId"));
     }
 
     public override async Task HandleAsync(CancellationToken cancellationToken)

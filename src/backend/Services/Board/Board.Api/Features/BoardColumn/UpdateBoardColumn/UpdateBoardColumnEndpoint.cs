@@ -1,8 +1,8 @@
-using Board.Api.Security;
 using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
 using Board.Domain.Contracts.Enums;
 using Board.Domain.Contracts.Security;
+using Board.Domain.Security;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;
 
@@ -22,7 +22,7 @@ public class UpdateBoardColumnEndpoint : Endpoint<UpdateBoardColumnRequest>
     public override void Configure()
     {
         Put("/api/boards/{boardId}/columns");
-        Policies(Auth.BuildPermissionPolicy(Permission.Edit, Context.Board, "boardId"));
+        Policies(Auth.BuildPermissionPolicy(Permission.ManageBoard, Context.BoardColumn, "boardId"));
     }
 
     public override async Task HandleAsync(UpdateBoardColumnRequest request, CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ public class UpdateBoardColumnEndpoint : Endpoint<UpdateBoardColumnRequest>
 
         Domain.Entities.BoardColumn updated = await _repository.UpdateAsync(entity, cancellationToken);
 
-        var response = _mapper.Map<BoardColumnDto>(updated);
+        BoardColumnDto response = _mapper.Map<BoardColumnDto>(updated);
         await Send.OkAsync(response, cancellationToken);
     }
 }

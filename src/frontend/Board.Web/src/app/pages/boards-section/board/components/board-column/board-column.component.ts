@@ -16,7 +16,7 @@ import { BoardColumnApiService } from 'src/app/core/services/api-services';
     imports: [CommonModule, TaskCardComponent, TranslateModule]
 })
 export class BoardColumnComponent implements OnInit, OnDestroy {
-  @Input() columnId: string = '1';
+  @Input() boardColumnId: string = '1';
   @Input() boardId: string = '1';
 
   @Input() allTasks: BoardItem[] = [];
@@ -24,7 +24,7 @@ export class BoardColumnComponent implements OnInit, OnDestroy {
   @Output() addTask = new EventEmitter<{boardColumnId: string}>();
   @Output() editTask = new EventEmitter<{task: BoardItem, boardColumnId: string}>();
   @Output() deleteTask = new EventEmitter<string>();
-  @Output() moveTask = new EventEmitter<{taskId: string, newStatus: string}>();
+  @Output() moveTask = new EventEmitter<{taskId: string, toColumnId: string}>();
   @Output() dropTask = new EventEmitter<DragDropEvent>();
 
   isDragOver = false;
@@ -40,7 +40,7 @@ export class BoardColumnComponent implements OnInit, OnDestroy {
   }
 
   public loadData(): void {
-    this.boardColumnApiService.getBoardColumnById(this.boardId, this.columnId).subscribe((data) => {
+    this.boardColumnApiService.getBoardColumnById(this.boardId, this.boardColumnId).subscribe((data) => {
       this.columnData = data;
     });
   }
@@ -50,12 +50,12 @@ export class BoardColumnComponent implements OnInit, OnDestroy {
   }
 
   onAddTask(): void {
-    const targetColumnId = this.columnData?.id ?? this.columnId;
+    const targetColumnId = this.columnData?.id ?? this.boardColumnId;
     this.addTask.emit({boardColumnId: targetColumnId});
   }
 
   onEditTask(task: BoardItem): void {
-    const targetColumnId = this.columnData?.id ?? this.columnId;
+    const targetColumnId = this.columnData?.id ?? this.boardColumnId;
     this.editTask.emit({task: task, boardColumnId: targetColumnId});
   }
 
@@ -63,7 +63,7 @@ export class BoardColumnComponent implements OnInit, OnDestroy {
     this.deleteTask.emit(taskId);
   }
 
-  onMoveTask(data: {taskId: string, newStatus: string}): void {
+  onMoveTask(data: {taskId: string, toColumnId: string}): void {
     this.moveTask.emit(data);
   }
 
@@ -83,7 +83,7 @@ export class BoardColumnComponent implements OnInit, OnDestroy {
       const dragDropEvent: DragDropEvent = {
         taskId: taskId,
         fromColumnId: this.getTaskStatusFromId(taskId),
-        toColumnId: this.columnData?.id ?? this.columnId
+        toColumnId: this.columnData?.id ?? this.boardColumnId
       };
 
       if (dragDropEvent.fromColumnId !== dragDropEvent.toColumnId) {
@@ -98,7 +98,7 @@ export class BoardColumnComponent implements OnInit, OnDestroy {
       return task.id;
     }
 
-    return this.columnData?.id ?? this.columnId;
+    return this.columnData?.id ?? this.boardColumnId;
   }
 
   onDragEnter(event: DragEvent): void {

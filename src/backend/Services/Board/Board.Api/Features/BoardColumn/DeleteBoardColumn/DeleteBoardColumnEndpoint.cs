@@ -1,7 +1,7 @@
-using Board.Api.Security;
 using Board.Application.Abstractions.Repositories;
 using Board.Domain.Contracts.Enums;
 using Board.Domain.Contracts.Security;
+using Board.Domain.Security;
 using FastEndpoints;
 
 namespace Board.Api.Features.BoardColumn.DeleteBoardColumn;
@@ -17,7 +17,7 @@ public class DeleteBoardColumnEndpoint : EndpointWithoutRequest
     public override void Configure()
     {
         Delete("/api/boards/{boardId}/columns/{id}");
-        Policies(Auth.BuildPermissionPolicy(Permission.Delete, Context.BoardColumn, "id"));
+        Policies(Auth.BuildPermissionPolicy(Permission.ManageBoard, Context.BoardColumn, "boardId"));
     }
 
     public override async Task HandleAsync(CancellationToken cancellationToken)

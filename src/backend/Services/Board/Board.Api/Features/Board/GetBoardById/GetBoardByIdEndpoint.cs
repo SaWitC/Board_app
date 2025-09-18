@@ -1,8 +1,8 @@
-using Board.Api.Security;
 using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
 using Board.Domain.Contracts.Enums;
 using Board.Domain.Contracts.Security;
+using Board.Domain.Security;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;
 
@@ -12,8 +12,8 @@ public class GetBoardByIdEndpoint : EndpointWithoutRequest
 {
     public override void Configure()
     {
-        Get("/api/boards/{id}");
-        Policies(Auth.BuildPermissionPolicy(Permission.Read, Context.Board, "id"));
+        Get("/api/boards/{boardId}");
+        Policies(Auth.BuildPermissionPolicy(Permission.Read, Context.BoardColumn, "boardId"));
     }
 
     private readonly IBoardRepository _repository;
@@ -27,7 +27,7 @@ public class GetBoardByIdEndpoint : EndpointWithoutRequest
 
     public override async Task HandleAsync(CancellationToken cancellationToken)
     {
-        Guid id = Route<Guid>("id");
+        Guid id = Route<Guid>("boardId");
 
         Domain.Entities.Board entity = await _repository.GetAsync(x => x.Id == id, cancellationToken, true, x => x.BoardColumns, x => x.BoardUsers, x => x.BoardTemplate);
         if (entity == null)

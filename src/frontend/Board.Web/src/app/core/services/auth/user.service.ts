@@ -1,6 +1,6 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
+import { UserAccess } from "../../models/enums/user-access.enum";
 
 @Injectable({
     providedIn: 'root'
@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 export class UserService {
     //User auth0 permissions
     private permissionsSubject$$: BehaviorSubject<string[] | null> = new BehaviorSubject<string[] | null>(null);
+    private boardPermissionsSubject$$: BehaviorSubject<UserAccess | null> = new BehaviorSubject<UserAccess | null>(null);
     private currentUserEmail: string = "";
 
     constructor() { }
@@ -32,8 +33,24 @@ export class UserService {
         return this.permissionsSubject$$.asObservable();
     }
 
-    public hasAdminPermission(): boolean {
-        return this.permissionsSubject$$.value?.includes('admin') ?? false;
+    public hasGlobalAdminPermission(): boolean {
+        return this.permissionsSubject$$.value?.includes('GlobalAdmin') ?? false;
     }
+
+    public setUserBoardAccess(access: UserAccess){
+      this.boardPermissionsSubject$$.next(access);
+    }
+
+     public isUserBoardUser(): boolean {
+       return this.hasGlobalAdminPermission() || +(this.boardPermissionsSubject$$.value??0)>=+UserAccess.USER;
+     }
+
+     public isUserBoardAdmin(): boolean {
+       return this.hasGlobalAdminPermission() || +(this.boardPermissionsSubject$$.value??0)>=+UserAccess.ADMIN;
+     }
+
+     public isUserBoardOwner(): boolean {
+       return this.hasGlobalAdminPermission() || +(this.boardPermissionsSubject$$.value??0)>=+UserAccess.OWNER;
+     }
 }
 

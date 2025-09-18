@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
-using Board.Api.Security;
 using Board.Domain.Contracts.Enums;
 using Board.Domain.Contracts.Security;
+using Board.Domain.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 

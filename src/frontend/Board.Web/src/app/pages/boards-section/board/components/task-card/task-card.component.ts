@@ -17,7 +17,7 @@ export class TaskCardComponent {
   @Input() task!: BoardItem;
   @Output() editTask = new EventEmitter<BoardItem>();
   @Output() deleteTask = new EventEmitter<string>();
-  @Output() moveTask = new EventEmitter<{taskId: string, newStatus: string}>();
+  @Output() moveTask = new EventEmitter<{taskId: string, toColumnId: string}>();
 
   public taskTypes = TaskType;
   public priorities = Object.values(TaskPriority);
@@ -69,8 +69,8 @@ export class TaskCardComponent {
     }
   }
 
-  onMoveTask(newStatus: string): void {
-    this.moveTask.emit({ taskId: this.task.id, newStatus });
+  onMoveTask(toColumnId: string): void {
+    this.moveTask.emit({ taskId: this.task.id, toColumnId: toColumnId });
   }
 
   formatDate(date: Date): string {

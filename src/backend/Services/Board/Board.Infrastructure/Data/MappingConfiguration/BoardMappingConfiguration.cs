@@ -19,7 +19,7 @@ public class BoardMappingConfiguration : IEntityTypeConfiguration<Domain.Entitie
         builder
             .Property(b => b.Description)
             .IsRequired()
-            .HasMaxLength(10000);
+            .HasMaxLength(100000);
 
         builder
             .HasMany(b => b.BoardColumns)
