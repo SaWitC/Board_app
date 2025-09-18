@@ -71,6 +71,25 @@
     color: var(--text-color);
   }
 
+  .mat-mdc-mini-fab.mat-primary { //Add Participant button
+    background-color: #bebebe;
+  }
+  .mat-mdc-mini-fab.mat-primary mat-icon {
+    color: #363636; 
+  }
+
+  .mat-mdc-button{ // Cancel button
+    background-color: #c4c4c4
+  }
+
+  mat-dialog-actions .mat-mdc-raised-button.mat-primary { // Create button
+    background-color: #4caf50; 
+    color: white;             
+  }
+  mat-dialog-actions .mat-mdc-raised-button.mat-primary:disabled { // Create button
+    background-color: #555555; 
+    color: rgb(124, 124, 124);             
+  }
 
   --btn-primary-text: rgb(255, 255, 255);
   --btn-primary-text-background: rgb(246, 246, 246);
@@ -132,6 +151,8 @@
   --mat-datepicker-calendar-period-button-text-color: var(--text-color);
   --mat-paginator-enabled-icon-color: var(--ng-select-text-color);
   --mat-paginator-disabled-icon-color: var(--ng-select-disabled-option-color);
+  --mdc-outlined-text-field-input-text-placeholder-color: var(--text-color);
+
 
 
     //Mat menu

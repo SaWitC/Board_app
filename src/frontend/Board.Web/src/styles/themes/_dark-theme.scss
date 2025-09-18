@@ -69,6 +69,28 @@
     color: var(--text-color);
   }
 
+  .mat-mdc-mini-fab.mat-primary { //Add Participant butotn
+    background-color: #bebebe;
+  }
+  .mat-mdc-mini-fab.mat-primary mat-icon {
+    color: #363636; 
+  }
+
+  .mat-mdc-button{ // Cancel button
+    color: #e6e6e6;
+    background-color: #575757
+  }
+
+  mat-dialog-actions .mat-mdc-raised-button.mat-primary { // Create button
+    background-color: #4caf50; 
+    color: white;             
+  }
+  mat-dialog-actions .mat-mdc-raised-button.mat-primary:disabled { // Create button
+    background-color: #555555; 
+    color: rgb(124, 124, 124);             
+  }
+//#c63031
+
   --input-background: rgb(43, 42, 42);
   --input-border-active: rgb(51, 146, 248);
   --input-text: #e2e7f7;
@@ -92,6 +114,8 @@
   --ng-select-placeholder-color: #b0b0b0;
   /* Light gray for placeholder text */
 
+
+  
   --ng-select-disabled-background:  #777676;
   --side-menu-active: #3F3F3F;
 
@@ -122,9 +146,12 @@
 
   --mdc-outlined-text-field-label-text-color: var(--text-color);
   --mat-icon-color: var(--text-color);
+  --mdc-outlined-text-field-input-text-placeholder-color: var(--text-color);
 
   //Mat menu
   --mat-menu-container-color: var(--background-modal);
+
+
 
   /* Light theme scrollbar styles */
   --scrollbar-bg: #393939;
