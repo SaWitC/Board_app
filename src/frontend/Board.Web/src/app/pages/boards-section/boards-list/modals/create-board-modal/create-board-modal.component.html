@@ -143,7 +143,7 @@
                       Название обязательно
                     </mat-error>
                   </mat-form-field>
-  
+
                   <mat-form-field appearance="outline">
                     <mat-label>Описание колонки</mat-label>
                     <input matInput formControlName="columnDescription" placeholder="Описание колонки" />
@@ -151,7 +151,7 @@
                       Описание обязательно
                     </mat-error>
                   </mat-form-field>
-  
+
                   <button type="button" class="delete-icon" mat-icon-button color="warn" (click)="removeColumn(i)"
                     [disabled]="boardColumnsArray.length <= 1">
                     <mat-icon>delete</mat-icon>

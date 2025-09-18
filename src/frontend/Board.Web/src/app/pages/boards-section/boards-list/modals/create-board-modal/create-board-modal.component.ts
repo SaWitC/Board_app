@@ -56,6 +56,9 @@ export class CreateBoardModalComponent implements OnInit {
   public boardTemplates$: Observable<BoardTemplateDTO[]> = of([]);
   searchTerm$ = new Subject<string>();
 
+  public isBoardManager: boolean = false;
+  public isBoardOwner: boolean = false;
+
   public draggedIndex: number | null = null;
   public hoveredIndex: number | null = null;
 
@@ -76,7 +79,14 @@ export class CreateBoardModalComponent implements OnInit {
     this.initForm();
     this.initSearchBoardsSubscription();
 
+    //Edit Mode
     if (this.data?.mode === 'edit' && this.data.board) {
+
+      this.isBoardManager = this.userService.isUserBoardAdmin();
+      this.isBoardOwner = this.userService.isUserBoardOwner();
+
+      this.updateBoardFieldsConfiguration();
+
       this.dialogTitle = 'Edit Board';
       this.submitButtonText = 'Save';
 
@@ -105,6 +115,17 @@ export class CreateBoardModalComponent implements OnInit {
 
         (this.boardForm.controls['boardColumns'] as FormArray).push(columnForm);
       })
+    }
+  }
+
+  private updateBoardFieldsConfiguration(){
+    if(this.isBoardOwner){
+      this.boardForm.get('boardTitle')?.enable();
+      this.boardForm.get('boardDescription')?.enable();
+    }
+    else{
+      this.boardForm.get('boardTitle')?.disable();
+      this.boardForm.get('boardDescription')?.disable();
     }
   }
 
