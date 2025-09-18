@@ -15,6 +15,6 @@ public class BoardRepository : Repository<Domain.Entities.Board>, IBoardReposito
         return await _context.Boards
             .Where(b => b.Id == boardId)
             .SelectMany(b => b.BoardUsers)
-            .FirstOrDefaultAsync(u => u.Role == UserAccessEnum.Owner, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(u => u.Role == UserAccessEnum.BoardOwner, cancellationToken: cancellationToken);
     }
 }

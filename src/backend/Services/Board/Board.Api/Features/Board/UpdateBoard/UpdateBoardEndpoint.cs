@@ -1,5 +1,8 @@
 using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
+using Board.Domain.Contracts.Enums;
+using Board.Domain.Contracts.Security;
+using Board.Domain.Security;
 using Board.Infrastructure.Data.Extensions;
 using FastEndpoints;
 
@@ -14,14 +17,16 @@ public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
         _repository = repository;
         _mapper = mapper;
     }
+
     public override void Configure()
     {
-        Put("/api/boards/{id}");
+        Put("/api/boards/{boardId}");
+        Policies(Auth.BuildPermissionPolicy(Permission.ManageBoard, Context.BoardColumn, "boardId"));
     }
 
     public override async Task HandleAsync(UpdateBoardRequest request, CancellationToken cancellationToken)
     {
-        Guid id = Route<Guid>("id");
+        Guid id = Route<Guid>("boardId");
 
         Domain.Entities.Board entity = await _repository.GetAsync(x => x.Id == id, cancellationToken, false, x => x.BoardColumns, x => x.BoardUsers);
         if (entity == null)
@@ -60,7 +65,8 @@ public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
                 BoardId = id,
                 Email = requestUser.Email,
                 Role = requestUser.Role
-            }
+            },
+            StringComparer.OrdinalIgnoreCase
         );
 
         Domain.Entities.Board updated = await _repository.UpdateAsync(entity, cancellationToken);

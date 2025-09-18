@@ -15,10 +15,10 @@ public class CreateBoardValidator : Validator<CreateBoardRequest>
 
         RuleFor(i => i.Title)
             .NotNull().NotEmpty().WithMessage(x => string.Format(SharedResources.FieldIsRequired, nameof(x.Title)))
-            .MaximumLength(20).WithMessage(x => string.Format(SharedResources.MaxLengthExceeded, nameof(x.Title), 20));
+            .MaximumLength(200).WithMessage(x => string.Format(SharedResources.MaxLengthExceeded, nameof(x.Title), 200));
 
-        RuleFor(i => i.Description).MaximumLength(100)
-            .WithMessage(x => string.Format(SharedResources.MaxLengthExceeded, nameof(x.Description), 100));
+        RuleFor(i => i.Description).MaximumLength(100000)
+            .WithMessage(x => string.Format(SharedResources.MaxLengthExceeded, nameof(x.Description), 100000));
 
         RuleForEach(i => i.BoardUsers).NotNull().NotEmpty().SetValidator(new BoardUserValidator());
         //TODO ADD CHECK FOR OWNER

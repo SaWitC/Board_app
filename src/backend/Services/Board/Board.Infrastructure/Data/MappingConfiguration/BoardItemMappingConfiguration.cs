@@ -42,7 +42,8 @@ public class BoardItemMappingConfiguration : IEntityTypeConfiguration<BoardItem>
         builder
             .Property(b => b.TaskType)
             .IsRequired()
-            .HasDefaultValue(TaskTypeEnum.UserStory);
+            .HasDefaultValue(TaskTypeEnum.UserStory)
+            .HasSentinel(TaskTypeEnum.UserStory);
 
         // Explicitly ignore unconfigured self-referencing navigation to prevent unintended join tables for now
         builder.Ignore(b => b.SubItems);

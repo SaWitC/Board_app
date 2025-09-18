@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
@@ -16,10 +16,11 @@ import { ToastrService } from 'ngx-toastr';
 import { BoardTemplateServiceApi } from 'src/app/core/services/api-services/board-template-api.service';
 import { AddBoardTemplateDTO } from 'src/app/core/models/board-template/add-board-template-DTO.interface';
 import { BoardCreationOptions } from 'src/app/core/models/enums/board-creation-options.enum';
-import { debounceTime, distinctUntilChanged, filter, Observable, of, Subject, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap } from 'rxjs';
 import { BoardTemplateDTO } from 'src/app/core/models/board-template/board-template-DTO.interface';
 import { MatSelectModule } from '@angular/material/select';
 import { NgSelectComponent } from '@ng-select/ng-select';
+import { TranslateModule } from '@ngx-translate/core';
 
 export interface CreateBoardModalData {
   mode: 'create' | 'edit';
@@ -43,18 +44,25 @@ export interface CreateBoardModalData {
     MatRadioModule,
     MatCheckboxModule,
     MatSelectModule,
-    NgSelectComponent
+    NgSelectComponent,
+    TranslateModule
   ]
 })
 export class CreateBoardModalComponent implements OnInit {
+  private static saveButtonTextLocalizationKey: string = 'BOARD_EDIT.CREATE';
+  private static editButtonTextLocalizationKey: string = 'BOARD_EDIT.EDIT';
+  
   boardForm!: FormGroup;
   dialogTitle = 'Create New Board';
-  submitButtonText = 'Create';
+  submitButtonTextLocalizationKey = CreateBoardModalComponent.saveButtonTextLocalizationKey;
 
   readonly separatorKeysCodes = [13] as const;
   public boardCreationOptions = BoardCreationOptions;
   public boardTemplates$: Observable<BoardTemplateDTO[]> = of([]);
   searchTerm$ = new Subject<string>();
+
+  public isBoardManager: boolean = false;
+  public isBoardOwner: boolean = false;
 
   public draggedIndex: number | null = null;
   public hoveredIndex: number | null = null;
@@ -76,9 +84,16 @@ export class CreateBoardModalComponent implements OnInit {
     this.initForm();
     this.initSearchBoardsSubscription();
 
+    //Edit Mode
     if (this.data?.mode === 'edit' && this.data.board) {
+
+      this.isBoardManager = this.userService.isUserBoardAdmin();
+      this.isBoardOwner = this.userService.isUserBoardOwner();
+
+      this.updateBoardFieldsConfiguration();
+
       this.dialogTitle = 'Edit Board';
-      this.submitButtonText = 'Save';
+      this.submitButtonTextLocalizationKey = CreateBoardModalComponent.editButtonTextLocalizationKey;
 
       this.boardForm.patchValue({
         boardTitle: this.data.board.title,
@@ -108,13 +123,24 @@ export class CreateBoardModalComponent implements OnInit {
     }
   }
 
+  private updateBoardFieldsConfiguration(){
+    if(this.isBoardOwner){
+      this.boardForm.get('boardTitle')?.enable();
+      this.boardForm.get('boardDescription')?.enable();
+    }
+    else{
+      this.boardForm.get('boardTitle')?.disable();
+      this.boardForm.get('boardDescription')?.disable();
+    }
+  }
+
   private initForm(): void {
     this.boardForm = this.fb.group({
       boardTitle: ['', Validators.required],
       boardDescription: ['', Validators.required],
       boardColumns: new FormArray([]),
-      boardUser: ['',[Validators.email]],
-      boardAdmin: ['',[Validators.email]],
+      boardUser: ['',[]],
+      boardAdmin: ['',[]],
 
       boardAdmins: new FormArray([]),
       boardUsers: new FormArray([]),
@@ -158,7 +184,7 @@ export class CreateBoardModalComponent implements OnInit {
     else if (!this.boardForm.get('boardColumns')?.value) {
       this.toastr.error('Columns are required');
     }
-    else if(this.boardForm.valid) { 
+    else if(this.boardForm.valid) {
 
       if (this.data?.mode === 'edit' && this.data.board) {
         const updateData = this.getUpdateBoardDTO(this.boardForm);
@@ -215,7 +241,6 @@ export class CreateBoardModalComponent implements OnInit {
       boardUsers:[
         ...userEmails.map(u => ({ email: u, role: UserAccess.USER })),
         ...adminEmails.map(a => ({ email: a, role: UserAccess.ADMIN }))
-      ,{ email: this.userService.getCurrentUserEmail(), role: UserAccess.OWNER }
       ],
       boardColumns: boardColumns
     };
@@ -248,9 +273,7 @@ export class CreateBoardModalComponent implements OnInit {
   }
 
   get isFormValid(): boolean {
-    return this.boardForm.valid &&
-      this.boardAdmins.length > 0 &&
-      this.boardUsers.length > 0;
+    return this.boardForm.valid
   }
 
   private normalize(email: string): string {
@@ -279,7 +302,7 @@ export class CreateBoardModalComponent implements OnInit {
       if (adminSet.has(u)) {
         this.toastr.error('You cannot add the same email as an admin and user');
         return false;
-      } 
+      }
     }
 
     return true;
@@ -380,7 +403,7 @@ export class CreateBoardModalComponent implements OnInit {
     }
 
     const draggedItem = this.boardColumnsArray.at(this.draggedIndex);
-    
+
     this.boardColumnsArray.removeAt(this.draggedIndex);
     this.boardColumnsArray.insert(index, draggedItem);
 
@@ -399,7 +422,7 @@ export class CreateBoardModalComponent implements OnInit {
     }
 
     const draggedItem = this.boardColumnsArray.at(this.draggedIndex);
-    
+
     this.boardColumnsArray.removeAt(this.draggedIndex);
     this.boardColumnsArray.insert(dropIndex, draggedItem);
 

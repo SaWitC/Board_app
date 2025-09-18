@@ -1,6 +1,7 @@
 using Board.Application.Abstractions.Repositories;
 using Board.Application.Abstractions.Services;
 using Board.Application.DTOs;
+using Board.Domain.Contracts.Enums;
 using FastEndpoints;
 
 namespace Board.Api.Features.Board.CreateBoard;
@@ -24,6 +25,23 @@ public class CreateBoardEndpoint : Endpoint<CreateBoardRequest>
 
     public override async Task HandleAsync(CreateBoardRequest request, CancellationToken cancellationToken)
     {
+        string currentEmail = _currentUserProvider.GetUserEmail();
+
+        bool hasOwnerInRequest = request.BoardUsers?.Any(u => u.Role == UserAccessEnum.BoardOwner) == true;
+        if (!hasOwnerInRequest)
+        {
+            request.BoardUsers ??= [];
+            request.BoardUsers.Add(new BoardUserDto { Email = currentEmail, Role = UserAccessEnum.BoardOwner });
+        }
+        else
+        {
+            if (!_currentUserProvider.IsGlobalAdmin())
+            {
+                //TODO add problem details
+                throw new Exception("You can not create board for other users");
+            }
+        }
+
         Guid boardId = Guid.NewGuid();
         Domain.Entities.Board entity = new()
         {

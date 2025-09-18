@@ -84,7 +84,7 @@ export class TaskModalComponent implements OnInit {
       const taskData: Partial<BoardItem> = {
         title: formValue.title,
         description: formValue.description,
-        columnId: formValue.columnId,
+        boardColumnId: formValue.boardColumnId,
         priority: formValue.priority,
         taskType: formValue.taskType,
         assignee: formValue.assignee || undefined,

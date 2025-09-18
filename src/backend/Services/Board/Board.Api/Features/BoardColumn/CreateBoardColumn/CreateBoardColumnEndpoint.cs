@@ -1,5 +1,8 @@
 using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
+using Board.Domain.Contracts.Enums;
+using Board.Domain.Contracts.Security;
+using Board.Domain.Security;
 using FastEndpoints;
 
 namespace Board.Api.Features.BoardColumn.CreateBoardColumn;
@@ -17,11 +20,13 @@ public class CreateBoardColumnEndpoint : Endpoint<CreateBoardItemRequest>
     public override void Configure()
     {
         Post("/api/boards/{boardId}/columns");
+        Policies(Auth.BuildPermissionPolicy(Permission.ManageBoard, Context.BoardColumn, "boardId"));
     }
 
     public override async Task HandleAsync(CreateBoardItemRequest request, CancellationToken cancellationToken)
     {
         Guid boardId = Route<Guid>("boardId");
+
         Domain.Entities.Board board = await _boardRepository.GetAsync(b => b.Id == boardId, cancellationToken, true, b => b.BoardColumns);
         if (board == null)
         {

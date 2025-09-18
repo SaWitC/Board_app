@@ -1,6 +1,9 @@
 using Board.Application.Abstractions.Repositories;
 using Board.Application.DTOs;
+using Board.Domain.Contracts.Enums;
+using Board.Domain.Contracts.Security;
 using Board.Domain.Entities;
+using Board.Domain.Security;
 using FastEndpoints;
 
 namespace Board.Api.Features.BoardItems.UpdateBoardItem;
@@ -17,7 +20,8 @@ public class UpdateBoardItemEndpoint : Endpoint<UpdateBoardItemRequest>
     }
     public override void Configure()
     {
-        Put("/api/boarditems/{id}");
+        Put("/api/boards/{boardId}/columns/{boardColumnId}/items/{id}");
+        Policies(Auth.BuildPermissionPolicy(Permission.ManageItems, Context.BoardItem, "boardId"));
     }
 
     public override async Task HandleAsync(UpdateBoardItemRequest request, CancellationToken cancellationToken)

@@ -11,6 +11,7 @@ import { BoardColumnComponent } from './components/board-column/board-column.com
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { boardItemToTask, taskToCreateDto, taskToUpdateDto } from 'src/app/core/mappers/board-item.mapper';
+import { UserService } from 'src/app/core/services/auth/user.service';
 
 
 @Component({
@@ -40,8 +41,11 @@ export class BoardComponent implements OnInit {
     private boardApiService: BoardApiService,
     private boardTemplateServiceApi: BoardTemplateServiceApi,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {}
+
+  public isBoardManager: boolean = false;
 
   ngOnInit(): void {
     // Get board ID from route parameters
@@ -82,6 +86,14 @@ export class BoardComponent implements OnInit {
     this.boardApiService.getBoardById(boardId).subscribe({
       next: (board: BoardDetailsDTO) => {
         this.currentBoard = board;
+        var currentUser = board.boardUsers?.find(u=>u.email===this.userService.getCurrentUserEmail())
+        if(currentUser){
+          this.userService.setUserBoardAccess(currentUser?.role??null);
+          this.isBoardManager = this.userService.isUserBoardAdmin();
+        }
+        else{
+          this.router.navigate(['/boards']);
+        }
       },
       error: (error: unknown) => {
         console.error('Error loading board details:', error);
@@ -99,7 +111,7 @@ export class BoardComponent implements OnInit {
   }
 
   private loadTasks(): void {
-    this.boardItemService.getBoardItems().subscribe({
+    this.boardItemService.getBoardItems(this.currentBoardId as string).subscribe({
       next: (items) => {
         this.tasks = items.map(boardItemToTask);
       },
@@ -109,8 +121,8 @@ export class BoardComponent implements OnInit {
     });
   }
 
-  getTasksByStatus(columnId: string): BoardItem[] {
-    return this.tasks.filter(task => task.columnId === columnId);
+  getTasksByStatus(boardColumnId: string): BoardItem[] {
+    return this.tasks.filter(task => task.boardColumnId === boardColumnId);
   }
 
   onAddTask(data: {boardColumnId: string}): void {
@@ -120,7 +132,7 @@ export class BoardComponent implements OnInit {
       if (task) {
         const createDto = taskToCreateDto(task);
         createDto.boardColumnId = data.boardColumnId;
-        this.boardItemService.addBoardItem(createDto).subscribe({
+        this.boardItemService.addBoardItem(this.currentBoardId as string, data.boardColumnId, createDto).subscribe({
           next: (created) => {
             this.tasks = [...this.tasks, boardItemToTask(created)];
           },
@@ -136,11 +148,11 @@ export class BoardComponent implements OnInit {
       task: data.task
     }).subscribe((updatedTask) => {
       if (updatedTask) {
-        this.boardItemService.getBoardItemById(data.task.id).subscribe({
+        this.boardItemService.getBoardItemById(this.currentBoardId as string, data.task.id).subscribe({
           next: (existing) => {
             const updateDto = taskToUpdateDto(existing, updatedTask);
             updateDto.boardColumnId = data.boardColumnId;
-            this.boardItemService.updateBoardItem(data.task.id, updateDto).subscribe({
+            this.boardItemService.updateBoardItem(this.currentBoardId as string, data.boardColumnId, data.task.id, updateDto).subscribe({
               next: (res) => {
                 const mapped = boardItemToTask(res);
                 this.tasks = this.tasks.map(t => t.id === mapped.id ? mapped : t);
@@ -155,7 +167,7 @@ export class BoardComponent implements OnInit {
   }
 
   onDeleteTask(taskId: string): void {
-    this.boardItemService.deleteBoardItem(taskId).subscribe({
+    this.boardItemService.deleteBoardItem(this.currentBoardId as string, taskId).subscribe({
       next: () => {
         this.tasks = this.tasks.filter(t => t.id !== taskId);
       },
@@ -163,8 +175,8 @@ export class BoardComponent implements OnInit {
     });
   }
 
-  onMoveTask(data: {taskId: string, newStatus: string}): void {
-    this.boardItemService.moveBoardItem(data.taskId, data.newStatus).subscribe({
+  onMoveTask(data: {taskId: string, toColumnId: string}): void {
+    this.boardItemService.moveBoardItem(this.currentBoardId as string, data.toColumnId, data.taskId).subscribe({
       next: (res) => {
         const mapped = boardItemToTask(res);
         this.tasks = this.tasks.map(t => t.id === mapped.id ? mapped : t);
@@ -174,7 +186,7 @@ export class BoardComponent implements OnInit {
   }
 
   onDropTask(event: DragDropEvent): void {
-    this.boardItemService.moveBoardItem(event.taskId, event.toColumnId).subscribe({
+    this.boardItemService.moveBoardItem(this.currentBoardId as string,event.toColumnId, event.taskId).subscribe({
       next: (res) => {
         const mapped = boardItemToTask(res);
         this.tasks = this.tasks.map(t => t.id === mapped.id ? mapped : t);
@@ -186,7 +198,7 @@ export class BoardComponent implements OnInit {
   onColumnDragStart(event: DragEvent, column: BoardColumnLookupDTO, index: number): void {
     if (event.dataTransfer) {
       event.dataTransfer.setData('text/plain', JSON.stringify({
-        columnId: column.id,
+        boardColumnId: column.id,
         fromIndex: index
       }));
       event.dataTransfer.effectAllowed = 'move';

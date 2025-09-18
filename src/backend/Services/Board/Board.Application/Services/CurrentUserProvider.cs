@@ -1,21 +1,24 @@
+using System.Security.Claims;
 using Board.Application.Abstractions.Services;
+using Board.Domain.Security;
 using Microsoft.AspNetCore.Http;
 
 namespace Board.Application.Services;
 public class CurrentUserProvider : ICurrentUserProvider
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private ClaimsPrincipal? User => _httpContextAccessor.HttpContext?.User;
     public CurrentUserProvider(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
     }
-    public string GetCurrentUserEmail()
+    public string? GetUserEmail()
     {
-        return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+        return User?.FindFirst(ClaimTypes.Email)?.Value;
     }
 
-    public bool IsCurrentUserAdmin()
+    public bool IsGlobalAdmin()
     {
-        return _httpContextAccessor.HttpContext.User.IsInRole("Admin");
+        return User?.HasClaim(Auth.Claims.Permissions, Auth.Roles.GlobalAdmin) ?? false;
     }
 }

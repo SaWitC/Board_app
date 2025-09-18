@@ -1,3 +1,4 @@
+using Board.Api.Authorization;
 using Board.Api.Configuration;
 using Board.Api.Features.Board.CreateBoard;
 using Board.Application.DI;
@@ -10,6 +11,7 @@ using FastEndpoints.Swagger;
 using FluentValidation;
 using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -20,9 +22,9 @@ const string AllowAllCorsPolicy = "AllowAll";
 
 //options registration
 services.AddOptionsWithBaseValidationOnStart<ConnectionStringsOptions>(configuration);
-services.AddOptionsWithBaseValidationOnStart<AuthOptions>(configuration, x => x.IsBypassAuthorization);
+services.AddOptionsWithBaseValidationOnStart<AuthOptions>(configuration);
 
-AuthOptions authOptions = configuration.GetSection(AuthOptions.SectionName).Get<AuthOptions>() ?? new AuthOptions();
+AuthOptions authOptions = configuration.GetSection(AuthOptions.SectionName).Get<AuthOptions>() ?? throw new InvalidOperationException("Auth options are not configured");
 
 builder.AddSharedAppSettings(args);
 builder.AddServiceDefaults();
@@ -38,7 +40,7 @@ services.AddValidatorsFromAssembly(typeof(CreateBoardValidator).Assembly);
 //services.AddAutoMapper(typeof(BoardMappingProfile).Assembly);
 services.AddMapster();
 
-builder.AddDatabase<BoardDbContext, ConnectionStringsOptions>(x => x.BoardDbConnectionString);
+builder.AddDatabase<BoardDbContext, ConnectionStringsOptions>(x => x.BoardDbConnectionString, "Board.Infrastructure");
 services.ConfigureAuth(authOptions)
     .ConfigureRepositories(configuration)
     .ConfigureAuth(AllowAllCorsPolicy)
@@ -48,6 +50,9 @@ services.ConfigureAuth(authOptions)
     .AddHttpContextAccessor()
     .AddInfrastructure(configuration)
     .ConfigureApplication();
+
+services.AddSingleton<IAuthorizationPolicyProvider, BoardPermissionPolicyProvider>();
+services.AddScoped<IAuthorizationHandler, BoardPermissionHandler>();
 
 WebApplication app = builder.Build();
 
@@ -73,24 +78,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseCors(AllowAllCorsPolicy);
 app.UseAuthentication();
-if (authOptions.IsBypassAuthorization)
-{
-    app.Use(async (context, next) =>
-    {
-        if (context.User?.Identity == null || !context.User.Identity.IsAuthenticated)
-        {
-            System.Security.Claims.Claim[] claims = new[]
-            {
-                new System.Security.Claims.Claim("sub", "bypass-user"),
-                new System.Security.Claims.Claim("name", "Bypass User"),
-                new System.Security.Claims.Claim("permissions", "Editor")
-            };
-            System.Security.Claims.ClaimsIdentity identity = new System.Security.Claims.ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme);
-            context.User = new System.Security.Claims.ClaimsPrincipal(identity);
-        }
-        await next();
-    });
-}
+
 app.UseAuthorization();
 app.UseFastEndpoints();
 app.MapControllers();
