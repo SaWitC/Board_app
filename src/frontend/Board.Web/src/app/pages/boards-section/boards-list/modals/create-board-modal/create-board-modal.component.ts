@@ -20,6 +20,7 @@ import { debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap 
 import { BoardTemplateDTO } from 'src/app/core/models/board-template/board-template-DTO.interface';
 import { MatSelectModule } from '@angular/material/select';
 import { NgSelectComponent } from '@ng-select/ng-select';
+import { TranslateModule } from '@ngx-translate/core';
 
 export interface CreateBoardModalData {
   mode: 'create' | 'edit';
@@ -43,13 +44,17 @@ export interface CreateBoardModalData {
     MatRadioModule,
     MatCheckboxModule,
     MatSelectModule,
-    NgSelectComponent
+    NgSelectComponent,
+    TranslateModule
   ]
 })
 export class CreateBoardModalComponent implements OnInit {
+  private static saveButtonTextLocalizationKey: string = 'BOARD_EDIT.CREATE';
+  private static editButtonTextLocalizationKey: string = 'BOARD_EDIT.EDIT';
+  
   boardForm!: FormGroup;
   dialogTitle = 'Create New Board';
-  submitButtonText = 'Create';
+  submitButtonTextLocalizationKey = CreateBoardModalComponent.saveButtonTextLocalizationKey;
 
   readonly separatorKeysCodes = [13] as const;
   public boardCreationOptions = BoardCreationOptions;
@@ -88,7 +93,7 @@ export class CreateBoardModalComponent implements OnInit {
       this.updateBoardFieldsConfiguration();
 
       this.dialogTitle = 'Edit Board';
-      this.submitButtonText = 'Save';
+      this.submitButtonTextLocalizationKey = CreateBoardModalComponent.editButtonTextLocalizationKey;
 
       this.boardForm.patchValue({
         boardTitle: this.data.board.title,
