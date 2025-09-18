@@ -16,7 +16,6 @@ public static class DatabaseExtension
         where TOptions : class
     {
         builder.Services.AddDatabaseWithoutEnrich<TContext, TOptions>(connectionStringSelector, assemblyName, serviceLifetime);
-        builder.EnrichSqlServerDbContext<TContext>();
 
         return builder.Services;
     }
@@ -34,7 +33,7 @@ public static class DatabaseExtension
             var options = serviceProvider.GetRequiredService<IOptions<TOptions>>().Value;
             var connectionString = connectionStringSelector(options);
 
-            optionsBuilder.UseSqlServer(connectionString, o =>
+            optionsBuilder.UseNpgsql(connectionString, o =>
             {
                 o.EnableRetryOnFailure();
                 if (!string.IsNullOrWhiteSpace(assemblyName))

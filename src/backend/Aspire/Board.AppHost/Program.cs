@@ -1,26 +1,26 @@
-using Microsoft.Extensions.DependencyInjection;
-
 var builder = DistributedApplication.CreateBuilder(args);
 
-var sqlPassword = builder.AddParameter("sql-password", true);
+var pgUsername = builder.AddParameter("pg-username", true);
+var pgPassword = builder.AddParameter("pg-password", true);
 
-// Add SQL Server
+// Add Postgres
 #if DEBUG
-int sqlPort = 1435;
+int pgPort = 5435;
 #else
-int sqlPort = 1433;
+int pgPort = 5432;
 #endif
 
 var boardDb = builder
-    .AddSqlServer("BoardDb", sqlPassword, port: sqlPort)
-    .WithImageTag("2022-latest")
+    .AddPostgres("postgres", pgUsername, pgPassword, port: pgPort)
+    //.WithPgAdmin()
     .WithDataVolume()
     .WithLifetime(ContainerLifetime.Persistent)
     .AddDatabase("BoardDbConnectionString", "BoardDb");
 
 // Add migration service for project database
 var projectDbMigrator = builder.AddProject<Projects.BoardDb_MigrationService>("boarddb-migrator")
-    .WithReference(boardDb);
+    .WithReference(boardDb)
+    .WaitFor(boardDb);
 
 // Add API
 var boardApi = builder.AddProject<Projects.Board_Api>("board-api")
