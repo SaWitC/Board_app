@@ -9,7 +9,7 @@
       </mat-radio-group>
     </div>
 
-    <div *ngIf="!isNew()">
+    <div *ngIf="!isNew() && isGlobalAdmin">
       <button *ngIf="data.board?.IsTemplate; else notTemplate" mat-stroked-button color="primary" class="text-white"
         type="button" (click)="createTemplatebasedOnThisBoard()">
         {{ 'BOARD_EDIT.MAKE_IT_TEMPLATE' | translate }}
