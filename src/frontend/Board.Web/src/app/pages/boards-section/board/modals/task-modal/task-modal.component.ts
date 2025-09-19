@@ -62,7 +62,6 @@ export class TaskModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.task);
     this.initForm();
   }
 

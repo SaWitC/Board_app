@@ -27,10 +27,11 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { UnauthorizedInterceptor } from './core/Interceptors/unathorized.interceptor';
-import { HttpLoaderInterceptor } from './core/Interceptors/http-loader.interceptor';
-import { LanguageInterceptor } from './core/Interceptors/language.interceptor';
-import { HttpNotificationInterceptorService } from './core/Interceptors/http-notification-interceptor-service';
+import { UnauthorizedInterceptor } from './core/interceptors/unathorized.interceptor';
+import { HttpLoaderInterceptor } from './core/interceptors/http-loader.interceptor';
+import { LanguageInterceptor } from './core/interceptors/language.interceptor';
+import { HttpNotificationInterceptorService } from './core/interceptors/http-notification-interceptor-service';
+import { ErrorHandlingInterceptor } from './core/interceptors/error-handling.interceptor';
 
 // translations are stored in assets/i18n/*.json
 
@@ -145,6 +146,11 @@ export const appConfig: ApplicationConfig = {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpNotificationInterceptorService,
       multi: true, // this ensures you can have multiple interceptors if needed
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorHandlingInterceptor,
+      multi: true,
     },
   ],
 };

@@ -9,6 +9,7 @@ public class SearchBoardTemplateValidator : Validator<SearchBoardTemplatesReques
     public SearchBoardTemplateValidator()
     {
         RuleFor(x => x.SearchTerm)
+            .Cascade(CascadeMode.Continue)
             .NotEmpty()
             .WithMessage(x => string.Format(SharedResources.FieldIsRequired, nameof(x.SearchTerm)))
             .MinimumLength(3);

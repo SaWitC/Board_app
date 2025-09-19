@@ -32,7 +32,8 @@ public class GetBoardItemByIdEndpoint : EndpointWithoutRequest
         BoardItem entity = await _repository.GetAsync(x => x.Id == id, cancellationToken);
         if (entity == null)
         {
-            await Send.OkAsync(null, cancellationToken);
+            			await Send.NotFoundAsync(cancellationToken);
+			return;
         }
 
         BoardItemDto response = _mapper.Map<BoardItemDto>(entity);

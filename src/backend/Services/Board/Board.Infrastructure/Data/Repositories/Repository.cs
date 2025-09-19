@@ -49,7 +49,7 @@ public abstract class Repository<T> : IRepository<T>
     {
         if (string.IsNullOrWhiteSpace(searchTerm))
         {
-            return new List<T>();
+            return [];
         }
 
         Expression<Func<T, bool>> predicate = x => false;
@@ -127,7 +127,7 @@ public abstract class Repository<T> : IRepository<T>
                            .ToListAsync(cancellationToken);
     }
 
-    private static Expression<Func<T, bool>> OrElse<T>(
+    private static Expression<Func<T, bool>> OrElse(
         Expression<Func<T, bool>> expr1,
         Expression<Func<T, bool>> expr2)
     {

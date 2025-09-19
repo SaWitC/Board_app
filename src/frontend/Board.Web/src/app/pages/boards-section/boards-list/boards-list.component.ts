@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { TranslateModule } from '@ngx-translate/core';
-import { BoardLookupDTO, AddBoardDTO, BoardDetailsDTO, UpdateBoardDTO } from 'src/app/core/models';
+import { BoardLookupDTO, BoardDetailsDTO } from 'src/app/core/models';
 import { BoardApiService } from 'src/app/core/services/api-services';
 import { DialogService } from 'src/app/core/services/other/dialog.service';
-import { Observable, switchMap, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { UserService } from 'src/app/core/services/auth/user.service';
 import { UserAccess } from 'src/app/core/models/enums/user-access.enum';
+import { BoardModalResult } from 'src/app/pages/boards-section/boards-list/modals/create-board-modal/create-board-modal.component';
 
 @Component({
   selector: 'app-boards-list',
@@ -53,9 +54,9 @@ export class BoardsListComponent implements OnInit {
   }
 
   onCreateBoard(): void {
-    this.dialogService.openCreateBoardModal().subscribe((boardData) => {
-      if (boardData) {
-        this.boardApiService.addBoard(boardData as AddBoardDTO).pipe(switchMap(()=>this.loadBoards())).subscribe();
+    this.dialogService.openCreateBoardModal().subscribe((result?: BoardModalResult) => {
+      if (result?.success && result?.boards) {
+        this.boards = result.boards;
       }
     });
   }
@@ -66,7 +67,6 @@ export class BoardsListComponent implements OnInit {
         this.boards = this.boards.filter(b => b.id !== boardId);
       },
       error: (err) => {
-        console.error('Error deleting board:', err);
         this.error = 'Failed to delete board';
       }
     });
@@ -82,9 +82,9 @@ export class BoardsListComponent implements OnInit {
 
     this.boardApiService.getBoardById(this.selectedBoard.id).subscribe({
       next: (boardDetails: BoardDetailsDTO) => {
-        this.dialogService.openEditBoardModal(boardDetails).subscribe((updateDto?: UpdateBoardDTO) => {
-          if (updateDto) {
-            this.boardApiService.updateBoard(updateDto).pipe(switchMap(()=>this.loadBoards())).subscribe();
+        this.dialogService.openEditBoardModal(boardDetails).subscribe((result?: BoardModalResult) => {
+          if (result?.success && result?.boards) {
+            this.boards = result.boards;
           }
         });
       }

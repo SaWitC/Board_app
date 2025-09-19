@@ -27,7 +27,7 @@ public class CreateBoardItemEndpoint : Endpoint<CreateBoardItemRequest>
 
     public override async Task HandleAsync(CreateBoardItemRequest request, CancellationToken cancellationToken)
     {
-        BoardItem entity = new BoardItem
+        BoardItem entity = new()
         {
             Id = Guid.NewGuid(),
             Title = request.Title,

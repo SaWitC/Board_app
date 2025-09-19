@@ -5,6 +5,16 @@
     "REQUEST_FAILED": "Не удалось выполнить запрос",
     "ERROR": "Ошибка"
   },
+  "ERRORS": {
+    "VALIDATION_TITLE": "Ошибка валидации",
+    "VALIDATION_FAILED": "Проверьте форму и исправьте ошибки.",
+    "ERROR_TITLE": "Ошибка",
+    "UNAUTHORIZED_TITLE": "Не авторизован",
+    "FORBIDDEN_TITLE": "Доступ запрещен",
+    "NOT_FOUND_TITLE": "Не найдено",
+    "SERVER_ERROR_TITLE": "Ошибка сервера",
+    "UNEXPECTED_ERROR": "Произошла неожиданная ошибка"
+  },
   "NAV": {
     "BOARD_APP": "BOARD APP",
     "LOG_IN": "Войти",

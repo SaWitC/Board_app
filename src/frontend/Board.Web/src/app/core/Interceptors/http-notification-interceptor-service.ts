@@ -26,8 +26,8 @@ export class HttpNotificationInterceptorService implements HttpInterceptor {
         },
         error: (error) => {
           if (error instanceof HttpErrorResponse) {
-            this.toastr.error(this.translate.instant('NOTIFICATIONS.REQUEST_FAILED'),
-              this.translate.instant('NOTIFICATIONS.ERROR'));
+            // Delegate error toast to ErrorHandlingInterceptor; do not show here
+            // no-op
           }
         }
       })

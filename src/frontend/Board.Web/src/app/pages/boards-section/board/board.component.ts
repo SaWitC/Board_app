@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { boardItemToTask, taskToCreateDto, taskToUpdateDto } from 'src/app/core/mappers/board-item.mapper';
 import { UserService } from 'src/app/core/services/auth/user.service';
+import { BoardModalResult } from 'src/app/pages/boards-section/boards-list/modals/create-board-modal/create-board-modal.component';
 
 
 @Component({
@@ -238,14 +239,13 @@ export class BoardComponent implements OnInit {
   }
 
   openSettings(): void {
-    this.dialogService.openEditBoardModal(this.currentBoard as BoardDetailsDTO).subscribe((updateDto?: UpdateBoardDTO) => {
-      if (updateDto) {
-        this.boardApiService.updateBoard(updateDto).subscribe(()=>{
-          this.boardApiService.getBoardById(this.currentBoardId as string).subscribe({
-            next: (board) => {
-              this.currentBoard = board;
-            }
-          });
+    this.dialogService.openEditBoardModal(this.currentBoard as BoardDetailsDTO).subscribe((result?: BoardModalResult) => {
+      if (result?.success && result?.boards) {
+        // Board was updated successfully, refresh current board data
+        this.boardApiService.getBoardById(this.currentBoardId as string).subscribe({
+          next: (board) => {
+            this.currentBoard = board;
+          }
         });
       }
     });

@@ -35,6 +35,8 @@ dotnet_diagnostic.ide0052.severity = error
 dotnet_diagnostic.ide0079.severity = error
 # Remove unnecessary equality operator
 dotnet_diagnostic.ide0100.severity = error
+# Disable use primary constructor
+dotnet_diagnostic.ide0290.severity = none
 
 [*.json]
 indent_size = 2

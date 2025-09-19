@@ -27,12 +27,8 @@ public class UpdateBoardColumnEndpoint : Endpoint<UpdateBoardColumnRequest>
 
     public override async Task HandleAsync(UpdateBoardColumnRequest request, CancellationToken cancellationToken)
     {
-        Domain.Entities.BoardColumn entity = await _repository.GetAsync(x => x.Id == request.Id, cancellationToken, false);
-        if (entity == null)
-        {
-            throw new InvalidOperationException("Column not found");
-        }
-
+        Domain.Entities.BoardColumn entity = await _repository.GetAsync(x => x.Id == request.Id, cancellationToken, false)
+            ?? throw new InvalidOperationException("Column not found");
         entity.Title = request.Title;
         entity.Description = request.Description;
 

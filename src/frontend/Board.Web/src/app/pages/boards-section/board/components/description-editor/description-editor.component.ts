@@ -1,25 +1,26 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormsModule, FormGroup } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
+import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Editor, NgxEditorComponent, NgxEditorMenuComponent, Toolbar } from 'ngx-editor';
-import { ReactiveFormsModule, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-description-editor',
   imports: [
     NgxEditorComponent,
     NgxEditorMenuComponent,
-    FormsModule,
-    ReactiveFormsModule
-],
+    FormsModule
+  ],
   templateUrl: './description-editor.component.html',
   styleUrl: './description-editor.component.scss',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => DescriptionEditorComponent),
+      multi: true
+    }
+  ]
 })
-export class DescriptionEditorComponent implements
-  OnInit,
-  OnDestroy
-{
+export class DescriptionEditorComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() placeholder: string = '';
-  @Input() formControl!: FormControl;
 
   editor: Editor = new Editor();
   toolbar: Toolbar = [
@@ -34,13 +35,40 @@ export class DescriptionEditorComponent implements
     ['undo', 'redo'],
   ];
 
+  private onChange = (value: any) => {};
+  private onTouched = () => {};
+  public value = '';
+
   ngOnInit(): void {
-    if (this.formControl) {
-      this.editor.setContent(this.formControl.value || '');
-    }
+    this.editor.setContent(this.value);
   }
 
   ngOnDestroy(): void {
     this.editor?.destroy();
+  }
+
+  writeValue(value: any): void {
+    this.value = value || '';
+    if (this.editor) {
+      this.editor.setContent(this.value);
+    }
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    // Implement if needed
+  }
+
+  onContentChange(value: string): void {
+    this.value = value;
+    this.onChange(value);
+    this.onTouched();
   }
 }
