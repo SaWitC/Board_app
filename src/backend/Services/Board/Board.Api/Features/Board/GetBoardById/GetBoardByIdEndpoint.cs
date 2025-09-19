@@ -13,7 +13,7 @@ public class GetBoardByIdEndpoint : EndpointWithoutRequest
     public override void Configure()
     {
         Get("/api/boards/{boardId}");
-        Policies(Auth.BuildPermissionPolicy(Permission.Read, Context.BoardColumn, "boardId"));
+        Policies(Auth.BuildPermissionPolicy(Permission.Read, Context.Board, "boardId"));
     }
 
     private readonly IBoardRepository _repository;

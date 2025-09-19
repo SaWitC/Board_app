@@ -26,7 +26,9 @@ public static class AuthConfiguration
         services.AddAuthorizationBuilder()
                 .AddPolicy(Auth.Policies.GlobalAdminPolicy, p => p
                     .RequireAuthenticatedUser()
-                    .RequireClaim(Auth.Claims.Permissions, Auth.Roles.GlobalAdmin));
+                    .RequireClaim(Auth.Claims.Permissions, Auth.Roles.GlobalAdmin))
+                .AddPolicy(Auth.Policies.AuthenticatedUser, p => p
+                    .RequireAuthenticatedUser());
 
         return services;
     }

@@ -1,10 +1,11 @@
+using Board.Api.Configuration;
 using Board.Application.Abstractions.Repositories;
 using Board.Application.Abstractions.Services;
 using Board.Application.DTOs;
 using Board.Domain.Contracts.Enums;
+using Board.Domain.Security;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;
-using Board.Api.Configuration;
 
 namespace Board.Api.Features.Board.CreateBoard;
 
@@ -23,6 +24,7 @@ public class CreateBoardEndpoint : Endpoint<CreateBoardRequest>
     public override void Configure()
     {
         Post("/api/boards");
+        Policies(Auth.Policies.AuthenticatedUser);
     }
 
     public override async Task HandleAsync(CreateBoardRequest request, CancellationToken cancellationToken)
