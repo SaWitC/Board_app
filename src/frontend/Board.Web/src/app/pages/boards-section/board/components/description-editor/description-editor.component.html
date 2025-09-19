@@ -4,9 +4,11 @@
                     class="editor-menu">
     </ngx-editor-menu>
     <div class="editor-container">
-        <ngx-editor [placeholder]="'Description...'"
+        <ngx-editor [placeholder]="placeholder"
                     [editor]="editor"
-                    [formControl]="formControl"
+                    [ngModel]="value"
+                    (ngModelChange)="onContentChange($event)"
                     class="description">
         </ngx-editor>
+    </div>
 </div>

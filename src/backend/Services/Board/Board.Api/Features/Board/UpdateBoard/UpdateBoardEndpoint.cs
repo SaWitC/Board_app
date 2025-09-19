@@ -32,7 +32,8 @@ public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
         Domain.Entities.Board entity = await _repository.GetAsync(x => x.Id == id, cancellationToken, false, x => x.BoardColumns, x => x.BoardUsers);
         if (entity == null)
         {
-            await Send.OkAsync(null, cancellationToken);
+            HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+            return;
         }
 
         entity.Title = request.Title;

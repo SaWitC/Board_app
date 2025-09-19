@@ -5,6 +5,16 @@
     "REQUEST_FAILED": "Request failed",
     "ERROR": "Error"
   },
+  "ERRORS": {
+    "VALIDATION_TITLE": "Validation Error",
+    "VALIDATION_FAILED": "Please check the form and correct the errors.",
+    "ERROR_TITLE": "Error",
+    "UNAUTHORIZED_TITLE": "Unauthorized",
+    "FORBIDDEN_TITLE": "Access Denied",
+    "NOT_FOUND_TITLE": "Not Found",
+    "SERVER_ERROR_TITLE": "Server Error",
+    "UNEXPECTED_ERROR": "An unexpected error occurred"
+  },
   "NAV": {
     "BOARD_APP": "BOARD APP",
     "LOG_IN": "Log in",

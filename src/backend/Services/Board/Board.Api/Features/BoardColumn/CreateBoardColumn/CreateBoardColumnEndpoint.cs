@@ -27,13 +27,9 @@ public class CreateBoardColumnEndpoint : Endpoint<CreateBoardItemRequest>
     {
         Guid boardId = Route<Guid>("boardId");
 
-        Domain.Entities.Board board = await _boardRepository.GetAsync(b => b.Id == boardId, cancellationToken, true, b => b.BoardColumns);
-        if (board == null)
-        {
-            throw new InvalidOperationException("Board not found");
-        }
-
-        Domain.Entities.BoardColumn entity = new Domain.Entities.BoardColumn
+        Domain.Entities.Board board = await _boardRepository.GetAsync(b => b.Id == boardId, cancellationToken, true, b => b.BoardColumns)
+            ?? throw new InvalidOperationException("Board not found");
+        Domain.Entities.BoardColumn entity = new()
         {
             Id = Guid.NewGuid(),
             Title = request.Title,
@@ -44,7 +40,7 @@ public class CreateBoardColumnEndpoint : Endpoint<CreateBoardItemRequest>
         await _columnRepository.AddAsync(entity, cancellationToken);
         await _boardRepository.UpdateAsync(board, cancellationToken);
 
-        BoardColumnDto response = new BoardColumnDto
+        BoardColumnDto response = new()
         {
             Id = entity.Id,
             Title = entity.Title,

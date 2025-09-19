@@ -48,6 +48,10 @@ services.ConfigureAuth(authOptions)
     .AddInfrastructure(configuration)
     .ConfigureApplication();
 
+// ProblemDetails + Exception handling
+services.AddProblemDetails();
+services.AddExceptionHandler<GlobalExceptionHandler>();
+
 services.AddSingleton<IAuthorizationPolicyProvider, BoardPermissionPolicyProvider>();
 services.AddScoped<IAuthorizationHandler, BoardPermissionHandler>();
 
@@ -73,11 +77,23 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
+// Enable centralized exception handling with ProblemDetails
+app.UseExceptionHandler();
+
+// ProblemDetails for non-exception status codes
+app.UseProblemDetailsForStatusCodes();
+
 app.UseCors(AllowAllCorsPolicy);
 app.UseAuthentication();
 
 app.UseAuthorization();
-app.UseFastEndpoints();
+
+// Configure FastEndpoints to emit RFC7807 and return all validation failures
+app.UseFastEndpoints(cfg =>
+{
+    cfg.Errors.UseProblemDetails();
+});
+
 app.MapControllers();
 
 app.Run();

@@ -7,12 +7,12 @@ namespace Board.Application.Services;
 public class CurrentUserProvider : ICurrentUserProvider
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private ClaimsPrincipal? User => _httpContextAccessor.HttpContext?.User;
+    private ClaimsPrincipal User => _httpContextAccessor.HttpContext?.User;
     public CurrentUserProvider(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
     }
-    public string? GetUserEmail()
+    public string GetUserEmail()
     {
         return User?.FindFirst(ClaimTypes.Email)?.Value;
     }

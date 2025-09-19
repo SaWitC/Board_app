@@ -32,7 +32,8 @@ public class UpdateBoardItemEndpoint : Endpoint<UpdateBoardItemRequest>
         BoardItem entity = await _repository.GetAsync(x => x.Id == id, cancellationToken);
         if (entity == null)
         {
-            await Send.OkAsync(null, cancellationToken);
+            			await Send.NotFoundAsync(cancellationToken);
+			return;
         }
 
         entity.Title = request.Title;

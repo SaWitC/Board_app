@@ -20,7 +20,7 @@ public class CreateBoardTemplateEndpoint : Endpoint<CreateBoardTemplateRequest>
 
     public override async Task HandleAsync(CreateBoardTemplateRequest request, CancellationToken ct)
     {
-        BoardTemplate entity = new BoardTemplate
+        BoardTemplate entity = new()
         {
             Title = request.Title,
             Description = request.Description,
@@ -29,7 +29,7 @@ public class CreateBoardTemplateEndpoint : Endpoint<CreateBoardTemplateRequest>
         };
 
         BoardTemplate created = await _repository.AddAsync(entity, ct);
-        BoardTemplateDto response = new BoardTemplateDto
+        BoardTemplateDto response = new()
         {
             Title = created.Title,
             Description = created.Description,

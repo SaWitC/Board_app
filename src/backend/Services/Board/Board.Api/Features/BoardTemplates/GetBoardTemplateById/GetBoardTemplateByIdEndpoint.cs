@@ -22,14 +22,17 @@ public class GetBoardTemplateByIdEndpoint : EndpointWithoutRequest
     {
         Guid id = Route<Guid>("id");
         BoardTemplate entity = await _repository.GetAsync(x => x.Id == id, ct);
-        BoardTemplateDto response = entity == null
-            ? null
-            : new BoardTemplateDto
-            {
-                Title = entity.Title,
-                Description = entity.Description,
-                BoardId = entity.Id
-            };
+        if (entity == null)
+        {
+            			await Send.NotFoundAsync(ct);
+			return;
+        }
+        BoardTemplateDto response = new BoardTemplateDto
+        {
+            Title = entity.Title,
+            Description = entity.Description,
+            BoardId = entity.Id
+        };
 
         await Send.OkAsync(response, ct);
     }

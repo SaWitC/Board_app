@@ -10,7 +10,7 @@ namespace Board.Api.Authorization;
 public sealed class BoardPermissionPolicyProvider : IAuthorizationPolicyProvider
 {
 	private readonly DefaultAuthorizationPolicyProvider _fallbackPolicyProvider;
-	private static readonly Regex PolicyRegex = new Regex(
+	private static readonly Regex PolicyRegex = new(
 		$"^{Auth.Claims.Permissions}:(?<perm>[^:]+):(?<ctx>[^:]+):(?<route>[^:]+)$",
 		RegexOptions.Compiled | RegexOptions.IgnoreCase);
 

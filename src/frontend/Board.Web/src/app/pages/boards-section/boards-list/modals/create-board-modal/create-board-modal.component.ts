@@ -16,15 +16,22 @@ import { ToastrService } from 'ngx-toastr';
 import { BoardTemplateServiceApi } from 'src/app/core/services/api-services/board-template-api.service';
 import { AddBoardTemplateDTO } from 'src/app/core/models/board-template/add-board-template-DTO.interface';
 import { BoardCreationOptions } from 'src/app/core/models/enums/board-creation-options.enum';
-import { debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap, catchError } from 'rxjs';
 import { BoardTemplateDTO } from 'src/app/core/models/board-template/board-template-DTO.interface';
 import { MatSelectModule } from '@angular/material/select';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { TranslateModule } from '@ngx-translate/core';
+import { BoardApiService } from 'src/app/core/services/api-services';
+import { BoardLookupDTO } from 'src/app/core/models/board/board-lookup-DTO.interface';
 
 export interface CreateBoardModalData {
   mode: 'create' | 'edit';
   board?: BoardDetailsDTO;
+}
+
+export interface BoardModalResult {
+  success: boolean;
+  boards?: BoardLookupDTO[];
 }
 
 @Component({
@@ -67,12 +74,15 @@ export class CreateBoardModalComponent implements OnInit {
   public draggedIndex: number | null = null;
   public hoveredIndex: number | null = null;
 
+  public isSubmitting = false; // Add loading state
+
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<CreateBoardModalComponent>,
     private userService: UserService,
     private boardTemplateServiceApi: BoardTemplateServiceApi,
     private toastr: ToastrService,
+    private boardApiService: BoardApiService,
     @Inject(MAT_DIALOG_DATA) public data: CreateBoardModalData
   ) { }
 
@@ -169,31 +179,53 @@ export class CreateBoardModalComponent implements OnInit {
 
 
   onSubmit(): void {
-    if(!this.isAllUserEmailsValid()){
+    if (this.isSubmitting) return;
+    
+    if (!this.isAllUserEmailsValid()) {
       return;
     }
 
     //Template board
-    if(this.boardForm.get('boardType')?.value == BoardCreationOptions.TEMPLATE){
-      if(!this.boardForm.get('boardTemplateId')?.value){
+    if (this.boardForm.get('boardType')?.value == BoardCreationOptions.TEMPLATE) {
+      if (!this.boardForm.get('boardTemplateId')?.value) {
         this.toastr.error('Template is required');
-
         //TODO add logic to create board based on template
+        return;
       }
     }
     else if (!this.boardForm.get('boardColumns')?.value) {
       this.toastr.error('Columns are required');
+      return;
     }
-    else if(this.boardForm.valid) {
+    else if (this.boardForm.valid) {
+      this.isSubmitting = true;
 
       if (this.data?.mode === 'edit' && this.data.board) {
         const updateData = this.getUpdateBoardDTO(this.boardForm);
-        this.dialogRef.close(updateData);
+        this.boardApiService.updateBoard(updateData).pipe(
+          switchMap(() => this.boardApiService.getBoards())
+        ).subscribe({
+          next: (boards) => {
+            this.dialogRef.close({ success: true, boards: boards });
+          },
+          error: (error) => {
+            this.isSubmitting = false;
+          }
+        });
         return;
       }
 
       const boardData = this.getAddBoardDTO(this.boardForm);
-      this.dialogRef.close(boardData);
+      this.boardApiService.addBoard(boardData).pipe(
+        switchMap(() => this.boardApiService.getBoards())
+      ).subscribe({
+        next: (boards) => {
+          this.dialogRef.close({ success: true, boards: boards });
+        },
+        error: (error) => {
+          this.isSubmitting = false;
+        }
+      });
     }
   }
 

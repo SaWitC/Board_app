@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BoardItem, AddBoardDTO, BoardDetailsDTO, UpdateBoardDTO } from '../../models';
 import { Observable } from 'rxjs';
 import { TaskModalComponent, TaskModalData } from 'src/app/pages/boards-section/board/modals/task-modal/task-modal.component';
-import { CreateBoardModalComponent, CreateBoardModalData } from 'src/app/pages/boards-section/boards-list/modals/create-board-modal/create-board-modal.component';
+import { CreateBoardModalComponent, CreateBoardModalData, BoardModalResult } from 'src/app/pages/boards-section/boards-list/modals/create-board-modal/create-board-modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +27,7 @@ export class DialogService {
     return dialogRef.afterClosed();
   }
 
-  openCreateBoardModal(): Observable<AddBoardDTO | undefined> {
+  openCreateBoardModal(): Observable<BoardModalResult | undefined> {
     const dialogRef: MatDialogRef<CreateBoardModalComponent> = this.dialog.open(CreateBoardModalComponent, {
       width: '700px',
       maxWidth: '90vw',
@@ -43,7 +43,7 @@ export class DialogService {
     return dialogRef.afterClosed();
   }
 
-  openEditBoardModal(board: BoardDetailsDTO): Observable<UpdateBoardDTO | undefined> {
+  openEditBoardModal(board: BoardDetailsDTO): Observable<BoardModalResult | undefined> {
     const dialogRef: MatDialogRef<CreateBoardModalComponent> = this.dialog.open(CreateBoardModalComponent, {
       width: '700px',
       maxWidth: '90vw',

@@ -4,6 +4,7 @@ using Board.Application.DTOs;
 using Board.Domain.Contracts.Enums;
 using FastEndpoints;
 using IMapper = AutoMapper.IMapper;
+using Board.Api.Configuration;
 
 namespace Board.Api.Features.Board.CreateBoard;
 
@@ -38,8 +39,7 @@ public class CreateBoardEndpoint : Endpoint<CreateBoardRequest>
         {
             if (!_currentUserProvider.IsGlobalAdmin())
             {
-                //TODO add problem details
-                throw new Exception("You can not create board for other users");
+                throw new ForbiddenAccessException("You can not create board for other users");
             }
         }
 

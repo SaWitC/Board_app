@@ -143,7 +143,14 @@
     font-size: 1.4rem;
     font-weight: 600;
     color: var(--text-color);
-    flex: 1;
+    flex: 1;    
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    max-height: 2.6em;
   }
 
   .board-actions {
@@ -167,11 +174,15 @@
 .board-description {
   color: #7f8c8d;
   margin-bottom: 20px;
-  line-height: 1.5;
+  line-height: 1.5; 
+  word-wrap: break-word;
+  word-break: break-word;  
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 3em;
 }
 
 .board-meta {

@@ -32,7 +32,8 @@ public class GetBoardByIdEndpoint : EndpointWithoutRequest
         Domain.Entities.Board entity = await _repository.GetAsync(x => x.Id == id, cancellationToken, true, x => x.BoardColumns, x => x.BoardUsers, x => x.BoardTemplate);
         if (entity == null)
         {
-            await Send.OkAsync(null, cancellationToken);
+            			await Send.NotFoundAsync(cancellationToken);
+			return;
         }
 
         BoardDto response = _mapper.Map<BoardDto>(entity);
