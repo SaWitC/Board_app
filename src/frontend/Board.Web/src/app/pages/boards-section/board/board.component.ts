@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { boardItemToTask, taskToCreateDto, taskToUpdateDto } from 'src/app/core/mappers/board-item.mapper';
 import { UserService } from 'src/app/core/services/auth/user.service';
 import { BoardModalResult } from 'src/app/pages/boards-section/boards-list/modals/create-board-modal/create-board-modal.component';
+import { UserAccess } from 'src/app/core/models/enums/user-access.enum';
 
 
 @Component({
@@ -47,8 +48,10 @@ export class BoardComponent implements OnInit {
   ) {}
 
   public isBoardManager: boolean = false;
+  public isGlobalAdmin: boolean = false;
 
   ngOnInit(): void {
+    this.isGlobalAdmin = this.userService.hasGlobalAdminPermission();
     // Get board ID from route parameters
     this.route.params.subscribe(params => {
       const boardId = params['id'];
@@ -88,9 +91,15 @@ export class BoardComponent implements OnInit {
       next: (board: BoardDetailsDTO) => {
         this.currentBoard = board;
         var currentUser = board.boardUsers?.find(u=>u.email===this.userService.getCurrentUserEmail())
+        
         if(currentUser){
-          this.userService.setUserBoardAccess(currentUser?.role??null);
+          this.userService.setUserBoardAccess(currentUser?.role??UserAccess.USER);
           this.isBoardManager = this.userService.isUserBoardAdmin();
+        }
+        else if(this.isGlobalAdmin){
+          // GlobalAdmin can access any board even if not a participant
+          this.userService.setUserBoardAccess(UserAccess.OWNER);
+          this.isBoardManager = true; // GlobalAdmin has admin rights on any board
         }
         else{
           this.router.navigate(['/boards']);
@@ -98,6 +107,7 @@ export class BoardComponent implements OnInit {
       },
       error: (error: unknown) => {
         console.error('Error loading board details:', error);
+        this.router.navigate(['/boards']);
       }
     });
   }

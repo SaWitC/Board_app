@@ -51,6 +51,26 @@
         </mat-form-field>
       </div>
 
+      <!-- Owner selector start -->
+      <div class="user-form" *ngIf="isGlobalAdmin">
+        <label class="form-label">{{ 'BOARD_EDIT.OWNER' | translate }}</label>
+        <div class="user-form-row mt-2">
+          <mat-form-field appearance="outline" class="user-form-field">
+            <mat-label>{{ 'BOARD_EDIT.OWNER_LABEL' | translate }}</mat-label>
+            <input matInput formControlName="boardOwner"
+              placeholder="{{ 'BOARD_EDIT.OWNER_EMAIL_PLACEHOLDER' | translate }}" />
+
+            <mat-error class="mt-0" *ngIf="boardForm.get('boardOwner')?.hasError('email')">
+              {{ 'BOARD_EDIT.INVALID_EMAIL' | translate }}
+            </mat-error>
+            <mat-error class="mt-0" *ngIf="boardForm.get('boardOwner')?.hasError('required')">
+              {{ 'BOARD_EDIT.OWNER_REQUIRED' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <!-- Owner selector end -->
+
       <!-- Admins selector start -->
       <div class="user-form">
         <label class="form-label">{{ 'BOARD_EDIT.ADMINS' | translate }}</label>

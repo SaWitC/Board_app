@@ -22,6 +22,7 @@ export class BoardsListComponent implements OnInit {
   boards: BoardLookupDTO[] = [];
   error: string | null = null;
   selectedBoard: BoardLookupDTO | null = null;
+  public isGlobalAdmin: boolean = false;
 
   getUsersCount(board: BoardLookupDTO): number {
     return (board.boardUsers ?? []).filter(u => u.role === 7).length;
@@ -39,6 +40,7 @@ export class BoardsListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isGlobalAdmin = this.userService.hasGlobalAdminPermission();
     this.loadBoards().subscribe();
   }
 
@@ -104,16 +106,31 @@ export class BoardsListComponent implements OnInit {
   }
 
   canSeeActions(board: BoardLookupDTO): boolean {
+    // GlobalAdmin can see actions on any board
+    if (this.isGlobalAdmin) {
+      return true;
+    }
+    
     const role = this.getCurrentUserRole(board);
     return role === UserAccess.ADMIN || role === UserAccess.OWNER;
   }
 
   canEdit(board: BoardLookupDTO): boolean {
+    // GlobalAdmin can edit any board
+    if (this.isGlobalAdmin) {
+      return true;
+    }
+    
     const role = this.getCurrentUserRole(board);
     return role === UserAccess.ADMIN || role === UserAccess.OWNER;
   }
 
   canDelete(board: BoardLookupDTO): boolean {
+    // GlobalAdmin can delete any board
+    if (this.isGlobalAdmin) {
+      return true;
+    }
+    
     const role = this.getCurrentUserRole(board);
     return role === UserAccess.OWNER;
   }

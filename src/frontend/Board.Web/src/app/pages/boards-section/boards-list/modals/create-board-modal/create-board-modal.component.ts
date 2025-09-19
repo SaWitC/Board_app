@@ -70,6 +70,7 @@ export class CreateBoardModalComponent implements OnInit {
 
   public isBoardManager: boolean = false;
   public isBoardOwner: boolean = false;
+  public isGlobalAdmin: boolean = false;
 
   public draggedIndex: number | null = null;
   public hoveredIndex: number | null = null;
@@ -92,7 +93,9 @@ export class CreateBoardModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.initSearchBoardsSubscription();
+    this.initSearchBoardsSubscription();    
+    
+    this.isGlobalAdmin = this.userService.hasGlobalAdminPermission();
 
     //Edit Mode
     if (this.data?.mode === 'edit' && this.data.board) {
@@ -121,6 +124,14 @@ export class CreateBoardModalComponent implements OnInit {
           columnDescription: [c.description, Validators.required]
         }));
       });
+
+      // Set owner email if exists
+      const owner = this.data.board.boardUsers.find(u => u.role === UserAccess.OWNER);
+      if (owner && this.isGlobalAdmin) {
+        this.boardForm.patchValue({
+          boardOwner: owner.email
+        });
+      }
     } else {
       ["TODO", "In Progress", "Ready for Review", "Done"].forEach(column => {
         const columnForm = this.fb.group({
@@ -149,12 +160,11 @@ export class CreateBoardModalComponent implements OnInit {
       boardTitle: ['', Validators.required],
       boardDescription: ['', Validators.required],
       boardColumns: new FormArray([]),
-      boardUser: ['',[]],
-      boardAdmin: ['',[]],
-
+      boardUser: ['', [Validators.email]],
+      boardAdmin: ['', [Validators.email]],
+      boardOwner: ['', [Validators.email]],
       boardAdmins: new FormArray([]),
       boardUsers: new FormArray([]),
-
       boardTemplateId: [null],
       boardType: [BoardCreationOptions.EMPTY, Validators.required]
     });
@@ -177,6 +187,77 @@ export class CreateBoardModalComponent implements OnInit {
     }
   }
 
+  private createBoardUsersArray(ownerEmail?: string): Array<{ email: string; role: UserAccess }> {
+    const adminEmails = this.adminEmails;
+    const userEmails = this.userEmails;
+
+    // Create base board users array
+    const boardUsers = [
+      ...userEmails.map(u => ({ email: u, role: UserAccess.USER })),
+      ...adminEmails.map(a => ({ email: a, role: UserAccess.ADMIN }))
+    ];
+
+    // Add owner based on permissions and provided email
+    if (ownerEmail && this.isGlobalAdmin) {
+      // GlobalAdmin specified a custom owner
+      boardUsers.push({ email: ownerEmail, role: UserAccess.OWNER });
+    } else if (!ownerEmail && this.isGlobalAdmin) {
+      // GlobalAdmin didn't specify owner, use current user as owner
+      boardUsers.push({ email: this.userService.getCurrentUserEmail(), role: UserAccess.OWNER });
+    } else {
+      // Not GlobalAdmin, current user is always owner
+      boardUsers.push({ email: this.userService.getCurrentUserEmail(), role: UserAccess.OWNER });
+    }
+
+    return boardUsers;
+  }
+
+  private getUpdateBoardDTO(boardForm: FormGroup<any>): UpdateBoardDTO {
+    const formValue = boardForm.value;
+
+    const boardColumns = formValue.boardColumns.map((column: any) => ({
+      id: column.id,
+      title: column.columnTitle,
+      description: column.columnDescription
+    }));
+
+    const boardUsers = this.createBoardUsersArray(formValue.boardOwner);
+
+    const updateData: UpdateBoardDTO = {
+      id: this.data.board!.id,
+      title: formValue.boardTitle,
+      description: formValue.boardDescription,
+      boardUsers: boardUsers,
+      boardColumns: boardColumns
+    };
+
+    return updateData;
+  }
+
+  private getAddBoardDTO(boardForm: FormGroup<any>): AddBoardDTO {
+    const formValue = boardForm.value;
+
+    const boardColumns: any[] = formValue.boardColumns.map((column: any) => ({
+      id: column.id,
+      title: column.columnTitle,
+      description: column.columnDescription
+    }));
+
+    const boardUsers = this.createBoardUsersArray(formValue.boardOwner);
+
+    const boardData: AddBoardDTO = {
+      title: formValue.boardTitle,
+      description: formValue.boardDescription,
+      boardUsers: boardUsers,
+      boardColumns: boardColumns
+    };
+
+    return boardData;
+  }
+
+  onClose(): void {
+    this.dialogRef.close();
+  }
 
   onSubmit(): void {
     if (this.isSubmitting) return;
@@ -227,61 +308,6 @@ export class CreateBoardModalComponent implements OnInit {
         }
       });
     }
-  }
-
-  private getUpdateBoardDTO(boardForm: FormGroup<any>): UpdateBoardDTO {
-    const formValue = boardForm.value;
-
-    const boardColumns = formValue.boardColumns.map((column: any) => ({
-      id: column.id,
-      title: column.columnTitle,
-      description: column.columnDescription
-    }));
-
-    const adminEmails = this.adminEmails;
-    const userEmails = this.userEmails;
-
-    const updateData: UpdateBoardDTO = {
-      id: this.data.board!.id,
-      title: formValue.boardTitle,
-      description: formValue.boardDescription,
-      boardUsers:[
-        ...userEmails.map(u => ({ email: u, role: UserAccess.USER })),
-        ...adminEmails.map(a => ({ email: a, role: UserAccess.ADMIN }))
-      ],
-      boardColumns: boardColumns
-    };
-
-    return updateData;
-  }
-
-  private getAddBoardDTO(boardForm: FormGroup<any>): AddBoardDTO {
-    const formValue = boardForm.value;
-
-    const boardColumns: any[] = formValue.boardColumns.map((column: any) => ({
-      id: column.id,
-      title: column.columnTitle,
-      description: column.columnDescription
-    }));
-
-    const adminEmails = this.adminEmails;
-    const userEmails = this.userEmails;
-
-    const boardData: AddBoardDTO = {
-      title: formValue.boardTitle,
-      description: formValue.boardDescription,
-      boardUsers:[
-        ...userEmails.map(u => ({ email: u, role: UserAccess.USER })),
-        ...adminEmails.map(a => ({ email: a, role: UserAccess.ADMIN }))
-      ],
-      boardColumns: boardColumns
-    };
-
-    return boardData;
-  }
-
-  onClose(): void {
-    this.dialogRef.close();
   }
 
   get boardColumnsArray() {

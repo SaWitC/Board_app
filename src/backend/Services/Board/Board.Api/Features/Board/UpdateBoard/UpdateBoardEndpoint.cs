@@ -22,7 +22,7 @@ public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
     public override void Configure()
     {
         Put("/api/boards/{boardId}");
-        Policies(Auth.BuildPermissionPolicy(Permission.ManageBoard, Context.BoardColumn, "boardId"));
+        Policies(Auth.BuildPermissionPolicy(Permission.ManageBoard, Context.Board, "boardId"));
     }
 
     public override async Task HandleAsync(UpdateBoardRequest request, CancellationToken cancellationToken)
