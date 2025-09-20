@@ -37,6 +37,6 @@ public class GetBoardColumnsEndpoint : EndpointWithoutRequest
 
         List<BoardColumnDto> response = _mapper.Map<List<BoardColumnDto>>(board.BoardColumns);
 
-        await Send.OkAsync(response, cancellationToken);
+        await Send.OkAsync(response.OrderBy(x => x.Order), cancellationToken);
     }
 }

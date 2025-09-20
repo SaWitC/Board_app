@@ -10,4 +10,5 @@ public class BoardColumn : IEntity
     public ICollection<BoardItem> Elements { get; set; }
     public Board Board { get; set; }
     public Guid BoardId { get; set; }
+    public int Order { get; set; }
 }

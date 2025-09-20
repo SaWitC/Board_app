@@ -33,6 +33,12 @@ public abstract class Repository<T> : IRepository<T>
         return result.Entity;
     }
 
+    public async Task UpdateRangeAsync(T[] entities, CancellationToken cancellationToken)
+    {
+        _dbSet.UpdateRange(entities);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task<T> DeleteAsync(T entity, CancellationToken cancellationToken)
     {
         EntityEntry<T> result = _dbSet.Remove(entity);
@@ -125,6 +131,11 @@ public abstract class Repository<T> : IRepository<T>
                            .Includes(includes)
                            .Select(selector)
                            .ToListAsync(cancellationToken);
+    }
+
+    public async Task SaveChangesAsync(CancellationToken cancellationToken)
+    {
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     private static Expression<Func<T, bool>> OrElse(

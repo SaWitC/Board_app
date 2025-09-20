@@ -37,7 +37,8 @@
   "BOARD": {
     "TOTAL_TASKS": "Total tasks:",
     "NO_TASKS": "No tasks",
-    "ADD_TASK": "Add task"
+    "ADD_TASK": "Add task",
+    "DRAG_TO_REORDER": "Drag to reorder columns"
   },
   "BOARD_EDIT": {
     "BOARD_TITLE": "Board title",
@@ -82,4 +83,4 @@
     "LOGOUT": "Logout",
     "THEME": "Theme"
   }
-} 
+}

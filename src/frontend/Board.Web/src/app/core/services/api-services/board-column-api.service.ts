@@ -7,6 +7,7 @@ import {
   UpdateBoardColumnDTO
 } from "../../models";
 import { ApiService } from "./api.service";
+import { OrderedBoardColumnDTO, UpdateOrderedBoardColumnDTO } from "../../models/board-column/ordered-board-column-DTO.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -34,5 +35,9 @@ export class BoardColumnApiService {
 
   public deleteBoardColumn(boardId: string, boardColumnId: string): Observable<boolean> {
     return this.api.delete<boolean>(`/boards/${boardId}/columns/${boardColumnId}`);
+  }
+
+  public updateBoardColumnOrder(boardId: string, updateOrderRequest: UpdateOrderedBoardColumnDTO): Observable<void>{
+    return this.api.put<void>(`/boards/${boardId}/columns/order`, {columns:updateOrderRequest.OrderedBoardColumns});
   }
 }

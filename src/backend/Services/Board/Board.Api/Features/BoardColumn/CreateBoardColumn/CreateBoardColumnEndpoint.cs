@@ -42,6 +42,7 @@ public class CreateBoardColumnEndpoint : Endpoint<CreateBoardItemRequest>
 
         BoardColumnDto response = new()
         {
+            Order = entity.Order,
             Id = entity.Id,
             Title = entity.Title,
             Description = entity.Description

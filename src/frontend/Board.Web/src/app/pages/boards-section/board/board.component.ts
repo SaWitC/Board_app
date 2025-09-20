@@ -14,6 +14,7 @@ import { boardItemToTask, taskToCreateDto, taskToUpdateDto } from 'src/app/core/
 import { UserService } from 'src/app/core/services/auth/user.service';
 import { BoardModalResult } from 'src/app/pages/boards-section/boards-list/modals/create-board-modal/create-board-modal.component';
 import { UserAccess } from 'src/app/core/models/enums/user-access.enum';
+import { OrderedBoardColumnDTO } from 'src/app/core/models/board-column/ordered-board-column-DTO.interface';
 
 
 @Component({
@@ -49,6 +50,10 @@ export class BoardComponent implements OnInit {
 
   public isBoardManager: boolean = false;
   public isGlobalAdmin: boolean = false;
+
+  // Drag and drop properties
+  public draggedColumnIndex: number | null = null;
+  public hoveredColumnIndex: number | null = null;
 
   ngOnInit(): void {
     this.isGlobalAdmin = this.userService.hasGlobalAdminPermission();
@@ -86,12 +91,26 @@ export class BoardComponent implements OnInit {
     });
   }
 
+public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
+  this.boardColumnService.updateBoardColumnOrder(this.currentBoardId as string, { OrderedBoardColumns: columns }).subscribe({
+    next: () => {
+      // Успешно обновлен порядок колонок
+      console.log('Column order updated successfully');
+    },
+    error: (error) => {
+      console.error('Error updating column order:', error);
+      // В случае ошибки перезагружаем колонки для восстановления правильного порядка
+      this.loadColumns(this.currentBoardId as string);
+    }
+  });
+}
+
   private loadBoardDetails(boardId: string): void {
     this.boardApiService.getBoardById(boardId).subscribe({
       next: (board: BoardDetailsDTO) => {
         this.currentBoard = board;
         var currentUser = board.boardUsers?.find(u=>u.email===this.userService.getCurrentUserEmail())
-        
+
         if(currentUser){
           this.userService.setUserBoardAccess(currentUser?.role??UserAccess.USER);
           this.isBoardManager = this.userService.isUserBoardAdmin();
@@ -114,7 +133,7 @@ export class BoardComponent implements OnInit {
 
   private loadColumns(boardId: string): void {
     this.boardColumnService.getBoardColumns(boardId).subscribe({
-      next: (columns) => this.columns = columns,
+      next: (columns) => this.columns = columns.sort((a, b) => a.order - b.order),
       error: (error) => {
         console.error('Error loading columns:', error);
       }
@@ -206,41 +225,77 @@ export class BoardComponent implements OnInit {
     });
   }
 
-  onColumnDragStart(event: DragEvent, column: BoardColumnLookupDTO, index: number): void {
+  onColumnDragStart(event: DragEvent, index: number): void {
     if (event.dataTransfer) {
-      event.dataTransfer.setData('text/plain', JSON.stringify({
-        boardColumnId: column.id,
-        fromIndex: index
-      }));
       event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', index.toString());
+      this.draggedColumnIndex = index;
     }
   }
 
-  onColumnDragOver(event: DragEvent): void {
-    event.preventDefault();
-    event.dataTransfer!.dropEffect = 'move';
+  onColumnDragEnd(event: DragEvent): void {
+    this.draggedColumnIndex = null;
+    this.hoveredColumnIndex = null;
   }
 
-  onColumnDrop(event: DragEvent, toIndex: number): void {
+  onColumnDragOver(event: DragEvent, index: number): void {
     event.preventDefault();
 
-    try {
-      const dragData = JSON.parse(event.dataTransfer?.getData('text/plain') || '{}');
-      const fromIndex = dragData.fromIndex;
+    this.hoveredColumnIndex = index;
 
-      if (fromIndex !== undefined && fromIndex !== toIndex) {
-        this.reorderColumns(fromIndex, toIndex);
-      }
-    } catch (error) {
-      console.error('Error parsing drag data:', error);
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move';
     }
+
+    if (this.draggedColumnIndex === null || this.draggedColumnIndex === index) {
+      return;
+    }
+
+    // Перемещаем элемент в массиве
+    const draggedColumn = this.columns[this.draggedColumnIndex];
+    this.columns.splice(this.draggedColumnIndex, 1);
+    this.columns.splice(index, 0, draggedColumn);
+
+    // Обновляем индекс перетаскиваемого элемента
+    this.draggedColumnIndex = index;
   }
 
-  private reorderColumns(fromIndex: number, toIndex: number): void {
-    const columns = [...this.columns];
-    const [movedColumn] = columns.splice(fromIndex, 1);
-    columns.splice(toIndex, 0, movedColumn);
-    this.columns = columns;
+  onColumnDragEnter(event: DragEvent): void {
+    event.preventDefault();
+  }
+
+  onColumnDrop(event: DragEvent, dropIndex: number): void {
+    event.preventDefault();
+
+    if (this.draggedColumnIndex === null) {
+      return;
+    }
+
+    // Финальное перемещение элемента
+    const draggedColumn = this.columns[this.draggedColumnIndex];
+    this.columns.splice(this.draggedColumnIndex, 1);
+    this.columns.splice(dropIndex, 0, draggedColumn);
+
+    console.log('=== DRAG DROP EVENT ===');
+    console.log('Final columns order:', this.columns.map((c, i) => `${i}: ${c.id}`));
+
+    // Создаем массив с новым порядком для отправки на сервер
+    const orderedColumns: OrderedBoardColumnDTO[] = this.columns.map((column, index) => ({
+      id: column.id,
+      order: index
+    }));
+
+    console.log('Sending order to server:', orderedColumns);
+
+    // Отправляем обновленный порядок на сервер
+    this.updateBoardColumnOrder(orderedColumns);
+
+    this.draggedColumnIndex = null;
+    this.hoveredColumnIndex = null;
+  }
+
+  trackByColumnId(index: number, column: BoardColumnLookupDTO): string {
+    return column.id;
   }
 
 

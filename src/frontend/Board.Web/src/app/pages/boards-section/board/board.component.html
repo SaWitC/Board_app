@@ -15,19 +15,37 @@
 
   <div class="board-content">
     <div class="board-columns">
-      <app-board-column
-        *ngFor="let column of columns"
-        [boardColumnId]="column.id"
-        [boardId]="currentBoardId ?? column.id"
-        [allTasks]="tasks"
-        [columnTasks]="getTasksByStatus(column.id)"
+      <div *ngFor="let column of columns; trackBy: trackByColumnId; let i = index"
+           class="column-drag-container"
+           [class.drag-over]="draggedColumnIndex !== null && draggedColumnIndex !== i"
+           [class.dragging]="draggedColumnIndex === i">
 
-        (addTask)="onAddTask($event)"
-        (editTask)="onEditTask($event)"
-        (deleteTask)="onDeleteTask($event)"
-        (moveTask)="onMoveTask($event)"
-        (dropTask)="onDropTask($event)">
-      </app-board-column>
+        <!-- Drag Handle -->
+        <div class="column-drag-handle"
+             *ngIf="isBoardManager"
+             [draggable]="true"
+             (dragover)="onColumnDragOver($event, i)"
+             (dragenter)="onColumnDragEnter($event)"
+             (dragstart)="onColumnDragStart($event, i)"
+             (dragend)="onColumnDragEnd($event)"
+             (drop)="onColumnDrop($event, i)"
+             title="{{ 'BOARD.DRAG_TO_REORDER' | translate }}">
+          <i class="material-icons">drag_indicator</i>
+        </div>
+
+        <app-board-column
+          [boardColumnId]="column.id"
+          [boardId]="currentBoardId ?? column.id"
+          [allTasks]="tasks"
+          [columnTasks]="getTasksByStatus(column.id)"
+
+          (addTask)="onAddTask($event)"
+          (editTask)="onEditTask($event)"
+          (deleteTask)="onDeleteTask($event)"
+          (moveTask)="onMoveTask($event)"
+          (dropTask)="onDropTask($event)">
+        </app-board-column>
+      </div>
     </div>
   </div>
 </div>

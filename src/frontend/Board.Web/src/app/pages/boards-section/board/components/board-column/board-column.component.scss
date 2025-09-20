@@ -1,7 +1,8 @@
 
 :host {
   display: block;
-  height: auto;
+  // height: auto;
+  height: -webkit-fill-available;
 }
 
 .board-column {

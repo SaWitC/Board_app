@@ -20,35 +20,31 @@
   --background-warning: rgb(154, 89, 1);
   --box-shadow-color-secondary: #242424;
   --icon-active-color: #C63031;
-
   //TEXT
   --text-color: #e2e7f7;
   --text-color-during-hover: rgb(52, 52, 52);
   --text-color-negative: rgb(252, 62, 46);
   --text-color-accent: rgb(255, 163, 163);
-
   // BORDERS
   --border-color-negative: #e57373;
   --border-color-accent: #5b9dff;
   --border-color-negative-tint: #ffb3b3;
-
+  // ICONS
+  --icon-color-negative: #e57373;
+  --icon-color-accent: #5b9dff;
+  --icon-color-negative-tint: #ffb3b3;
   // PRIORITY
   --priority-color-low: #81c784;
   --priority-color-medium: #ffb74d;
   --priority-color-high: #ff8a65;
   --priority-color-urgent: #e57373;
-
-
   //BOARD
   --board-background-color: #2a2a2a;
   --board-header-background-color: #393939;
-
   //BOARD COLUMN
   --board-column-background-color: #393939;
   //BOARD ITEM
   --board-task-background-color: #3f3f3f;
-
-
   --bs-custom-btn-color: #e2e7f7 !important;
   --bs-custom-btn-bg: #da7b3c !important;
   --bs-custom-btn-border-color: #da8248 !important;
@@ -56,7 +52,6 @@
   --bs-custom-btn-hover-border-color: #888;
   --bs-border-color: #666666;
   --bs-heading-color: var(--text-color);
-
   .btn-primary {
     --bs-btn-color: var(--bs-custom-btn-color) !important;
     --bs-btn-bg: var(--bs-custom-btn-bg) !important;
@@ -64,7 +59,6 @@
     --bs-btn-hover-bg: var(--bs-custom-btn-hover-bg) !important;
     --bs-btn-hover-border-color: var(--bs-custom-btn-hover-border-color);
   }
-
   .mat-mdc-option {
     color: var(--text-color);
   }
@@ -73,7 +67,7 @@
     background-color: #bebebe;
   }
   .mat-mdc-mini-fab.mat-primary mat-icon {
-    color: #363636; 
+    color: #363636;
   }
 
   .mat-mdc-button{ // Cancel button
@@ -82,12 +76,12 @@
   }
 
   mat-dialog-actions .mat-mdc-raised-button.mat-primary { // Create button
-    background-color: #4caf50; 
-    color: white;             
+    background-color: #4caf50;
+    color: white;
   }
   mat-dialog-actions .mat-mdc-raised-button.mat-primary:disabled { // Create button
-    background-color: #555555; 
-    color: rgb(124, 124, 124);             
+    background-color: #555555;
+    color: rgb(124, 124, 124);
   }
 //#c63031
 
@@ -96,7 +90,6 @@
   --input-text: #e2e7f7;
   --input-bg-active: rgb(35, 35, 35);
   /* Slightly lighter */
-
   --ng-select-background: rgb(43, 42, 42);
   /* Very dark gray background */
   --ng-select-text-color: #e2e7f7;
@@ -115,7 +108,7 @@
   /* Light gray for placeholder text */
 
 
-  
+
   --ng-select-disabled-background:  #777676;
   --side-menu-active: #3F3F3F;
 
@@ -151,8 +144,6 @@
   //Mat menu
   --mat-menu-container-color: var(--background-modal);
 
-
-
   /* Light theme scrollbar styles */
   --scrollbar-bg: #393939;
   /* Light track background */
@@ -160,9 +151,6 @@
   /* Light thumb color */
   --scrollbar-thumb-hover: #555;
   /* Thumb hover color */
-
-
-
   --mat-sys-primary: var(--background-accent-themed);
   --mat-sys-on-secondary-container: var(--background-secondary);
   --mat-sys-on-error: var(--text-color);
@@ -171,5 +159,4 @@
   --mat-sys-background: var(--background);
   --mat-sys-error: var(--text-color-negative);
   --mat-sys-error-container: var(--background-negative-tint);
-
 }

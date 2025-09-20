@@ -178,3 +178,15 @@ ng-select input {
   color: var(--text-color);
   cursor: default;
 }
+
+i.icon-negative{
+  color: var(--icon-color-negative);
+}
+
+i.icon-accent{
+  color: var(--icon-color-accent);
+}
+
+i.icon-negative-tint{
+  color: var(--icon-color-negative-tint);
+}
