@@ -63,6 +63,18 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
 				Instance = httpContext.Request.Path
 			};
 		}
+		else if (exception is NotFoundException notFound)
+		{
+			statusCode = StatusCodes.Status404NotFound;
+			problemDetails = new ProblemDetails
+			{
+				Title = "Resource not found",
+				Detail = string.IsNullOrWhiteSpace(notFound.Message) ? "The requested resource was not found." : notFound.Message,
+				Status = statusCode,
+				Type = "https://httpstatuses.io/404",
+				Instance = httpContext.Request.Path
+			};
+		}
 		else if (exception is UnauthorizedAccessException unauthorized)
 		{
 			statusCode = StatusCodes.Status401Unauthorized;
@@ -120,4 +132,9 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
 public sealed class ForbiddenAccessException : Exception
 {
 	public ForbiddenAccessException(string message) : base(message) { }
+}
+
+public sealed class NotFoundException : Exception
+{
+	public NotFoundException(string message) : base(message) { }
 } 
