@@ -23,6 +23,7 @@
           [task]="task"
           (editTask)="onEditTask($event)"
           (deleteTask)="onDeleteTask($event)"
+          (click)="openTaskPreview($event,task)"
           (moveTask)="onMoveTask($event)">
         </app-task-card>
       </div>

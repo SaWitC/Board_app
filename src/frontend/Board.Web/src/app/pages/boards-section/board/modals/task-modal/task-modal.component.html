@@ -1,11 +1,14 @@
 <h2 mat-dialog-title>{{ dialogTitle }}</h2>
 
 <mat-dialog-content>
-  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+  <!-- Preview Mode -->
+
+  <!-- Edit/Create Mode -->
+  <form  [formGroup]="taskForm" (ngSubmit)="onSubmit()">
     <div class="form-container">
       <div class="form-row row pt-2">
         <!--Story type-->
-        <mat-form-field appearance="outline" class="pe-2 col">
+        <mat-form-field appearance="outline" class="pe-2 col-2">
           <mat-label class="form-label">Type</mat-label>
           <mat-select formControlName="taskType">
             <mat-option *ngFor="let taskType of taskTypes" [value]="taskType">
@@ -27,12 +30,12 @@
       </div>
 
       <div class="form-row">
-        <mat-form-field appearance="outline"  class="pe-2">
+        <mat-form-field appearance="outline" class="pe-2 col-3">
           <mat-label class="form-label">Исполнитель</mat-label>
           <input matInput formControlName="assignee" placeholder="Введите имя исполнителя">
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="pe-2">
+        <mat-form-field appearance="outline" class="pe-2 col-3">
           <mat-label class="form-label">Приоритет *</mat-label>
           <mat-select formControlName="priority">
             <mat-option *ngFor="let priority of taskPriorities" [value]="priority">
@@ -41,33 +44,37 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="pe-2">
+        <mat-form-field appearance="outline" class="pe-2 col-3">
           <mat-label class="form-label">Срок выполнения</mat-label>
           <input matInput [matDatepicker]="picker" formControlName="dueDate" placeholder="Выберите дату">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-3">
+          <mat-label class="form-label">Теги</mat-label>
+          <input matInput formControlName="tags" placeholder="Введите теги через запятую">
+        </mat-form-field>
       </div>
 
       <label class="form-label">Описание</label>
-      <app-description-editor [placeholder]="'Description...'"
+      <app-description-editor *ngIf="!isPreviewMode;else previewDesription" [placeholder]="'Description...'"
                               [formControl]="getControl('description')">
                               
       </app-description-editor>
 
-      <mat-form-field appearance="outline" class="full-width w-100">
-        <mat-label class="form-label">Теги</mat-label>
-        <input matInput formControlName="tags" placeholder="Введите теги через запятую">
-      </mat-form-field>
+      <ng-template #previewDesription>
+        <div *ngIf="taskDetails" class="preview-description" [innerHTML]="taskDetails.description"></div>
+      </ng-template>
     </div>
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="onClose()">
-    Отмена
+    {{ isPreviewMode ? 'Закрыть' : 'Отмена' }}
   </button>
-  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="taskForm.invalid">
+  <button *ngIf="!isPreviewMode" mat-raised-button color="primary" (click)="onSubmit()" [disabled]="taskForm.invalid">
     {{ submitButtonText }}
   </button>
 </mat-dialog-actions>

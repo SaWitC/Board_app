@@ -1,5 +1,6 @@
 using AutoMapper;
 using Board.Application.DTOs;
+using Board.Application.DTOs.BoardItems;
 using Board.Domain.Entities;
 
 namespace Board.Application.Mapping;

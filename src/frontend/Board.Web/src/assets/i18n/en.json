@@ -9,7 +9,7 @@
     "VALIDATION_TITLE": "Validation Error",
     "VALIDATION_FAILED": "Please check the form and correct the errors.",
     "ERROR_TITLE": "Error",
-    "UNAUTHORIZED_TITLE": "Unauthorized",
+    "UNAUTHORIZED_TITLE": "Unauthorized", 
     "FORBIDDEN_TITLE": "Access Denied",
     "NOT_FOUND_TITLE": "Not Found",
     "SERVER_ERROR_TITLE": "Server Error",
@@ -46,7 +46,7 @@
     "EMPTY_BOARD": "Empty board",
     "BASED_ON_TEMPLATE": "Based on a template",
     "MAKE_IT_TEMPLATE": "Make it template",
-    "IS_TEMPLATE_ACTIVE": "is template active",
+    "IS_TEMPLATE_ACTIVE": "Is template active",
     "SELECT_TEMPLATE_PLACEHOLDER": "Select template",
     "BOARD_DESCRIPTION": "Board description",
     "BOARD_DESCRIPTION_PLACEHOLDER": "Enter board description",
@@ -71,6 +71,11 @@
     "CANCEL": "Cancel",
     "CREATE": "Create",
     "EDIT": "Edit"
+  },
+  "BOARD_ITEM":{
+    "PRIORITY":"Priority",
+    "DEADLINE":"Deadline",
+    "NO_DEADLINE":"No deadline specified"
   },
   "COMMON": {
     "RETRY": "Retry",

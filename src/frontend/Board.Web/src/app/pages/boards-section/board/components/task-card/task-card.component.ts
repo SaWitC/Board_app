@@ -1,23 +1,23 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 import { TaskTypeIconComponent } from "src/app/components/shared/story-icon/task-type-icon.component";
-import { BoardItem } from "src/app/core/models";
+import { BoardItemLookupDTO } from "src/app/core/models";
 import { TaskPriority } from "src/app/core/models/enums/task-priority.enum";
 import { TaskType } from "src/app/core/models/enums/task-type.enum";
 
 
 @Component({
-    selector: 'app-task-card',
-    templateUrl: './task-card.component.html',
-    styleUrls: ['./task-card.component.scss'],
-    standalone: true,
-    imports: [CommonModule, TaskTypeIconComponent]
+  selector: 'app-task-card',
+  templateUrl: './task-card.component.html',
+  styleUrls: ['./task-card.component.scss'],
+  standalone: true,
+  imports: [CommonModule, TaskTypeIconComponent]
 })
 export class TaskCardComponent {
-  @Input() task!: BoardItem;
-  @Output() editTask = new EventEmitter<BoardItem>();
+  @Input() task!: BoardItemLookupDTO;
+  @Output() editTask = new EventEmitter<BoardItemLookupDTO>();
   @Output() deleteTask = new EventEmitter<string>();
-  @Output() moveTask = new EventEmitter<{taskId: string, toColumnId: string}>();
+  @Output() moveTask = new EventEmitter<{ taskId: string, toColumnId: string }>();
 
   public taskTypes = TaskType;
   public priorities = Object.values(TaskPriority);
@@ -36,7 +36,7 @@ export class TaskCardComponent {
     [TaskPriority.URGENT]: 'priority-color-urgent'
   };
 
-    onDragStart(event: DragEvent): void {
+  onDragStart(event: DragEvent): void {
     if (event.dataTransfer) {
       event.dataTransfer.setData('text/plain', this.task.id);
       event.dataTransfer.effectAllowed = 'move';
@@ -59,11 +59,13 @@ export class TaskCardComponent {
     return labels[priority] || 'Неизвестно';
   }
 
-  onEdit(): void {
+  onEdit(event:any): void {
+    event.stopPropagation();
     this.editTask.emit(this.task);
   }
 
-  onDelete(): void {
+  onDelete(event:any): void {
+    event.stopPropagation();
     if (confirm('Вы уверены, что хотите удалить эту задачу?')) {
       this.deleteTask.emit(this.task.id);
     }
@@ -78,7 +80,7 @@ export class TaskCardComponent {
   }
 
   isOverdue(): boolean {
-    if (!this.task.dueDate) return false;
+    if (this.task?.dueDate == null) return false;
     return new Date(this.task.dueDate) < new Date();
   }
 }

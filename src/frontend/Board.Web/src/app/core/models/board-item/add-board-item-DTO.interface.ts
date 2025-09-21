@@ -6,7 +6,8 @@ export interface AddBoardItemDTO {
   description: string;
   boardColumnId: string;
   priority: TaskPriority;
-  assigneeId: string;
-  dueDate: string;
+  assignee: string;
+  dueDate: Date|null;
   taskType: TaskType;
+  tags?: string[];
 }
