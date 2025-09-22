@@ -45,7 +45,7 @@ export class BoardItemApiService {
 					description: item.description,
 				  boardColumnId: boardColumnId,
 					priority: item.priority,
-					assigneeId: item.assigneeId,
+					assignee: item.assignee,
 					dueDate: item.dueDate,
 					taskType: item.taskType,
 				};

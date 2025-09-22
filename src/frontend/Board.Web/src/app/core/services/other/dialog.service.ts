@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, model } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { BoardItem, AddBoardDTO, BoardDetailsDTO, UpdateBoardDTO } from '../../models';
+import { BoardDetailsDTO, BoardItemDetailsDTO, BoardItemLookupDTO } from '../../models';
 import { Observable } from 'rxjs';
 import { TaskModalComponent, TaskModalData } from 'src/app/pages/boards-section/board/modals/task-modal/task-modal.component';
 import { CreateBoardModalComponent, CreateBoardModalData, BoardModalResult } from 'src/app/pages/boards-section/boards-list/modals/create-board-modal/create-board-modal.component';
@@ -12,14 +12,31 @@ export class DialogService {
 
   constructor(private dialog: MatDialog) { }
 
-  openTaskModal(taskModalData: TaskModalData): Observable<BoardItem | undefined> {
+  openTaskModal(taskModalData: TaskModalData): Observable<BoardItemDetailsDTO | undefined> {
     const dialogRef: MatDialogRef<TaskModalComponent> = this.dialog.open(TaskModalComponent, {
-      width: '1200px',
-      maxWidth: '90vw',
+      width: '1800px',
+      maxWidth: '95vw',
       height: '800px',
-      maxHeight: '90vh',
       data: taskModalData,
       disableClose: true,
+      autoFocus: true,
+      panelClass: 'task-modal-dialog'
+    });
+
+    return dialogRef.afterClosed();
+  }
+
+  openTaskPreviewModal(task:BoardItemLookupDTO, boardId:string): Observable<undefined> {
+    const dialogRef: MatDialogRef<TaskModalComponent> = this.dialog.open(TaskModalComponent, {
+      width: '1800px',
+      maxWidth: '95vw',
+      height: '800px',
+      data: {
+        task:task,
+        boardId:boardId,
+        mode:'preview'
+      },
+      disableClose: false,
       autoFocus: true,
       panelClass: 'task-modal-dialog'
     });

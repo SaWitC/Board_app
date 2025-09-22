@@ -1,4 +1,4 @@
-namespace Board.Application.DTOs;
+namespace Board.Application.DTOs.BoardItems;
 
 using Board.Domain.Contracts.Enums;
 

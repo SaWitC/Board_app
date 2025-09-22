@@ -1,5 +1,5 @@
 using Board.Application.Abstractions.Repositories;
-using Board.Application.DTOs;
+using Board.Application.DTOs.BoardItems;
 using Board.Domain.Contracts.Enums;
 using Board.Domain.Contracts.Security;
 using Board.Domain.Entities;
