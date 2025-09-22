@@ -14,10 +14,9 @@ export class DialogService {
 
   openTaskModal(taskModalData: TaskModalData): Observable<BoardItemDetailsDTO | undefined> {
     const dialogRef: MatDialogRef<TaskModalComponent> = this.dialog.open(TaskModalComponent, {
-      width: '1400px',
+      width: '1800px',
       maxWidth: '95vw',
-      height: '900px',
-      maxHeight: '95vh',
+      height: '800px',
       data: taskModalData,
       disableClose: true,
       autoFocus: true,
@@ -29,10 +28,9 @@ export class DialogService {
 
   openTaskPreviewModal(task:BoardItemLookupDTO, boardId:string): Observable<undefined> {
     const dialogRef: MatDialogRef<TaskModalComponent> = this.dialog.open(TaskModalComponent, {
-      width: '1400px',
+      width: '1800px',
       maxWidth: '95vw',
-      height: '900px',
-      maxHeight: '95vh',
+      height: '800px',
       data: {
         task:task,
         boardId:boardId,

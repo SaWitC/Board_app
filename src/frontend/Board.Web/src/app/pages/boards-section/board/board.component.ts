@@ -227,6 +227,7 @@ public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
     });
   }
 
+  //Columns order management start
   onColumnDragStart(event: DragEvent, index: number): void {
     if (event.dataTransfer) {
       event.dataTransfer.effectAllowed = 'move';
@@ -253,12 +254,10 @@ public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
       return;
     }
 
-    // Перемещаем элемент в массиве
     const draggedColumn = this.columns[this.draggedColumnIndex];
     this.columns.splice(this.draggedColumnIndex, 1);
     this.columns.splice(index, 0, draggedColumn);
 
-    // Обновляем индекс перетаскиваемого элемента
     this.draggedColumnIndex = index;
   }
 
@@ -273,23 +272,15 @@ public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
       return;
     }
 
-    // Финальное перемещение элемента
     const draggedColumn = this.columns[this.draggedColumnIndex];
     this.columns.splice(this.draggedColumnIndex, 1);
     this.columns.splice(dropIndex, 0, draggedColumn);
 
-    console.log('=== DRAG DROP EVENT ===');
-    console.log('Final columns order:', this.columns.map((c, i) => `${i}: ${c.id}`));
-
-    // Создаем массив с новым порядком для отправки на сервер
     const orderedColumns: OrderedBoardColumnDTO[] = this.columns.map((column, index) => ({
       id: column.id,
       order: index
     }));
 
-    console.log('Sending order to server:', orderedColumns);
-
-    // Отправляем обновленный порядок на сервер
     this.updateBoardColumnOrder(orderedColumns);
 
     this.draggedColumnIndex = null;
@@ -299,6 +290,7 @@ public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
   trackByColumnId(index: number, column: BoardColumnLookupDTO): string {
     return column.id;
   }
+  //Columns order management end
 
 
   getTaskCount(): number {

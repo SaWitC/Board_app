@@ -47,7 +47,6 @@ export interface TaskModalData {
     MatChipsModule,
     TaskTypeIconComponent,
     DescriptionEditorComponent,
-    MatMenuContent
 ]
 })
 export class TaskModalComponent implements OnInit {
