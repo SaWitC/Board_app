@@ -21,8 +21,10 @@
   --background-warning: rgb(255, 244, 229);
   --box-shadow-color-secondary: #e2e2e2;
   --icon-active-color: #C63031;
+  --brand-color: #C63031;
   //TEXT
   --text-color: black;
+  --text-color-secondary: #383838;
   --text-color-during-hover: black;
   --text-color-negative: rgb(252, 62, 46);
   // BORDERS
@@ -134,6 +136,9 @@
   --mat-paginator-enabled-icon-color: var(--ng-select-text-color);
   --mat-paginator-disabled-icon-color: var(--ng-select-disabled-option-color);
   --mdc-outlined-text-field-input-text-placeholder-color: var(--text-color);
+
+  --mdc-outlined-text-field-caret-color : var(--brand-color);
+  --mdc-outlined-text-field-input-text-color : var(--text-color);
 
     //Mat menu
     --mat-menu-container-color: var(--background-modal);
