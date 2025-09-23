@@ -176,19 +176,6 @@ export class BoardsListComponent implements OnInit {
     this.selectedBoard = board;
   }
 
-  onEditSelected(): void {
-    if (!this.selectedBoard) { return; }
-
-    this.boardApiService.getBoardById(this.selectedBoard.id).subscribe({
-      next: (boardDetails: BoardDetailsDTO) => {
-        this.dialogService.openEditBoardModal(boardDetails).subscribe((result?: BoardModalResult) => {
-          if (result?.success && result?.boards) {
-            this.loadBoards().subscribe();
-          }
-        });
-      }
-    });
-  }
 
   private getCurrentUserRole(board: BoardLookupDTO): UserAccess | null {
     const currentEmail = (this.userService.getCurrentUserEmail() || '').toLowerCase();

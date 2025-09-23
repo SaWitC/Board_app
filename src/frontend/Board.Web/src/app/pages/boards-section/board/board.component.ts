@@ -18,6 +18,7 @@ import { OrderedBoardColumnDTO } from 'src/app/core/models/board-column/ordered-
 import { BoardLookupDTO } from 'src/app/core/models/board/board-lookup-DTO.interface';
 import { GetBoardsRequest } from 'src/app/core/models/board/get-boards-request.interface';
 import { PagedResult } from 'src/app/core/models/common/paged-result.interface';
+import { forkJoin } from 'rxjs';
 
 
 @Component({
@@ -63,16 +64,21 @@ export class BoardComponent implements OnInit {
     // Get board ID from route parameters
     this.route.params.subscribe(params => {
       const boardId = params['id'];
-      if (boardId) {
-        this.currentBoardId = boardId;
-        this.loadBoardDetails(boardId);
-        this.loadColumns(boardId);
-        this.loadTasks();
-      } else {
-        // If no board ID, load the first available board
-        this.loadFirstBoard();
-      }
+     this.loadData(boardId);
     });
+  }
+
+  public loadData(boardId: string){
+    if (boardId) {
+      this.currentBoardId = boardId;
+      this.loadBoardDetails(boardId);
+      this.loadColumns(boardId);
+      this.loadTasks();
+    } else {
+      // If no board ID, load the first available board
+      this.loadFirstBoard();
+    }
+
   }
 
   private loadFirstBoard(): void {
@@ -302,12 +308,12 @@ public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
   }
 
   openSettings(): void {
-    this.dialogService.openEditBoardModal(this.currentBoard as BoardDetailsDTO).subscribe((result?: BoardModalResult) => {
+    this.dialogService.openEditBoardModal(this.currentBoard as BoardDetailsDTO, this.columns).subscribe((result?: BoardModalResult) => {
       if (result?.success && result?.boards) {
-        // Board was updated successfully, refresh current board data
         this.boardApiService.getBoardById(this.currentBoardId as string).subscribe({
           next: (board) => {
             this.currentBoard = board;
+            this.loadData(this.currentBoardId as string);
           }
         });
       }

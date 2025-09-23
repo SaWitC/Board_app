@@ -78,10 +78,6 @@
   </div>
 
   <mat-menu #cardMenu="matMenu">
-    <button mat-menu-item (click)="onEditSelected()" *ngIf="selectedBoard && canEdit(selectedBoard)">
-      <mat-icon>edit</mat-icon>
-      <span>{{ 'BOARDS_LIST.EDIT' | translate }}</span>
-    </button>
     <button mat-menu-item (click)="onDeleteBoard(selectedBoard!.id)" *ngIf="selectedBoard && canDelete(selectedBoard)">
       <mat-icon>delete</mat-icon>
       <span>{{ 'BOARDS_LIST.DELETE' | translate }}</span>

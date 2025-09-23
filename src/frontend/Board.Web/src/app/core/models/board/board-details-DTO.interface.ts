@@ -3,8 +3,7 @@ export interface BoardDetailsDTO {
   title: string;
   description: string;
   boardUsers: { email: string; role: number; }[];
-  boardColumns: { id?: string; title: string; description: string; }[];
   modificationDate: Date;
-  IsTemplate: boolean;
+  isTemplate: boolean;
   IsActiveTemplate: boolean;
 }

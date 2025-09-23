@@ -1,7 +1,7 @@
 using AutoMapper;
 using Board.Application.DTOs;
-using Board.Domain.Contracts.Pagination;
 using Board.Application.DTOs.BoardItems;
+using Board.Domain.Contracts.Pagination;
 using Board.Domain.Entities;
 
 namespace Board.Application.Mapping;
@@ -14,7 +14,6 @@ public class BoardMappingProfile : Profile
 
         CreateMap<Domain.Entities.Board, BoardDto>()
             .ForMember(d => d.BoardUsers, o => o.MapFrom(s => s.BoardUsers))
-            .ForMember(d => d.BoardColumns, o => o.MapFrom(s => s.BoardColumns))
             .ReverseMap();
 
         CreateMap<BoardUser, BoardUserDto>()

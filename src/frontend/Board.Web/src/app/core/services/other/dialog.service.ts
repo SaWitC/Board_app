@@ -1,6 +1,6 @@
 import { Injectable, model } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { BoardDetailsDTO, BoardItemDetailsDTO, BoardItemLookupDTO } from '../../models';
+import { BoardColumnDetailsDTO, BoardDetailsDTO, BoardItemDetailsDTO, BoardItemLookupDTO } from '../../models';
 import { Observable } from 'rxjs';
 import { TaskModalComponent, TaskModalData } from 'src/app/pages/boards-section/board/modals/task-modal/task-modal.component';
 import { CreateBoardModalComponent, CreateBoardModalData, BoardModalResult } from 'src/app/pages/boards-section/boards-list/modals/create-board-modal/create-board-modal.component';
@@ -16,7 +16,7 @@ export class DialogService {
     const dialogRef: MatDialogRef<TaskModalComponent> = this.dialog.open(TaskModalComponent, {
       width: '1800px',
       maxWidth: '95vw',
-      height: '800px',
+      height: '1000px',
       data: taskModalData,
       disableClose: true,
       autoFocus: true,
@@ -30,7 +30,7 @@ export class DialogService {
     const dialogRef: MatDialogRef<TaskModalComponent> = this.dialog.open(TaskModalComponent, {
       width: '1800px',
       maxWidth: '95vw',
-      height: '800px',
+      height: '1000px',
       data: {
         task:task,
         boardId:boardId,
@@ -60,14 +60,15 @@ export class DialogService {
     return dialogRef.afterClosed();
   }
 
-  openEditBoardModal(board: BoardDetailsDTO): Observable<BoardModalResult | undefined> {
+  openEditBoardModal(board: BoardDetailsDTO, boardColumns: BoardColumnDetailsDTO[]): Observable<BoardModalResult | undefined> {
     const dialogRef: MatDialogRef<CreateBoardModalComponent> = this.dialog.open(CreateBoardModalComponent, {
       width: '700px',
       maxWidth: '90vw',
       maxHeight: '90vh',
       data: {
         mode: 'edit',
-        board
+        board,
+        boardColumns
       } as CreateBoardModalData,
       disableClose: true,
       autoFocus: true,

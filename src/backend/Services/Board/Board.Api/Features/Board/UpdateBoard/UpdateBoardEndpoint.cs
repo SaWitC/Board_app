@@ -36,6 +36,14 @@ public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
             return;
         }
 
+        //set columns order
+        int order = 0;
+        foreach (BoardColumnDto column in request.BoardColumns)
+        {
+            column.Order = order;
+            order++;
+        }
+
         entity.Title = request.Title;
         entity.Description = request.Description;
         entity.ModificationDate = DateTimeOffset.UtcNow;
@@ -45,6 +53,7 @@ public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
             updateAction: (entityColumn, requestColumn) =>
             {
                 entityColumn.Title = requestColumn.Title;
+                entityColumn.Order = requestColumn.Order;
                 entityColumn.Description = requestColumn.Description;
             },
             createAction: requestColumn => new Domain.Entities.BoardColumn
@@ -52,7 +61,9 @@ public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
                 Id = Guid.NewGuid(),
                 Title = requestColumn.Title,
                 Description = requestColumn.Description,
-                Elements = []
+                Elements = [],
+                Order = requestColumn.Order
+
             }
         );
         entity.BoardUsers.Synchronize(request.BoardUsers,
