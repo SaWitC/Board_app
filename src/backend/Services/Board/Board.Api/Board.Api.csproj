@@ -23,7 +23,8 @@
 		<PackageReference Include="Scrutor" />
 		<PackageReference Include="Swashbuckle.AspNetCore" />
         <PackageReference Include="AutoMapper" />
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />        
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+        <PackageReference Include="LinqKit" />        
     </ItemGroup>
 
 	<ItemGroup>

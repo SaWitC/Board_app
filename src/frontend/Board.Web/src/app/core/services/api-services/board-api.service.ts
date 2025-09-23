@@ -8,6 +8,9 @@ import {
   UpdateBoardDTO
 } from "../../models";
 import { UserAccess } from "../../models/enums/user-access.enum";
+import { GetBoardsRequest } from "../../models/board/get-boards-request.interface";
+import { PagedResult } from "../../models/common/paged-result.interface";
+
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +19,29 @@ export class BoardApiService {
 
 	constructor(private api: ApiService) {}
 
-	public getBoards(): Observable<BoardLookupDTO[]> {
-		return this.api.get<any[]>(`/boards`).pipe(
-			map(items => items.map(i => this.mapBoardLookup(i)))
+	public getBoards(request: GetBoardsRequest): Observable<PagedResult<BoardLookupDTO>> {
+		const params: Record<string, string> = {};
+		if (request.page) {
+		  params['page'] = request.page.toString();
+		}
+		if (request.pageSize) {
+		  params['pageSize'] = request.pageSize.toString();
+		}
+		if (request.titleSearchTerm) {
+		  params['titleSearchTerm'] = request.titleSearchTerm;
+		}
+		if (request.ownerSearchTerm) {
+		  params['ownerSearchTerm'] = request.ownerSearchTerm;
+		}
+	
+		return this.api.get<PagedResult<BoardLookupDTO>>('/boards', params).pipe(
+			map(result => ({
+				...result,
+				items: result.items.map(item => this.mapBoardLookup(item))
+			}))
 		);
 	}
-
+	  
 	public addBoard(board: AddBoardDTO): Observable<BoardDetailsDTO> {
 		const payload = {
 			title: board.title,

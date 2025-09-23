@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Board.Domain.Contracts.Pagination;
 
 namespace Board.Application.Abstractions.Repositories;
 
@@ -30,5 +31,13 @@ public interface IRepository<T>
     Task<IList<T>> GetAllAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken, bool asNoTracking = true, params Expression<Func<T, object>>[] includes);
 
     Task<IList<TResult>> GetAllAsync<TResult>(Expression<Func<T, bool>> predicate, Expression<Func<T, TResult>> selector, CancellationToken cancellationToken, params Expression<Func<T, object>>[] includes);
+
+    Task<PagedResult<T>> GetPagedAsync(int pageNumber, int pageSize,
+        Expression<Func<T, bool>> predicate,
+        Func<IQueryable<T>, IOrderedQueryable<T>> orderBy,
+        CancellationToken cancellationToken,
+        bool asNoTracking = true,
+        params Expression<Func<T, object>>[] includes);
+
     Task SaveChangesAsync(CancellationToken cancellationToken);
 }

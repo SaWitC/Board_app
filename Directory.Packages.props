@@ -74,6 +74,8 @@
     <!-- AutoMapper -->
     <PackageVersion Include="AutoMapper" Version="12.0.1" />
     <PackageVersion Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <!-- Other -->
+    <PackageVersion Include="LinqKit" Version="1.3.8" />
     <!-- Testing -->
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageVersion Include="xunit" Version="2.7.0" />
@@ -84,5 +86,7 @@
     <PackageVersion Include="MediatR" Version="12.4.1" />
     <PackageVersion Include="Microsoft.Data.SqlClient" Version="6.0.2" />
     <PackageVersion Include="Scrutor" Version="6.1.0" />
+
+      
   </ItemGroup>
 </Project>

@@ -32,7 +32,21 @@
     "EMPTY_TITLE": "Пока нет досок",
     "EMPTY_SUBTITLE": "Создайте свою первую доску, чтобы начать",
     "USERS": "польз.",
-    "ADMINS": "админы"
+    "ADMINS": "админы",
+    "SEARCH_BY_TITLE": "Поиск по названию",
+    "SEARCH_BY_OWNER": "Поиск по владельцу",
+    "SEARCH_TITLE_PLACEHOLDER": "Введите название доски...",
+    "SEARCH_OWNER_PLACEHOLDER": "Введите email владельца...",
+    "LAST_MODIFIED": "Последнее изменение",
+    "EDIT": "Редактировать",
+    "DELETE": "Удалить",
+    "SHOWING": "Показано",
+    "OF": "из",
+    "ITEMS_PER_PAGE": "Элементов на странице",
+    "FIRST_PAGE": "Первая страница",
+    "PREVIOUS_PAGE": "Предыдущая страница",
+    "NEXT_PAGE": "Следующая страница",
+    "LAST_PAGE": "Последняя страница"
   },
   "BOARD": {
     "TOTAL_TASKS": "Всего задач:",
@@ -83,7 +97,8 @@
   "COMMON": {
     "RETRY": "Повторить",
     "EDIT": "Редактировать",
-    "DELETE": "Удалить"
+    "DELETE": "Удалить",
+    "SEARCH": "Поиск"
   },
   "GENERAL": {
     "SETTINGS": "Настройки",

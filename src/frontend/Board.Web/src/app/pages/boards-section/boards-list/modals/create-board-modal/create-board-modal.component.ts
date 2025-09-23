@@ -23,6 +23,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 import { TranslateModule } from '@ngx-translate/core';
 import { BoardApiService } from 'src/app/core/services/api-services';
 import { BoardLookupDTO } from 'src/app/core/models/board/board-lookup-DTO.interface';
+import { PagedResult } from 'src/app/core/models/common/paged-result.interface';
 
 export interface CreateBoardModalData {
   mode: 'create' | 'edit';
@@ -284,10 +285,10 @@ export class CreateBoardModalComponent implements OnInit {
       if (this.data?.mode === 'edit' && this.data.board) {
         const updateData = this.getUpdateBoardDTO(this.boardForm);
         this.boardApiService.updateBoard(updateData).pipe(
-          switchMap(() => this.boardApiService.getBoards())
+          switchMap(() => this.boardApiService.getBoards({ page: 1, pageSize: 12 }))
         ).subscribe({
-          next: (boards) => {
-            this.dialogRef.close({ success: true, boards: boards });
+          next: (result: PagedResult<BoardLookupDTO>) => {
+            this.dialogRef.close({ success: true, boards: result.items });
           },
           error: (error) => {
             this.isSubmitting = false;
@@ -298,10 +299,10 @@ export class CreateBoardModalComponent implements OnInit {
 
       const boardData = this.getAddBoardDTO(this.boardForm);
       this.boardApiService.addBoard(boardData).pipe(
-        switchMap(() => this.boardApiService.getBoards())
+        switchMap(() => this.boardApiService.getBoards({ page: 1, pageSize: 12 }))
       ).subscribe({
-        next: (boards) => {
-          this.dialogRef.close({ success: true, boards: boards });
+        next: (result: PagedResult<BoardLookupDTO>) => {
+          this.dialogRef.close({ success: true, boards: result.items });
         },
         error: (error) => {
           this.isSubmitting = false;

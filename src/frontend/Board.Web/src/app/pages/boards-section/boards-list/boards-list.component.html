@@ -1,49 +1,97 @@
 <div class="boards-container">
   <div class="boards-header pt-3">
     <h1>{{ 'BOARDS_LIST.TITLE' | translate }}</h1>
-    <button class="create-board-btn" (click)="onCreateBoard()">
-      <span class="btn-icon">+</span>
-      {{ 'BOARDS_LIST.CREATE_BOARD' | translate }}
-    </button>
+    <div class="header-actions">
+      <button mat-icon-button (click)="toggleSearch()" class="search-toggle-btn" matTooltip="{{ 'COMMON.SEARCH' | translate }}">
+        <mat-icon>search</mat-icon>
+      </button>
+      
+      <div class="search-section" [class.expanded]="isSearchExpanded" #searchSection>
+        <div class="search-fields">
+          <mat-form-field appearance="outline" class="search-field">
+            <input matInput [formControl]="titleSearchControl" placeholder="{{ 'BOARDS_LIST.SEARCH_TITLE_PLACEHOLDER' | translate }}">
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="search-field">
+            <input matInput [formControl]="ownerSearchControl" placeholder="{{ 'BOARDS_LIST.SEARCH_OWNER_PLACEHOLDER' | translate }}">
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <button class="create-board-btn" (click)="onCreateBoard()">
+        <span class="btn-icon">+</span>
+        {{ 'BOARDS_LIST.CREATE_BOARD' | translate }}
+      </button>
+    </div>
   </div>
 
   <div class="boards-content">
-    <div *ngIf="error" class="error">
-      <p>{{ error }}</p>
-      <button class="retry-btn" (click)="loadBoards()">{{ 'COMMON.RETRY' | translate }}</button>
+    <div *ngIf="isLoading" class="spinner-container">
+        <mat-spinner></mat-spinner>
     </div>
 
-    <div *ngIf="boards.length === 0" class="empty-state">
-      <div class="empty-icon">📋</div>
-      <h3>{{ 'BOARDS_LIST.EMPTY_TITLE' | translate }}</h3>
-      <p>{{ 'BOARDS_LIST.EMPTY_SUBTITLE' | translate }}</p>
-    </div>
+    <div *ngIf="!isLoading" class="content-area">
+        <div *ngIf="error" class="error">
+          <p>{{ error }}</p>
+          <button class="retry-btn" (click)="loadBoards()">{{ 'COMMON.RETRY' | translate }}</button>
+        </div>
 
-    <div *ngIf="boards.length > 0" class="boards-grid">
-      <div
-        *ngFor="let board of boards"
-        class="board-card"
-        (click)="onBoardClick(board)"
-      >
-        <div class="board-header">
-          <h3 class="board-title">{{ board.title }}</h3>
-          <div class="board-actions">
-            <button *ngIf="canSeeActions(board)" class="action-btn" (click)="onOpenMenu($event, board)" [matMenuTriggerFor]="cardMenu">
-              <span>⋮</span>
-            </button>
+        <div *ngIf="boards.length === 0" class="empty-state">
+          <div class="empty-icon"></div>
+          <h3>{{ 'BOARDS_LIST.EMPTY_TITLE' | translate }}</h3>
+          <p>{{ 'BOARDS_LIST.EMPTY_SUBTITLE' | translate }}</p>
+        </div>
+
+        <div *ngIf="boards.length > 0" class="boards-grid">
+          <div *ngFor="let board of boards" class="board-card" (click)="onBoardClick(board)">
+            <div class="board-card-header">
+              <h3 class="board-title">{{ board.title }}</h3>
+              <button mat-icon-button [matMenuTriggerFor]="cardMenu" (click)="onOpenMenu($event, board)" *ngIf="canSeeActions(board)">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </div>
+            
+            <div class="board-card-content">
+              <p class="board-description" *ngIf="board.description">{{ board.description }}</p>
+              
+              <div class="board-stats">
+                <div class="stat-item">
+                  <mat-icon>people</mat-icon>
+                  <span>{{ getUsersCount(board) }} {{ 'BOARDS_LIST.USERS' | translate }}</span>
+                </div>
+                <div class="stat-item">
+                  <mat-icon>admin_panel_settings</mat-icon>
+                  <span>{{ getAdminsCount(board) }} {{ 'BOARDS_LIST.ADMINS' | translate }}</span>
+                </div>
+              </div>
+              
+              <div class="board-meta" *ngIf="board.modificationDate">
+                <small>{{ 'BOARDS_LIST.LAST_MODIFIED' | translate }}: {{ board.modificationDate | date:'short' }}</small>
+              </div>
+            </div>
           </div>
         </div>
-        <p class="board-description">{{ board.description }}</p>
-        <div class="board-meta">
-          <span class="users-count">{{ getUsersCount(board) }} {{ 'BOARDS_LIST.USERS' | translate }}</span>
-          <span class="admins-count">{{ getAdminsCount(board) }} {{ 'BOARDS_LIST.ADMINS' | translate }}</span>
-        </div>
-      </div>
-
-      <mat-menu #cardMenu="matMenu">
-        <button *ngIf="selectedBoard && canEdit(selectedBoard)" mat-menu-item (click)="$event.stopPropagation(); onEditSelected()">{{ 'COMMON.EDIT' | translate }}</button>
-        <button *ngIf="selectedBoard && canDelete(selectedBoard)" mat-menu-item (click)="$event.stopPropagation(); selectedBoard && onDeleteBoard(selectedBoard.id)">{{ 'COMMON.DELETE' | translate }}</button>
-      </mat-menu>
     </div>
+
+    <mat-paginator
+        *ngIf="!isLoading && boards.length > 0"
+        [length]="totalCount"
+        [pageSize]="pageSize"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="[12, 24, 48, 96]"
+        (page)="handlePageEvent($event)"
+        aria-label="Select page">
+    </mat-paginator>
   </div>
+
+  <mat-menu #cardMenu="matMenu">
+    <button mat-menu-item (click)="onEditSelected()" *ngIf="selectedBoard && canEdit(selectedBoard)">
+      <mat-icon>edit</mat-icon>
+      <span>{{ 'BOARDS_LIST.EDIT' | translate }}</span>
+    </button>
+    <button mat-menu-item (click)="onDeleteBoard(selectedBoard!.id)" *ngIf="selectedBoard && canDelete(selectedBoard)">
+      <mat-icon>delete</mat-icon>
+      <span>{{ 'BOARDS_LIST.DELETE' | translate }}</span>
+    </button>
+  </mat-menu>
 </div>

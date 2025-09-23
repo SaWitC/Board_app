@@ -21,6 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove=".\src\app\core\models\board-item.interface.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\backend\Aspire\Board.ServiceDefaults\Board.ServiceDefaults.csproj" />
   </ItemGroup>
 

@@ -32,7 +32,21 @@
     "EMPTY_TITLE": "No boards yet",
     "EMPTY_SUBTITLE": "Create your first board to get started",
     "USERS": "users",
-    "ADMINS": "admins"
+    "ADMINS": "admins",
+    "SEARCH_BY_TITLE": "Search by title",
+    "SEARCH_BY_OWNER": "Search by owner",
+    "SEARCH_TITLE_PLACEHOLDER": "Enter board title...",
+    "SEARCH_OWNER_PLACEHOLDER": "Enter owner email...",
+    "LAST_MODIFIED": "Last modified",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "SHOWING": "Showing",
+    "OF": "of",
+    "ITEMS_PER_PAGE": "Items per page",
+    "FIRST_PAGE": "First page",
+    "PREVIOUS_PAGE": "Previous page",
+    "NEXT_PAGE": "Next page",
+    "LAST_PAGE": "Last page"
   },
   "BOARD": {
     "TOTAL_TASKS": "Total tasks:",
@@ -80,7 +94,8 @@
   "COMMON": {
     "RETRY": "Retry",
     "EDIT": "Edit",
-    "DELETE": "Delete"
+    "DELETE": "Delete",
+    "SEARCH": "Search"
   },
   "GENERAL": {
     "SETTINGS": "Settings",
