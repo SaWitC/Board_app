@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { TaskCardComponent } from '../task-card/task-card.component';
 import {MatDialog} from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
-import { BoardItem } from 'src/app/core/models/board-item.interface';
-import { DragDropEvent, BoardColumnDetailsDTO } from 'src/app/core/models';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DragDropEvent, BoardColumnDetailsDTO, BoardItemLookupDTO } from 'src/app/core/models';
 import { BoardColumnApiService } from 'src/app/core/services/api-services';
+import { DialogService } from 'src/app/core/services/other/dialog.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-board-column',
@@ -17,12 +18,12 @@ import { BoardColumnApiService } from 'src/app/core/services/api-services';
 })
 export class BoardColumnComponent implements OnInit, OnDestroy {
   @Input() boardColumnId: string = '1';
-  @Input() boardId: string = '1';
+  @Input() boardId: string|null = null;
 
-  @Input() allTasks: BoardItem[] = [];
-  @Input() columnTasks: BoardItem[] = [];
+  @Input() allTasks: BoardItemLookupDTO[] = [];
+  @Input() columnTasks: BoardItemLookupDTO[] = [];
   @Output() addTask = new EventEmitter<{boardColumnId: string}>();
-  @Output() editTask = new EventEmitter<{task: BoardItem, boardColumnId: string}>();
+  @Output() editTask = new EventEmitter<{task: BoardItemLookupDTO, boardColumnId: string}>();
   @Output() deleteTask = new EventEmitter<string>();
   @Output() moveTask = new EventEmitter<{taskId: string, toColumnId: string}>();
   @Output() dropTask = new EventEmitter<DragDropEvent>();
@@ -33,13 +34,22 @@ export class BoardColumnComponent implements OnInit, OnDestroy {
   error: string | null = null;
   private subscription = new Subscription();
 
-  constructor(private boardColumnApiService: BoardColumnApiService,matDialog: MatDialog) {}
+  constructor(
+    private boardColumnApiService: BoardColumnApiService,
+    private matDialog: MatDialog,
+    private toastr:ToastrService,
+    private translate:TranslateService,
+    private dialogService: DialogService) {}
 
   ngOnInit(): void {
     this.loadData();
   }
 
   public loadData(): void {
+    if(this.boardId==null){
+      this.toastr.error(this.translate.instant('ERRORS.UNEXPECTED_ERROR'));
+      return
+    }
     this.boardColumnApiService.getBoardColumnById(this.boardId, this.boardColumnId).subscribe((data) => {
       this.columnData = data;
     });
@@ -54,9 +64,14 @@ export class BoardColumnComponent implements OnInit, OnDestroy {
     this.addTask.emit({boardColumnId: targetColumnId});
   }
 
-  onEditTask(task: BoardItem): void {
+  onEditTask(task: BoardItemLookupDTO): void {
     const targetColumnId = this.columnData?.id ?? this.boardColumnId;
     this.editTask.emit({task: task, boardColumnId: targetColumnId});
+  }
+
+  openTaskPreview(event:any,task: BoardItemLookupDTO): void {
+    const targetColumnId = this.columnData?.id ?? this.boardColumnId;
+    this.dialogService.openTaskPreviewModal(task,this.boardId!)  
   }
 
   onDeleteTask(taskId: string): void {

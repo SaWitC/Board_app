@@ -136,3 +136,4 @@ project.lock.json
 Thumbs.db
 ehthumbs.db
 desktop.ini
+/src/frontend/Board.Web/src/app/core/models/board-item.interface.ts

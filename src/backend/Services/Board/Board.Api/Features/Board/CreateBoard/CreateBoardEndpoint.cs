@@ -31,15 +31,15 @@ public class CreateBoardEndpoint : Endpoint<CreateBoardRequest>
     {
         string currentEmail = _currentUserProvider.GetUserEmail();
 
-        bool hasOwnerInRequest = request.BoardUsers?.Any(u => u.Role == UserAccessEnum.BoardOwner) == true;
-        if (!hasOwnerInRequest)
+        var boardOwner = request.BoardUsers.FirstOrDefault(u => u.Role == UserAccessEnum.BoardOwner);
+        if (boardOwner==null)
         {
             request.BoardUsers ??= [];
             request.BoardUsers.Add(new BoardUserDto { Email = currentEmail, Role = UserAccessEnum.BoardOwner });
         }
         else
         {
-            if (!_currentUserProvider.IsGlobalAdmin())
+            if (boardOwner.Email != currentEmail&&!_currentUserProvider.IsGlobalAdmin())
             {
                 throw new ForbiddenAccessException("You can not create board for other users");
             }

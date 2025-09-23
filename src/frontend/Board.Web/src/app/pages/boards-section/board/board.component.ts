@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BoardItem } from 'src/app/core/models/board-item.interface';
+
 import { TranslateModule } from '@ngx-translate/core';
-import { BoardColumnLookupDTO, BoardDetailsDTO, DragDropEvent, UpdateBoardDTO } from 'src/app/core/models';
+import { BoardColumnLookupDTO, BoardDetailsDTO, BoardItemLookupDTO, DragDropEvent, UpdateBoardDTO } from 'src/app/core/models';
 import { BoardColumnApiService, BoardItemApiService, BoardApiService } from 'src/app/core/services/api-services';
 import { BoardTemplateServiceApi } from 'src/app/core/services/api-services/board-template-api.service';
 import { DialogService } from 'src/app/core/services/other/dialog.service';
 import { BoardColumnComponent } from './components/board-column/board-column.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { boardItemToTask, taskToCreateDto, taskToUpdateDto } from 'src/app/core/mappers/board-item.mapper';
+import { taskToCreateDto, taskToUpdateDto } from 'src/app/core/mappers/board-item.mapper';
 import { UserService } from 'src/app/core/services/auth/user.service';
 import { BoardModalResult } from 'src/app/pages/boards-section/boards-list/modals/create-board-modal/create-board-modal.component';
 import { UserAccess } from 'src/app/core/models/enums/user-access.enum';
@@ -34,7 +34,7 @@ import { PagedResult } from 'src/app/core/models/common/paged-result.interface';
     providers: [BoardTemplateServiceApi]
 })
 export class BoardComponent implements OnInit {
-  tasks: BoardItem[] = [];
+  tasks: BoardItemLookupDTO[] = [];
   columns: BoardColumnLookupDTO[] = [];
   currentBoardId: string | null = null;
   currentBoard: BoardDetailsDTO | null = null;
@@ -147,7 +147,7 @@ public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
   private loadTasks(): void {
     this.boardItemService.getBoardItems(this.currentBoardId as string).subscribe({
       next: (items) => {
-        this.tasks = items.map(boardItemToTask);
+        this.tasks = items;
       },
       error: (err) => {
         console.error(err);
@@ -155,20 +155,21 @@ public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
     });
   }
 
-  getTasksByStatus(boardColumnId: string): BoardItem[] {
+  getTasksByStatus(boardColumnId: string): BoardItemLookupDTO[] {
     return this.tasks.filter(task => task.boardColumnId === boardColumnId);
   }
 
   onAddTask(data: {boardColumnId: string}): void {
     this.dialogService.openTaskModal({
       mode: 'create',
+      boardId: this.currentBoardId!
     }).subscribe((task) => {
       if (task) {
         const createDto = taskToCreateDto(task);
         createDto.boardColumnId = data.boardColumnId;
         this.boardItemService.addBoardItem(this.currentBoardId as string, data.boardColumnId, createDto).subscribe({
           next: (created) => {
-            this.tasks = [...this.tasks, boardItemToTask(created)];
+            this.tasks = [...this.tasks, created];
           },
           error: (err) => console.error('Error creating task ', err)
         });
@@ -176,10 +177,11 @@ public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
     });
   }
 
-  onEditTask(data: {task: BoardItem, boardColumnId: string}): void {
+  onEditTask(data: {task: BoardItemLookupDTO, boardColumnId: string}): void {
     this.dialogService.openTaskModal({
       mode: 'edit',
-      task: data.task
+      task: data.task,
+      boardId: this.currentBoardId!
     }).subscribe((updatedTask) => {
       if (updatedTask) {
         this.boardItemService.getBoardItemById(this.currentBoardId as string, data.task.id).subscribe({
@@ -188,7 +190,7 @@ public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
             updateDto.boardColumnId = data.boardColumnId;
             this.boardItemService.updateBoardItem(this.currentBoardId as string, data.boardColumnId, data.task.id, updateDto).subscribe({
               next: (res) => {
-                const mapped = boardItemToTask(res);
+                const mapped = res;
                 this.tasks = this.tasks.map(t => t.id === mapped.id ? mapped : t);
               },
               error: (err) => console.error('Failed to update board', err)
@@ -212,7 +214,7 @@ public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
   onMoveTask(data: {taskId: string, toColumnId: string}): void {
     this.boardItemService.moveBoardItem(this.currentBoardId as string, data.toColumnId, data.taskId).subscribe({
       next: (res) => {
-        const mapped = boardItemToTask(res);
+        const mapped = res;
         this.tasks = this.tasks.map(t => t.id === mapped.id ? mapped : t);
       },
       error: (err) => console.error('Ошибка перемещения задачи', err)
@@ -222,13 +224,14 @@ public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
   onDropTask(event: DragDropEvent): void {
     this.boardItemService.moveBoardItem(this.currentBoardId as string,event.toColumnId, event.taskId).subscribe({
       next: (res) => {
-        const mapped = boardItemToTask(res);
+        const mapped = res;
         this.tasks = this.tasks.map(t => t.id === mapped.id ? mapped : t);
       },
       error: (err) => console.error('Ошибка перемещения задачи (D&D)', err)
     });
   }
 
+  //Columns order management start
   onColumnDragStart(event: DragEvent, index: number): void {
     if (event.dataTransfer) {
       event.dataTransfer.effectAllowed = 'move';
@@ -255,12 +258,10 @@ public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
       return;
     }
 
-    // Перемещаем элемент в массиве
     const draggedColumn = this.columns[this.draggedColumnIndex];
     this.columns.splice(this.draggedColumnIndex, 1);
     this.columns.splice(index, 0, draggedColumn);
 
-    // Обновляем индекс перетаскиваемого элемента
     this.draggedColumnIndex = index;
   }
 
@@ -275,23 +276,15 @@ public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
       return;
     }
 
-    // Финальное перемещение элемента
     const draggedColumn = this.columns[this.draggedColumnIndex];
     this.columns.splice(this.draggedColumnIndex, 1);
     this.columns.splice(dropIndex, 0, draggedColumn);
 
-    console.log('=== DRAG DROP EVENT ===');
-    console.log('Final columns order:', this.columns.map((c, i) => `${i}: ${c.id}`));
-
-    // Создаем массив с новым порядком для отправки на сервер
     const orderedColumns: OrderedBoardColumnDTO[] = this.columns.map((column, index) => ({
       id: column.id,
       order: index
     }));
 
-    console.log('Sending order to server:', orderedColumns);
-
-    // Отправляем обновленный порядок на сервер
     this.updateBoardColumnOrder(orderedColumns);
 
     this.draggedColumnIndex = null;
@@ -301,6 +294,7 @@ public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
   trackByColumnId(index: number, column: BoardColumnLookupDTO): string {
     return column.id;
   }
+  //Columns order management end
 
 
   getTaskCount(): number {
