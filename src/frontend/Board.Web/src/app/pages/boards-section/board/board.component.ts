@@ -15,6 +15,9 @@ import { UserService } from 'src/app/core/services/auth/user.service';
 import { BoardModalResult } from 'src/app/pages/boards-section/boards-list/modals/create-board-modal/create-board-modal.component';
 import { UserAccess } from 'src/app/core/models/enums/user-access.enum';
 import { OrderedBoardColumnDTO } from 'src/app/core/models/board-column/ordered-board-column-DTO.interface';
+import { BoardLookupDTO } from 'src/app/core/models/board/board-lookup-DTO.interface';
+import { GetBoardsRequest } from 'src/app/core/models/board/get-boards-request.interface';
+import { PagedResult } from 'src/app/core/models/common/paged-result.interface';
 
 
 @Component({
@@ -73,9 +76,10 @@ export class BoardComponent implements OnInit {
   }
 
   private loadFirstBoard(): void {
-    this.boardApiService.getBoards().subscribe({
-      next: (boards) => {
-        const boardId = boards?.[0]?.id;
+    const request: GetBoardsRequest = { page: 1, pageSize: 12 };
+    this.boardApiService.getBoards(request).subscribe({
+      next: (result: PagedResult<BoardLookupDTO>) => {
+        const boardId = result.items?.[0]?.id;
         if (!boardId) {
           this.columns = [];
           return;

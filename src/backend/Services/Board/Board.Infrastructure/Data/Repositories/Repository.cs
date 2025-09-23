@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Board.Application.Abstractions.Repositories;
+using Board.Domain.Contracts.Pagination;
 using Board.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -122,6 +123,28 @@ public abstract class Repository<T> : IRepository<T>
                            .WhereIf(predicate)
                            .Includes(includes)
                            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<PagedResult<T>> GetPagedAsync(int pageNumber, int pageSize, 
+        Expression<Func<T, bool>> predicate,
+        Func<IQueryable<T>, IOrderedQueryable<T>> orderBy,
+        CancellationToken cancellationToken,
+        bool asNoTracking = true,
+        params Expression<Func<T, object>>[] includes)
+    {
+        var query = _dbSet.AsNoTracking(asNoTracking)
+                          .WhereIf(predicate)
+                          .Includes(includes);
+
+        query = orderBy(query);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query.Skip((pageNumber - 1) * pageSize)
+                               .Take(pageSize)
+                               .ToListAsync(cancellationToken);
+
+        return new PagedResult<T> { Items = items, PageNumber = pageNumber, PageSize = pageSize, TotalCount = totalCount };
     }
 
     public async Task<IList<TResult>> GetAllAsync<TResult>(Expression<Func<T, bool>> predicate, Expression<Func<T, TResult>> selector, CancellationToken cancellationToken, params Expression<Func<T, object>>[] includes)
