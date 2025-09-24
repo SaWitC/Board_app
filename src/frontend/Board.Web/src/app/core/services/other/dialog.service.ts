@@ -4,6 +4,7 @@ import { BoardColumnDetailsDTO, BoardDetailsDTO, BoardItemDetailsDTO, BoardItemL
 import { Observable } from 'rxjs';
 import { TaskModalComponent, TaskModalData } from 'src/app/pages/boards-section/board/modals/task-modal/task-modal.component';
 import { CreateBoardModalComponent, CreateBoardModalData, BoardModalResult } from 'src/app/pages/boards-section/boards-list/modals/create-board-modal/create-board-modal.component';
+import { ConfirmationModalComponent, ConfirmationModalData } from 'src/app/components/shared/modal/confirmation-dialog/configmation-modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -73,6 +74,16 @@ export class DialogService {
       disableClose: true,
       autoFocus: true,
       panelClass: 'create-board-modal-dialog'
+    });
+
+    return dialogRef.afterClosed();
+  }
+
+  openConfirmationModal(confirmationModalData: ConfirmationModalData): Observable<boolean | undefined> {
+    const dialogRef: MatDialogRef<ConfirmationModalComponent> = this.dialog.open(ConfirmationModalComponent, {
+      data: confirmationModalData,
+      disableClose: true,
+      autoFocus: true,
     });
 
     return dialogRef.afterClosed();

@@ -162,11 +162,18 @@ export class BoardsListComponent implements OnInit {
   }
 
   onDeleteBoard(boardId: string): void {
-    this.boardApiService.deleteBoard(boardId).subscribe({
-      next: () => {
-        this.loadBoards().subscribe();
-      },
-      error: (err) => {
+    this.dialogService.openConfirmationModal({
+      dialogTitle: 'BOARDS_LIST.DELETE_BOARD',
+      description: 'BOARDS_LIST.DELETE_BOARD_DESCRIPTION'
+    }).subscribe((result) => {
+      if (result) {
+        this.boardApiService.deleteBoard(boardId).subscribe({
+          next: () => {
+            this.loadBoards().subscribe();
+          },
+          error: (err) => {
+          }
+        });
       }
     });
   }

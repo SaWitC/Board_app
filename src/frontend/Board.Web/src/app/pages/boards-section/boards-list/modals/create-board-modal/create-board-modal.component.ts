@@ -24,6 +24,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BoardApiService } from 'src/app/core/services/api-services';
 import { BoardLookupDTO } from 'src/app/core/models/board/board-lookup-DTO.interface';
 import { PagedResult } from 'src/app/core/models/common/paged-result.interface';
+import { DialogService } from 'src/app/core/services/other/dialog.service';
 
 export interface CreateBoardModalData {
   mode: 'create' | 'edit';
@@ -86,6 +87,7 @@ export class CreateBoardModalComponent implements OnInit {
     private boardTemplateServiceApi: BoardTemplateServiceApi,
     private toastr: ToastrService,
     private boardApiService: BoardApiService,
+    private dialogService: DialogService,
     @Inject(MAT_DIALOG_DATA) public data: CreateBoardModalData
   ) { }
 
@@ -416,7 +418,20 @@ export class CreateBoardModalComponent implements OnInit {
   }
 
   public removeColumn(index: number): void {
+
+if(this.data.mode==='edit'){
+    this.dialogService.openConfirmationModal({
+      dialogTitle: 'BOARD_EDIT.REMOVE_COLUMN',
+      description: 'BOARD_EDIT.REMOVE_COLUMN_DESCRIPTION'
+    }).subscribe((result) => {
+      if (result) {
+        (this.boardForm.controls['boardColumns'] as FormArray).removeAt(index);
+      }
+    });
+  }
+  else{
     (this.boardForm.controls['boardColumns'] as FormArray).removeAt(index);
+  }
   }
 
   //Board templates configuration
