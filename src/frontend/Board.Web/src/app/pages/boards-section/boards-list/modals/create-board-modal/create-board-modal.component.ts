@@ -215,16 +215,18 @@ export class CreateBoardModalComponent implements OnInit {
       ...adminEmails.map(a => ({ email: a, role: UserAccess.ADMIN }))
     ];
 
+    const currentUserEmail = this.userService.getCurrentUserEmail();
+
     // Add owner based on permissions and provided email
-    if (ownerEmail && this.isGlobalAdmin) {
+    if (ownerEmail && this.isGlobalAdmin && !boardUsers.find(x => x.email === ownerEmail)) {
       // GlobalAdmin specified a custom owner
       boardUsers.push({ email: ownerEmail, role: UserAccess.OWNER });
-    } else if (!ownerEmail && this.isGlobalAdmin) {
+    } else if (!ownerEmail && this.isGlobalAdmin && !boardUsers.find(x => x.email === currentUserEmail)) {
       // GlobalAdmin didn't specify owner, use current user as owner
-      boardUsers.push({ email: this.userService.getCurrentUserEmail(), role: UserAccess.OWNER });
-    } else {
+      boardUsers.push({ email: currentUserEmail, role: UserAccess.OWNER });
+    } else if (!boardUsers.find(x => x.email === currentUserEmail)) {
       // Not GlobalAdmin, current user is always owner
-      boardUsers.push({ email: this.userService.getCurrentUserEmail(), role: UserAccess.OWNER });
+      boardUsers.push({ email: currentUserEmail, role: UserAccess.OWNER });
     }
 
     return boardUsers;
@@ -300,6 +302,11 @@ export class CreateBoardModalComponent implements OnInit {
       this.isSubmitting = true;
 
       if (this.data?.mode === 'edit' && this.data.board) {
+        if (this.areUsersChanged) {
+          const boardUsers = this.createBoardUsersArray();
+          this.boardApiService.updateBoardUsers(boardUsers, this.data.board!.id).subscribe();
+        }
+
         const updateData = this.getUpdateBoardDTO(this.boardForm);
         this.boardApiService.updateBoard(updateData).pipe(
           switchMap(() => this.boardApiService.getBoards({ page: 1, pageSize: 12 }))
@@ -352,6 +359,10 @@ export class CreateBoardModalComponent implements OnInit {
     return this.boardForm.valid
   }
 
+  get areUsersChanged(): boolean {
+    return this.boardUsers.dirty || this.boardAdmins.dirty;
+  }
+
   private normalize(email: string): string {
     return (email || '').trim().toLowerCase();
   }
@@ -361,11 +372,6 @@ export class CreateBoardModalComponent implements OnInit {
 
     const adminEmails = this.adminEmails;
     const userEmails = this.userEmails;
-
-    if (adminEmails.includes(current) || userEmails.includes(current)) {
-      this.toastr.error('You cannot add yourself as an admin or user');
-      return false;
-    }
 
     const hasDuplicates = (arr: string[]) => new Set(arr).size !== arr.length;
     if (hasDuplicates(adminEmails) || hasDuplicates(userEmails)) {

@@ -55,21 +55,6 @@ public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
                 Elements = []
             }
         );
-        entity.BoardUsers.Synchronize(request.BoardUsers,
-            entityUser => entityUser.Email,
-            requestUser => requestUser.Email,
-            updateAction: (entityUser, requestUser) =>
-            {
-                entityUser.Role = requestUser.Role;
-            },
-            createAction: requestUser => new Domain.Entities.BoardUser
-            {
-                BoardId = id,
-                Email = requestUser.Email,
-                Role = requestUser.Role
-            },
-            StringComparer.OrdinalIgnoreCase
-        );
 
         Domain.Entities.Board updated = await _repository.UpdateAsync(entity, cancellationToken);
         BoardDto response = _mapper.Map<BoardDto>(updated);

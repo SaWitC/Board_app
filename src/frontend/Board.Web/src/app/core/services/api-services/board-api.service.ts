@@ -5,7 +5,8 @@ import {
   BoardLookupDTO,
   BoardDetailsDTO,
   AddBoardDTO,
-  UpdateBoardDTO
+  UpdateBoardDTO,
+  BoardUserDTO
 } from "../../models";
 import { UserAccess } from "../../models/enums/user-access.enum";
 import { GetBoardsRequest } from "../../models/board/get-boards-request.interface";
@@ -52,20 +53,24 @@ export class BoardApiService {
 		return this.api.post<any>(`/boards`, payload).pipe(map(x => this.mapBoardDetails(x)));
 	}
 
-	public updateBoard(board: UpdateBoardDTO): Observable<BoardDetailsDTO> {
-		const basePayload = { title: board.title, description: board.description, boardUsers: board.boardUsers, boardColumns: board.boardColumns };
+	public updateBoardUsers(boardUsers: BoardUserDTO[], boardId: string): Observable<any> {
+		const basePayload = { boardUsers: boardUsers };
 
-		// If boardUsers is empty or undefined, preserve the current owner from server state
-		if (!basePayload.boardUsers || basePayload.boardUsers.length === 0) {
-			return this.getById(board.id).pipe(
+		if (!boardUsers || boardUsers.length === 0) {
+			return this.getById(boardId).pipe(
 				switchMap(current => {
-					const owner = (current.boardUsers || []).find(u => u.role === UserAccess.OWNER);
-					const payload = owner ? { ...basePayload, boardUsers: [owner] } : basePayload;
-					return this.api.put<any>(`/boards/${board.id}`, payload).pipe(map(x => this.mapBoardDetails(x)));
+					const owner = (current.boardUsers || []).find(x => x.role === UserAccess.OWNER);
+					const payload = owner ? { ...basePayload, boardUsers: [owner]} : basePayload;
+					return this.api.put<any>(`/board-users/${boardId}`, payload);
 				})
 			);
 		}
 
+		return this.api.put<any>(`/board-users/${boardId}`, basePayload);
+	}
+
+	public updateBoard(board: UpdateBoardDTO): Observable<BoardDetailsDTO> {
+		const basePayload = { title: board.title, description: board.description, boardUsers: board.boardUsers, boardColumns: board.boardColumns };
 		return this.api.put<any>(`/boards/${board.id}`, basePayload).pipe(map(x => this.mapBoardDetails(x)));
 	}
 

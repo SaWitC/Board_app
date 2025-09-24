@@ -12,6 +12,7 @@ public static class RepositoriesConfiguration
         services.AddScoped<IBoardItemRepository, BoardItemRepository>();
         services.AddScoped<ITagRepository, TagRepository>();
         services.AddScoped<IBoardTemplateRepository, BoardTemplateRepository>();
+        services.AddScoped<IBoardUserRepository, BoardUserRepository>();
 
         return services;
     }

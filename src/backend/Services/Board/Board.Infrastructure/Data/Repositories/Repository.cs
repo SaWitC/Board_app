@@ -27,6 +27,12 @@ public abstract class Repository<T> : IRepository<T>
         return result.Entity;
     }
 
+    public async Task AddRangeAsync(T[] entities, CancellationToken cancellationToken)
+    {
+        await _dbSet.AddRangeAsync(entities, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken)
     {
         EntityEntry<T> result = _dbSet.Update(entity);
@@ -45,6 +51,12 @@ public abstract class Repository<T> : IRepository<T>
         EntityEntry<T> result = _dbSet.Remove(entity);
         await _context.SaveChangesAsync(cancellationToken);
         return result.Entity;
+    }
+
+    public async Task DeleteRangeAsync(T[] entities, CancellationToken cancellationToken)
+    {
+        _dbSet.RemoveRange(entities);
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<List<T>> FindAsync(
