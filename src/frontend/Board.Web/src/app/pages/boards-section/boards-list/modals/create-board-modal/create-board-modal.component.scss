@@ -274,6 +274,10 @@ mat-dialog-actions {
   &:hover {
     color: var(--background-negative);
   }
+
+  &:disabled {
+    opacity: 0.5;
+  }
 }
 
 // Responsive design

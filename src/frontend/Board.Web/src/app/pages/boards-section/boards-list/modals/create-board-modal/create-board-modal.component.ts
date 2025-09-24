@@ -115,6 +115,7 @@ export class CreateBoardModalComponent implements OnInit {
       });
 
       this.setUsers();
+      this.disableCurrentAdminEditing();
 
       const arr = this.boardForm.get('boardColumns') as FormArray;
       arr.clear();
@@ -154,6 +155,22 @@ export class CreateBoardModalComponent implements OnInit {
       this.boardForm.get('boardTitle')?.disable();
       this.boardForm.get('boardDescription')?.disable();
     }
+  }
+
+  private disableCurrentAdminEditing() {
+    const currentAdminForm = this.boardAdmins.controls.find(x => {
+      const adminEmail = x.get('adminEmail')?.value as string;
+      const currentUserEmail = this.userService.getCurrentUserEmail();
+
+      if (adminEmail === currentUserEmail) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    });
+
+    currentAdminForm?.disable();
   }
 
   private initForm(): void {
