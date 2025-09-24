@@ -58,7 +58,7 @@ public class UpdateBoardUsersEndpoint : Endpoint<UpdateBoardUsersRequest>
         )
         .ToArray();
 
-        if (usersToDelete.Any())
+        if (!usersToDelete.Any())
         {
             return;
         }
