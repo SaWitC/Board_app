@@ -4,81 +4,124 @@
   <!-- Preview Mode -->
 
   <!-- Edit/Create Mode -->
-  <form [formGroup]="taskForm" class="h-100" (ngSubmit)="onSubmit()">
-      <div class="form-row row pt-2">
-        <!--Story type-->
-        <mat-form-field appearance="outline" class="pe-2 col-2">
-          <mat-label class="form-label">Type</mat-label>
-          <mat-select formControlName="taskType">
-            <mat-option *ngFor="let taskType of taskTypes" [value]="taskType">
-              <app-task-type-icon [taskType]="taskType"></app-task-type-icon>
-              {{ getTaskTypeLabel(taskType) }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+  <form *ngIf="taskForm" [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+    <div class="form-row row pt-2">
+      <!--Story type-->
+      <mat-form-field appearance="outline" class="pe-2 col-2">
+        <mat-label class="form-label">{{ 'TASK_MODAL.TYPE' | translate }}</mat-label>
+        <mat-select formControlName="taskType">
+          <mat-option *ngFor="let taskType of taskTypes" [value]="taskType">
+            <app-task-type-icon [taskType]="taskType"></app-task-type-icon>
+            {{ getTaskTypeLabel(taskType) }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width col-10">
-          <input class="w-100" matInput formControlName="title" placeholder="Название">
-          <mat-error *ngIf="taskForm.get('title')?.hasError('required')">
-            Название обязательно
-          </mat-error>
-          <mat-error *ngIf="taskForm.get('title')?.hasError('minlength')">
-            Минимум 3 символа
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <div class="row" style="height: 90%;">
-        <div class="col-9">
-          <div class="form-row">
-            <mat-form-field appearance="outline" class="pe-2 col-3">
-              <mat-label class="form-label">Исполнитель</mat-label>
-              <input matInput formControlName="assignee" placeholder="Введите имя исполнителя">
-            </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width col-10">
+        <input class="w-100" matInput formControlName="title" [placeholder]="'TASK_MODAL.TITLE_PLACEHOLDER' | translate">
+        <mat-error *ngIf="taskForm.get('title')?.hasError('required')">
+          {{ 'TASK_MODAL.TITLE_REQUIRED' | translate }}
+        </mat-error>
+        <mat-error *ngIf="taskForm.get('title')?.hasError('minlength')">
+          {{ 'TASK_MODAL.TITLE_MIN_LENGTH' | translate }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <div class="col-9">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="pe-2 col-3">
+            <mat-label class="form-label">{{ 'TASK_MODAL.ASSIGNEE' | translate }}</mat-label>
+            <input 
+              matInput 
+              formControlName="assigneeEmail"
+              #assigneeInput
+              [matAutocomplete]="assigneeAutocomplete"
+              [placeholder]="'TASK_MODAL.ASSIGNEE_PLACEHOLDER' | translate">
+            
+              <button 
+              *ngIf="hasAssigneeValue" 
+              matSuffix 
+              mat-icon-button 
+              type="button"
+              (click)="clearAssignee()"
+              [attr.aria-label]="'TASK_MODAL.CLEAR_ASSIGNEE' | translate">
+              <mat-icon>close</mat-icon>
+            </button>
 
-            <mat-form-field appearance="outline" class="pe-2 col-3">
-              <mat-label class="form-label">Приоритет *</mat-label>
-              <mat-select formControlName="priority">
-                <mat-option *ngFor="let priority of taskPriorities" [value]="priority">
-                  {{ getPriorityLabel(priority) }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <mat-autocomplete 
+              #assigneeAutocomplete="matAutocomplete"
+              [displayWith]="displayUserEmail"
+              (optionSelected)="onAssigneeSelectionChange($event)">
+              <mat-option *ngFor="let user of filteredUsers$ | async" [value]="user">
+                {{ user.email }}
+              </mat-option>
+            </mat-autocomplete>
 
-            <mat-form-field appearance="outline" class="pe-2 col-3">
-              <mat-label class="form-label">Срок выполнения</mat-label>
-              <input matInput [matDatepicker]="picker" formControlName="dueDate" placeholder="Выберите дату">
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
+            <mat-error *ngIf="taskForm.get('assigneeEmail')?.hasError('required')">
+              {{ 'TASK_MODAL.ASSIGNEE_REQUIRED' | translate }}
+            </mat-error>
+            <mat-error *ngIf="taskForm.get('assigneeEmail')?.hasError('invalidUser')">
+              {{ 'TASK_MODAL.ASSIGNEE_INVALID' | translate }}
+            </mat-error>
+          </mat-form-field>
 
-            <mat-form-field appearance="outline" class="col-3">
-              <mat-label class="form-label">Теги</mat-label>
-              <input matInput formControlName="tags" placeholder="Введите теги через запятую">
-            </mat-form-field>
-          </div>
+          <mat-form-field appearance="outline" class="pe-2 col-3">
+            <mat-label class="form-label">{{ 'TASK_MODAL.PRIORITY' | translate }} </mat-label>
+            <mat-select formControlName="priority">
+              <mat-option *ngFor="let priority of taskPriorities" [value]="priority">
+                {{ getPriorityLabel(priority) }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
-          <label class="form-label">Описание</label>
-          <app-description-editor *ngIf="!isPreviewMode;else previewDesription" [placeholder]="'Description...'"
-            [formControl]="getControl('description')">
+          <mat-form-field appearance="outline" class="pe-2 col-3">
+            <mat-label class="form-label">{{ 'TASK_MODAL.DUE_DATE' | translate }} </mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dueDate" [placeholder]="'TASK_MODAL.DUE_DATE_PLACEHOLDER' | translate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            
+            <mat-error *ngIf="taskForm.get('dueDate')?.hasError('required')">
+              {{ 'TASK_MODAL.DUE_DATE_REQUIRED' | translate }}
+            </mat-error>
+          </mat-form-field>
 
-          </app-description-editor>
-
-          <ng-template #previewDesription>
-            <div *ngIf="taskDetails" class="preview-description" [innerHTML]="taskDetails.description"></div>
-          </ng-template>
+          <mat-form-field appearance="outline" class="col-3">
+            <mat-label class="form-label">{{ 'TASK_MODAL.TAGS' | translate }}</mat-label>
+            <input matInput formControlName="tags" [placeholder]="'TASK_MODAL.TAGS_PLACEHOLDER' | translate">
+          </mat-form-field>
         </div>
-        <div class="col-3 attachments">
-          <h3 class="form-label text-center">Attachments</h3>
+
+        <div style="margin-top: 20px;">
+          <label class="form-label">{{ 'TASK_MODAL.DESCRIPTION' | translate }}</label>
+          <mat-form-field appearance="outline" class="w-100">
+            <textarea 
+              matInput 
+              formControlName="description" 
+              [placeholder]="'TASK_MODAL.DESCRIPTION_PLACEHOLDER' | translate"
+              rows="4">
+            </textarea>
+          </mat-form-field>
         </div>
       </div>
+      <div class="col-3 attachments">
+        <h3 class="form-label text-center">{{ 'TASK_MODAL.ATTACHMENTS' | translate }}</h3>
+      </div>
+    </div>
   </form>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
+<mat-dialog-actions *ngIf="taskForm" align="end">
   <button mat-button (click)="onClose()">
-    {{ isPreviewMode ? 'Закрыть' : 'Отмена' }}
+    {{ isPreviewMode ? ('TASK_MODAL.CLOSE' | translate) : ('TASK_MODAL.CANCEL' | translate) }}
   </button>
-  <button *ngIf="!isPreviewMode" mat-raised-button color="primary" (click)="onSubmit()" [disabled]="taskForm.invalid">
+  <button 
+    *ngIf="!isPreviewMode"
+    mat-raised-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="taskForm.invalid || (data.mode === 'edit' && taskForm.pristine)">
     {{ submitButtonText }}
-  </button>
+</button>
 </mat-dialog-actions>
+

@@ -23,7 +23,7 @@ public class BoardColumnMappingConfiguration : IEntityTypeConfiguration<BoardCol
 			.HasMaxLength(10000);
 
 		builder
-			.HasMany(b => b.Elements)
+			.HasMany(b => b.Items)
 			.WithOne(i => i.BoardColumn)
 			.HasForeignKey(i => i.BoardColumnId)
 			.OnDelete(DeleteBehavior.Cascade);

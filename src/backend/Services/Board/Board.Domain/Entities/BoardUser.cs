@@ -9,4 +9,6 @@ public class BoardUser
 
     public Guid BoardId { get; set; }
     public Board Board { get; set; }
+
+    public ICollection<BoardItem> Items { get; set; }
 }

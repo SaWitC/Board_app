@@ -52,7 +52,7 @@ public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
                 Id = Guid.NewGuid(),
                 Title = requestColumn.Title,
                 Description = requestColumn.Description,
-                Elements = []
+                Items = []
             }
         );
         entity.BoardUsers.Synchronize(request.BoardUsers,

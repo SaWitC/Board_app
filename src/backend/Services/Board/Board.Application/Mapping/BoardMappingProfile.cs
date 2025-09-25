@@ -1,7 +1,8 @@
 using AutoMapper;
 using Board.Application.DTOs;
-using Board.Domain.Contracts.Pagination;
 using Board.Application.DTOs.BoardItems;
+using Board.Application.DTOs.Tags;
+using Board.Domain.Contracts.Pagination;
 using Board.Domain.Entities;
 
 namespace Board.Application.Mapping;
@@ -23,12 +24,16 @@ public class BoardMappingProfile : Profile
 
         CreateMap<BoardColumn, BoardColumnDto>()
             .ReverseMap()
-            .ForMember(d => d.Elements, o => o.Ignore());
+            .ForMember(d => d.Items, o => o.Ignore());
 
         CreateMap<BoardItem, BoardItemDto>()
             .ReverseMap()
-            .ForMember(d => d.Tags, o => o.Ignore())
             .ForMember(d => d.BoardColumn, o => o.Ignore())
+            .ForMember(d => d.Assignee, o => o.Ignore())
             .ForMember(d => d.SubItems, o => o.Ignore());
+
+        CreateMap<Tag, TagDto>()
+            .ReverseMap()
+            .ForMember(d => d.BoardItems, o => o.Ignore());
     }
 }

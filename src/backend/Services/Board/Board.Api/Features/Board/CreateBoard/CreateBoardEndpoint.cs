@@ -56,7 +56,7 @@ public class CreateBoardEndpoint : Endpoint<CreateBoardRequest>
                 Id = Guid.NewGuid(),
                 Title = columnDto.Title,
                 Description = columnDto.Description,
-                Elements = []
+                Items = []
             })],
             BoardUsers = [.. request.BoardUsers.Select(userDto => new Domain.Entities.BoardUser
             {

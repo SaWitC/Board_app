@@ -27,9 +27,10 @@ export function taskToCreateDto(task: Partial<AddBoardItemDTO>): AddBoardItemDTO
 		description: task.description ?? '',
 		boardColumnId: task.boardColumnId ?? '',
 		priority: task.priority!,
-		assignee: EMPTY_GUID,
+		assigneeEmail: task.assigneeEmail ?? null,
 		dueDate: task.dueDate ? task.dueDate: null,
 		taskType: task.taskType!,
+		tags: task.tags ? task.tags : []
 	};
 }
 
@@ -40,8 +41,9 @@ export function taskToUpdateDto(existing: BoardItemDetailsDTO, updates: Partial<
 		description: updates.description ?? existing.description,
 		boardColumnId: updates.boardColumnId ?? existing.boardColumnId,
 		priority: updates.priority ?? existing.priority,
-		assignee: existing.assignee ?? EMPTY_GUID,
+		assigneeEmail: updates.assigneeEmail,
 		dueDate: updates.dueDate ? updates.dueDate: existing.dueDate,
 		taskType: updates.taskType ?? existing.taskType,
+		tags: updates.tags ? updates.tags : []
 	};
 }
