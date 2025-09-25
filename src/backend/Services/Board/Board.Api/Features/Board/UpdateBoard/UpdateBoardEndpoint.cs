@@ -61,8 +61,7 @@ public class UpdateBoardEndpoint : Endpoint<UpdateBoardRequest>
                 Id = Guid.NewGuid(),
                 Title = requestColumn.Title,
                 Description = requestColumn.Description,
-                Order = requestColumn.Order
-
+                Order = requestColumn.Order,
                 Items = []
             }
         );
