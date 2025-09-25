@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Board.Infrastructure.Data.Repositories;
 
-public abstract class Repository<T> : IRepository<T>
+public class Repository<T> : IRepository<T>
         where T : class
 {
     protected BoardDbContext _context;

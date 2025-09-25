@@ -99,6 +99,7 @@ export class BoardApiService {
 			title: source.title,
 			description: source.description,
 			boardUsers: source.boardUsers ?? [],
+			boardColumns: source.boardColumns ?? [],
 			modificationDate: new Date(source.modificationDate),
 			isTemplate: source.IsTemplate,
 			IsActiveTemplate: source.IsActiveTemplate

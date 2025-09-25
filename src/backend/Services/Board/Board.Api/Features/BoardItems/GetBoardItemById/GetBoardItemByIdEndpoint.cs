@@ -29,10 +29,10 @@ public class GetBoardItemByIdEndpoint : EndpointWithoutRequest
     {
         Guid id = Route<Guid>("id");
 
-        BoardItem entity = await _repository.GetAsync(x => x.Id == id, cancellationToken);
+        BoardItem entity = await _repository.GetAsync(x => x.Id == id, cancellationToken, true, x => x.Tags);
         if (entity == null)
         {
-            			await Send.NotFoundAsync(cancellationToken);
+            await Send.NotFoundAsync(cancellationToken);
 			return;
         }
 

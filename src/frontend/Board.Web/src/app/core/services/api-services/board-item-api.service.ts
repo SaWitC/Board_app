@@ -43,11 +43,12 @@ export class BoardItemApiService {
 					id: item.id,
 					title: item.title,
 					description: item.description,
-				  boardColumnId: boardColumnId,
+				    boardColumnId: boardColumnId,
 					priority: item.priority,
-					assignee: item.assignee,
+					assigneeEmail: item.assigneeEmail,
 					dueDate: item.dueDate,
 					taskType: item.taskType,
+					tags: item.tags
 				};
 				return this.updateBoardItem(boardId, boardColumnId, itemId, updatePayload);
 			})

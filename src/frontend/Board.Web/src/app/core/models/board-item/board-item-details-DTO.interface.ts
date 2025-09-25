@@ -1,5 +1,6 @@
 import { TaskPriority } from "../enums/task-priority.enum";
 import { TaskType } from "../enums/task-type.enum";
+import { TagDTO } from "../tag/tag-DTO.interface";
 
 export interface BoardItemDetailsDTO {
   id: string;
@@ -7,10 +8,10 @@ export interface BoardItemDetailsDTO {
   description: string;
   boardColumnId: string;
   priority: TaskPriority;
-  assignee: string;
+  assigneeEmail: string|null;
   dueDate: Date;
   modificationDate?: string;
   createdTime?: string;
   taskType: TaskType;
-  tags?: string[];
+  tags?: TagDTO[];
 }

@@ -1,4 +1,4 @@
 export interface UserLookupDTO {
-  id: string;
+  role: number;
   email: string;
 }

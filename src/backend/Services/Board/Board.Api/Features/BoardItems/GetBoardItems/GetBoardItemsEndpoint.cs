@@ -27,7 +27,7 @@ public class GetBoardItemsEndpoint : EndpointWithoutRequest
     public override async Task HandleAsync(CancellationToken cancellationToken)
     {
         Guid boardId = Route<Guid>("boardId");
-        ICollection<BoardItemLokupDto> items = await _repository.GetAllBoardItemsLookup(boardId, cancellationToken);
+        ICollection<BoardItemLookupDto> items = await _repository.GetAllBoardItemsLookup(boardId, cancellationToken);
 
         await Send.OkAsync(items, cancellationToken);
     }

@@ -122,7 +122,7 @@ public updateBoardColumnOrder(columns: OrderedBoardColumnDTO[]): void {
         var currentUser = board.boardUsers?.find(u=>u.email===this.userService.getCurrentUserEmail())
 
         if(currentUser){
-          this.userService.setUserBoardAccess(currentUser?.role??UserAccess.USER);
+          this.userService.setUserBoardAccess(currentUser?.role ?? UserAccess.USER);
           this.isBoardManager = this.userService.isUserBoardAdmin();
         }
         else if(this.isGlobalAdmin){
