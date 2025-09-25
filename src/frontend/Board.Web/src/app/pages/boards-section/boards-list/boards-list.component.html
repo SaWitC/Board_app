@@ -5,19 +5,19 @@
       <button mat-icon-button (click)="toggleSearch()" class="search-toggle-btn" matTooltip="{{ 'COMMON.SEARCH' | translate }}">
         <mat-icon>search</mat-icon>
       </button>
-      
+
       <div class="search-section" [class.expanded]="isSearchExpanded" #searchSection>
         <div class="search-fields">
           <mat-form-field appearance="outline" class="search-field">
             <input matInput [formControl]="titleSearchControl" placeholder="{{ 'BOARDS_LIST.SEARCH_TITLE_PLACEHOLDER' | translate }}">
           </mat-form-field>
-          
+
           <mat-form-field appearance="outline" class="search-field">
             <input matInput [formControl]="ownerSearchControl" placeholder="{{ 'BOARDS_LIST.SEARCH_OWNER_PLACEHOLDER' | translate }}">
           </mat-form-field>
         </div>
       </div>
-      
+
       <button class="create-board-btn" (click)="onCreateBoard()">
         <span class="btn-icon">+</span>
         {{ 'BOARDS_LIST.CREATE_BOARD' | translate }}
@@ -26,16 +26,13 @@
   </div>
 
   <div class="boards-content">
-    <div *ngIf="!isLoading" class="content-area">
-        <div *ngIf="error" class="error">
-          <p>{{ error }}</p>
-          <button class="retry-btn" (click)="loadBoards()">{{ 'COMMON.RETRY' | translate }}</button>
-        </div>
+
+    <div class="content-area">
 
         <div *ngIf="boards.length === 0" class="empty-state">
           <div class="empty-icon"></div>
-          <h3>{{ 'BOARDS_LIST.EMPTY_TITLE' | translate }}</h3>
-          <p>{{ 'BOARDS_LIST.EMPTY_SUBTITLE' | translate }}</p>
+          <h3 class="text">{{ 'BOARDS_LIST.EMPTY_TITLE' | translate }}</h3>
+          <p class="text">{{ 'BOARDS_LIST.EMPTY_SUBTITLE' | translate }}</p>
         </div>
 
         <div *ngIf="boards.length > 0" class="boards-grid">
@@ -46,10 +43,10 @@
                 <mat-icon>more_vert</mat-icon>
               </button>
             </div>
-            
+
             <div class="board-card-content">
               <p class="board-description" *ngIf="board.description">{{ board.description }}</p>
-              
+
               <div class="board-stats">
                 <div class="stat-item">
                   <mat-icon>people</mat-icon>
@@ -60,7 +57,7 @@
                   <span>{{ getAdminsCount(board) }} {{ 'BOARDS_LIST.ADMINS' | translate }}</span>
                 </div>
               </div>
-              
+
               <div class="board-meta" *ngIf="board.modificationDate">
                 <small>{{ 'BOARDS_LIST.LAST_MODIFIED' | translate }}: {{ board.modificationDate | date:'short' }}</small>
               </div>
@@ -70,7 +67,7 @@
     </div>
 
     <mat-paginator
-        *ngIf="!isLoading && boards.length > 0"
+        *ngIf="boards.length > 0"
         [length]="totalCount"
         [pageSize]="pageSize"
         [pageIndex]="pageIndex"
@@ -81,10 +78,6 @@
   </div>
 
   <mat-menu #cardMenu="matMenu">
-    <button mat-menu-item (click)="onEditSelected()" *ngIf="selectedBoard && canEdit(selectedBoard)">
-      <mat-icon>edit</mat-icon>
-      <span>{{ 'BOARDS_LIST.EDIT' | translate }}</span>
-    </button>
     <button mat-menu-item (click)="onDeleteBoard(selectedBoard!.id)" *ngIf="selectedBoard && canDelete(selectedBoard)">
       <mat-icon>delete</mat-icon>
       <span>{{ 'BOARDS_LIST.DELETE' | translate }}</span>

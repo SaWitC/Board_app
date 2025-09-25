@@ -190,3 +190,13 @@ i.icon-accent{
 i.icon-negative-tint{
   color: var(--icon-color-negative-tint);
 }
+
+text{
+  color: var(--text-color);
+}
+
+.mat-mdc-dialog-content{
+  max-height: 90vh!important;
+}
+
+

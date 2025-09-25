@@ -6,6 +6,6 @@ export interface BoardDetailsDTO {
   boardUsers: UserLookupDTO[];
   boardColumns: { id?: string; title: string; description: string; }[];
   modificationDate: Date;
-  IsTemplate: boolean;
+  isTemplate: boolean;
   IsActiveTemplate: boolean;
 }

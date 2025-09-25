@@ -24,8 +24,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   selector: 'app-boards-list',
   standalone: true,
   imports: [
-    CommonModule, 
-    MatMenuModule, 
+    CommonModule,
+    MatMenuModule,
     TranslateModule,
     ReactiveFormsModule,
     MatPaginatorModule,
@@ -40,17 +40,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class BoardsListComponent implements OnInit {
   boards: BoardLookupDTO[] = [];
-  error: string | null = null;
   selectedBoard: BoardLookupDTO | null = null;
   public isGlobalAdmin: boolean = false;
-  isLoading: boolean = false;
   totalCount: number = 0;
   pageSize: number = 12;
   pageIndex: number = 0;
   isSearchExpanded: boolean = false;
-  
+
   @ViewChild('searchSection', { static: false }) searchSection!: ElementRef;
- 
+
   searchForm = new FormGroup({
     titleSearch: new FormControl(''),
     ownerSearch: new FormControl('')
@@ -81,8 +79,8 @@ export class BoardsListComponent implements OnInit {
 
   ngOnInit(): void {
     this.isGlobalAdmin = this.userService.hasGlobalAdminPermission();
-    this.loadBoards().subscribe();    
-   
+    this.loadBoards().subscribe();
+
     this.searchForm.valueChanges.pipe(
       debounceTime(400),
       distinctUntilChanged(),
@@ -96,15 +94,15 @@ export class BoardsListComponent implements OnInit {
   toggleSearch(): void {
     this.isSearchExpanded = !this.isSearchExpanded;
   }
- 
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    if (this.isSearchExpanded) {     
+    if (this.isSearchExpanded) {
       const searchButton = (event.target as Element).closest('.search-toggle-btn');
       if (searchButton) {
         return;
-      }      
-     
+      }
+
       if (this.searchSection) {
         const clickedInside = this.searchSection.nativeElement.contains(event.target as Node);
         if (!clickedInside) {
@@ -115,9 +113,7 @@ export class BoardsListComponent implements OnInit {
   }
 
   loadBoards(): Observable<PagedResult<BoardLookupDTO>> {
-    this.isLoading = true;
-    this.error = null;
-    
+
     const formValue = this.searchForm.value;
     const request: GetBoardsRequest = {
       page: this.pageIndex + 1,
@@ -132,19 +128,16 @@ export class BoardsListComponent implements OnInit {
         this.totalCount = result.totalCount;
         this.pageIndex = result.pageNumber - 1;
         this.pageSize = result.pageSize;
-        this.isLoading = false;
       }),
-      catchError(error => {       
-        this.error = 'Failed to load boards';
-        this.isLoading = false;
-        return of({ 
-          items: [], 
-          totalCount: 0, 
-          pageNumber: 1, 
-          pageSize: 12, 
-          totalPages: 0, 
-          hasPreviousPage: false, 
-          hasNextPage: false 
+      catchError(error => {
+        return of({
+          items: [],
+          totalCount: 0,
+          pageNumber: 1,
+          pageSize: 12,
+          totalPages: 0,
+          hasPreviousPage: false,
+          hasNextPage: false
         });
       })
     );
@@ -169,12 +162,18 @@ export class BoardsListComponent implements OnInit {
   }
 
   onDeleteBoard(boardId: string): void {
-    this.boardApiService.deleteBoard(boardId).subscribe({
-      next: () => {
-        this.loadBoards().subscribe();
-      },
-      error: (err) => {
-        this.error = 'Failed to delete board';
+    this.dialogService.openConfirmationModal({
+      dialogTitle: 'BOARDS_LIST.DELETE_BOARD',
+      description: 'BOARDS_LIST.DELETE_BOARD_DESCRIPTION'
+    }).subscribe((result) => {
+      if (result) {
+        this.boardApiService.deleteBoard(boardId).subscribe({
+          next: () => {
+            this.loadBoards().subscribe();
+          },
+          error: (err) => {
+          }
+        });
       }
     });
   }
@@ -184,19 +183,6 @@ export class BoardsListComponent implements OnInit {
     this.selectedBoard = board;
   }
 
-  onEditSelected(): void {
-    if (!this.selectedBoard) { return; }
-
-    this.boardApiService.getBoardById(this.selectedBoard.id).subscribe({
-      next: (boardDetails: BoardDetailsDTO) => {
-        this.dialogService.openEditBoardModal(boardDetails).subscribe((result?: BoardModalResult) => {
-          if (result?.success && result?.boards) {
-            this.loadBoards().subscribe();
-          }
-        });
-      }
-    });
-  }
 
   private getCurrentUserRole(board: BoardLookupDTO): UserAccess | null {
     const currentEmail = (this.userService.getCurrentUserEmail() || '').toLowerCase();
@@ -214,7 +200,7 @@ export class BoardsListComponent implements OnInit {
     if (this.isGlobalAdmin) {
       return true;
     }
-    
+
     const role = this.getCurrentUserRole(board);
     return role === UserAccess.ADMIN || role === UserAccess.OWNER;
   }
@@ -223,7 +209,7 @@ export class BoardsListComponent implements OnInit {
     if (this.isGlobalAdmin) {
       return true;
     }
-    
+
     const role = this.getCurrentUserRole(board);
     return role === UserAccess.ADMIN || role === UserAccess.OWNER;
   }
@@ -232,7 +218,7 @@ export class BoardsListComponent implements OnInit {
     if (this.isGlobalAdmin) {
       return true;
     }
-    
+
     const role = this.getCurrentUserRole(board);
     return role === UserAccess.OWNER;
   }

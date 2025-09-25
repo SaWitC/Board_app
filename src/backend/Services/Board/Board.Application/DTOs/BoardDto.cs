@@ -6,7 +6,6 @@ public class BoardDto
     public string Title { get; set; }
     public string Description { get; set; }
     public List<BoardUserDto> BoardUsers { get; set; } = [];
-    public List<BoardColumnDto> BoardColumns { get; set; } = [];
     public DateTimeOffset ModificationDate { get; set; }
     public bool IsTemplate { get; set; }
     public bool IsActiveTemplate { get; set; }

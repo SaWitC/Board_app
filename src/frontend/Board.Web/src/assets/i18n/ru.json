@@ -49,7 +49,9 @@
     "FIRST_PAGE": "Первая страница",
     "PREVIOUS_PAGE": "Предыдущая страница",
     "NEXT_PAGE": "Следующая страница",
-    "LAST_PAGE": "Последняя страница"
+    "LAST_PAGE": "Последняя страница",
+    "DELETE_BOARD": "Удалить доску",
+    "DELETE_BOARD_DESCRIPTION": "Вы уверены, что хотите удалить эту доску?"
   },
   "BOARD": {
     "TOTAL_TASKS": "Всего задач:",
@@ -83,6 +85,8 @@
     "USER_LABEL": "Пользователи",
     "USER_EMAIL_PLACEHOLDER": "Введите email пользователя",
     "BOARD_COLUMNS": "Колонки доски",
+    "REMOVE_COLUMN": "Удалить колонку",
+    "REMOVE_COLUMN_DESCRIPTION": "Вы уверены, что хотите удалить эту колонку?",
     "DRAG_TO_REORDER": "Перетащите для изменения порядка",
     "COLUMN_TITLE": "Название колонки",
     "COLUMN_TITLE_PLACEHOLDER": "Название колонки",
@@ -135,7 +139,9 @@
     "RETRY": "Повторить",
     "EDIT": "Редактировать",
     "DELETE": "Удалить",
-    "SEARCH": "Поиск"
+    "SEARCH": "Поиск",
+    "CONFIRM": "Подтвердить",
+    "CANCEL": "Отмена"
   },
   "GENERAL": {
     "SETTINGS": "Настройки",
