@@ -1,7 +1,6 @@
 using AutoMapper;
 using Board.Application.DTOs;
 using Board.Application.DTOs.BoardItems;
-using Board.Domain.Contracts.Pagination;
 using Board.Application.DTOs.Tags;
 using Board.Domain.Contracts.Pagination;
 using Board.Domain.Entities;

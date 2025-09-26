@@ -33,6 +33,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Migrators", "Migrators", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardDb.MigrationService", "src\backend\Services\Migrators\BoardDb.MigrationService\BoardDb.MigrationService.csproj", "{925FE9A3-CD8F-3294-61CD-C4B243C7944B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yml = compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -158,6 +163,7 @@ Global
 		{600B1C47-30B7-480F-8CF0-11A4D0DEBD84} = {E05BBDDB-9503-E85A-2527-9DD5469381F0}
 		{5988EA63-0AF0-4267-AD57-3DC39682A31E} = {EA8B51A1-2815-D7EB-83DD-84035FEA831A}
 		{925FE9A3-CD8F-3294-61CD-C4B243C7944B} = {5988EA63-0AF0-4267-AD57-3DC39682A31E}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {58E771CE-94DA-46CB-9316-0E16AF7CADFB}
