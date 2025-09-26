@@ -91,16 +91,16 @@ export class TaskModalComponent implements OnInit, AfterViewInit {
       this.toastr.error(this.translate.instant('ERRORS.UNEXPECTED_ERROR'));
       return;
     }
-  
-    this.loadBoardData().pipe(      
+
+    this.loadBoardData().pipe(
       switchMap(() => {
         this.createForm();
-        this.setupUserFiltering();        
+        this.setupUserFiltering();
 
         if ((this.dialogData?.mode === 'edit' || this.dialogData?.mode === 'preview') && this.boardId && this.data.task?.id) {
           return this.boardItemService.getBoardItemById(this.boardId, this.data.task.id);
         }
-        
+
         return of(null);
       }),
 
@@ -132,7 +132,7 @@ export class TaskModalComponent implements OnInit, AfterViewInit {
       return this.boardUsers;
     }
     const filterValue = email.toLowerCase();
-    return this.boardUsers.filter(user => 
+    return this.boardUsers.filter(user =>
       user.email.toLowerCase().includes(filterValue)
     );
   }
@@ -148,13 +148,17 @@ export class TaskModalComponent implements OnInit, AfterViewInit {
     return of(null);
   }
 
+  public get f(){
+    return this.taskForm.controls;
+  }
+
   private createForm(): Observable<FormGroup> {
     this.taskForm = this.fb.group({
       title: [undefined, [Validators.required, Validators.minLength(3), Validators.maxLength(500)]],
       description: [undefined, [Validators.required]],
       priority: [TaskPriority.MEDIUM, Validators.required],
       assigneeEmail: [undefined, [this.assigneeValidator]],
-      dueDate: [undefined, [Validators.required]],
+      dueDate: [null],
       tags: [undefined],
       taskType: [TaskType.USER_STORY, Validators.required],
       boardColumnId: [null],
@@ -170,7 +174,7 @@ export class TaskModalComponent implements OnInit, AfterViewInit {
   public initFormData(taskData: BoardItemDetailsDTO | null): void {
     if (taskData) {
       const assigneeEmail = this.boardUsers.find(u => u.email === taskData.assigneeEmail);
-      
+
       this.taskForm.patchValue({
         title: taskData.title,
         description: taskData.description,
@@ -181,7 +185,7 @@ export class TaskModalComponent implements OnInit, AfterViewInit {
         assigneeEmail: assigneeEmail || null,
         boardColumnId: taskData.boardColumnId
       });
-    } 
+    }
   }
 
   displayUserEmail(user: UserLookupDTO): string {
@@ -210,7 +214,7 @@ export class TaskModalComponent implements OnInit, AfterViewInit {
 
   private assigneeValidator = (control: AbstractControl): ValidationErrors | null => {
     const value = control.value;
-  
+
     if (!value || (typeof value === 'string' && value.trim() === '')) {
       return null;
     }
@@ -219,21 +223,21 @@ export class TaskModalComponent implements OnInit, AfterViewInit {
       const userExists = this.boardUsers.some(u => u.email === value.email);
       return userExists ? null : { invalidUser: true };
     }
-  
+
     if (typeof value === 'string') {
       const userExists = this.boardUsers.some(u => u.email.toLowerCase() === value.toLowerCase());
       return userExists ? null : { invalidUser: true };
     }
-    
+
     return { invalidUser: true };
   };
 
   onSubmit(): void {
 
-    this.markAllFieldsAsTouched();    
+    this.markAllFieldsAsTouched();
 
     if (this.taskForm.valid) {
-      const formValue = this.taskForm.value;     
+      const formValue = this.taskForm.value;
 
       const assigneeValue = formValue.assigneeEmail;
 
@@ -255,7 +259,7 @@ export class TaskModalComponent implements OnInit, AfterViewInit {
         priority: formValue.priority,
         taskType: formValue.taskType,
         assigneeEmail: assigneeEmailString,
-        dueDate: formValue.dueDate ? new Date(formValue.dueDate) : undefined,
+        dueDate: formValue.dueDate ?? null,
         tags: tagsForDto
       };
 
@@ -293,7 +297,7 @@ export class TaskModalComponent implements OnInit, AfterViewInit {
 
   private showValidationErrors(): void {
     const errors: string[] = [];
-    
+
     Object.keys(this.taskForm.controls).forEach(key => {
       const control = this.taskForm.get(key);
       if (control && control.errors && control.touched) {
@@ -302,7 +306,7 @@ export class TaskModalComponent implements OnInit, AfterViewInit {
         errors.push(`${fieldName}: ${fieldErrors.join(', ')}`);
       }
     });
-    
+
     if (errors.length > 0) {
       this.toastr.error(errors.join('\n'), this.translate.instant('ERRORS.VALIDATION_TITLE'));
     }
@@ -319,30 +323,30 @@ export class TaskModalComponent implements OnInit, AfterViewInit {
       'tags': this.translate.instant('TASK_MODAL.TAGS'),
       'taskType': this.translate.instant('TASK_MODAL.TYPE')
     };
-    
+
     return fieldNames[fieldName] || fieldName;
   }
 
 
   private getFieldErrors(errors: any): string[] {
     const errorMessages: string[] = [];
-    
+
     if (errors['required']) {
       errorMessages.push(this.translate.instant('ERRORS.FIELD_REQUIRED'));
     }
-    
+
     if (errors['minlength']) {
       errorMessages.push(this.translate.instant('ERRORS.FIELD_MIN_LENGTH', { min: errors['minlength'].requiredLength }));
     }
-    
+
     if (errors['maxlength']) {
       errorMessages.push(this.translate.instant('ERRORS.FIELD_MAX_LENGTH', { max: errors['maxlength'].requiredLength }));
     }
-    
+
     if (errors['invalidUser']) {
       errorMessages.push(this.translate.instant('TASK_MODAL.ASSIGNEE_INVALID'));
     }
-    
+
     return errorMessages;
   }
 

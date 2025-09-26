@@ -18,7 +18,8 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width col-10">
-        <input class="w-100" matInput formControlName="title" [placeholder]="'TASK_MODAL.TITLE_PLACEHOLDER' | translate">
+        <input class="w-100" matInput formControlName="title"
+          [placeholder]="'TASK_MODAL.TITLE_PLACEHOLDER' | translate">
         <mat-error *ngIf="taskForm.get('title')?.hasError('required')">
           {{ 'TASK_MODAL.TITLE_REQUIRED' | translate }}
         </mat-error>
@@ -27,29 +28,29 @@
         </mat-error>
       </mat-form-field>
     </div>
-    <div class="row">
+    <div class="row" style="height: 90%;">
       <div class="col-9">
         <div class="form-row">
           <mat-form-field appearance="outline" class="pe-2 col-3">
             <mat-label class="form-label">{{ 'TASK_MODAL.ASSIGNEE' | translate }}</mat-label>
-            <input 
-              matInput 
+            <input
+              matInput
               formControlName="assigneeEmail"
               #assigneeInput
               [matAutocomplete]="assigneeAutocomplete"
               [placeholder]="'TASK_MODAL.ASSIGNEE_PLACEHOLDER' | translate">
-            
-              <button 
-              *ngIf="hasAssigneeValue" 
-              matSuffix 
-              mat-icon-button 
+
+              <button
+              *ngIf="hasAssigneeValue"
+              matSuffix
+              mat-icon-button
               type="button"
               (click)="clearAssignee()"
               [attr.aria-label]="'TASK_MODAL.CLEAR_ASSIGNEE' | translate">
               <mat-icon>close</mat-icon>
             </button>
 
-            <mat-autocomplete 
+            <mat-autocomplete
               #assigneeAutocomplete="matAutocomplete"
               [displayWith]="displayUserEmail"
               (optionSelected)="onAssigneeSelectionChange($event)">
@@ -65,7 +66,6 @@
               {{ 'TASK_MODAL.ASSIGNEE_INVALID' | translate }}
             </mat-error>
           </mat-form-field>
-
           <mat-form-field appearance="outline" class="pe-2 col-3">
             <mat-label class="form-label">{{ 'TASK_MODAL.PRIORITY' | translate }} </mat-label>
             <mat-select formControlName="priority">
@@ -80,7 +80,7 @@
             <input matInput [matDatepicker]="picker" formControlName="dueDate" [placeholder]="'TASK_MODAL.DUE_DATE_PLACEHOLDER' | translate">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
-            
+
             <mat-error *ngIf="taskForm.get('dueDate')?.hasError('required')">
               {{ 'TASK_MODAL.DUE_DATE_REQUIRED' | translate }}
             </mat-error>
@@ -92,17 +92,18 @@
           </mat-form-field>
         </div>
 
-        <div style="margin-top: 20px;">
-          <label class="form-label">{{ 'TASK_MODAL.DESCRIPTION' | translate }}</label>
-          <mat-form-field appearance="outline" class="w-100">
-            <textarea 
-              matInput 
-              formControlName="description" 
-              [placeholder]="'TASK_MODAL.DESCRIPTION_PLACEHOLDER' | translate"
-              rows="4">
-            </textarea>
-          </mat-form-field>
-        </div>
+        <label class="form-label">{{ 'TASK_MODAL.DESCRIPTION' | translate }}</label>
+        <app-description-editor *ngIf="!isPreviewMode;else previewDesription" [placeholder]="'TASK_MODAL.DESCRIPTION_PLACEHOLDER' | translate"
+          [formControl]="getControl('description')">
+        </app-description-editor>
+        <mat-error *ngIf="taskForm.get('description')?.hasError('required')">
+          {{ 'TASK_MODAL.DESCRIPTION_REQUIRED' | translate }}
+        </mat-error>
+
+
+        <ng-template #previewDesription>
+          <div *ngIf="taskDetails" class="preview-description" [innerHTML]="taskDetails.description"></div>
+        </ng-template>
       </div>
       <div class="col-3 attachments">
         <h3 class="form-label text-center">{{ 'TASK_MODAL.ATTACHMENTS' | translate }}</h3>
@@ -115,13 +116,8 @@
   <button mat-button (click)="onClose()">
     {{ isPreviewMode ? ('TASK_MODAL.CLOSE' | translate) : ('TASK_MODAL.CANCEL' | translate) }}
   </button>
-  <button 
-    *ngIf="!isPreviewMode"
-    mat-raised-button
-    color="primary"
-    (click)="onSubmit()"
+  <button *ngIf="!isPreviewMode" mat-raised-button color="primary" (click)="onSubmit()"
     [disabled]="taskForm.invalid || (data.mode === 'edit' && taskForm.pristine)">
     {{ submitButtonText }}
-</button>
+  </button>
 </mat-dialog-actions>
-

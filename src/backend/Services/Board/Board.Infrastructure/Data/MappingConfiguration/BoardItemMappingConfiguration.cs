@@ -33,7 +33,7 @@ public class BoardItemMappingConfiguration : IEntityTypeConfiguration<BoardItem>
 
         builder
             .Property(b => b.DueDate)
-            .IsRequired();
+            .IsRequired(false);
 
         builder
             .Property(b => b.CreatedTime)

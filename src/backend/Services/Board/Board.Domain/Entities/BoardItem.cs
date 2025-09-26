@@ -16,7 +16,7 @@ public class BoardItem : IEntity
     public Guid BoardId { get; set; }
     public string AssigneeEmail { get; set; }
     public BoardUser Assignee { get; set; }
-    public DateTime DueDate { get; set; }
+    public DateTime? DueDate { get; set; }
     public DateTime CreatedTime { get; set; }
     public ICollection<BoardItem> SubItems { get; set; }
     public TaskTypeEnum TaskType { get; set; }

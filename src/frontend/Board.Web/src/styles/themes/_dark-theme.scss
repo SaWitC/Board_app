@@ -144,6 +144,12 @@
   --mdc-outlined-text-field-label-text-color: var(--text-color);
   --mat-icon-color: var(--text-color);
   --mdc-outlined-text-field-input-text-placeholder-color: var(--text-color);
+
+  --mat-sys-surface-container: var(--background-modal);
+  --mat-autocomplete-background-color: var(--background-modal);
+
+  --mdc-outlined-text-field-caret-color : var(--brand-color);
+  --mdc-outlined-text-field-input-text-color : var(--text-color);
   //Mat menu
   --mat-menu-container-color: var(--background-modal);
   /* Light theme scrollbar styles */

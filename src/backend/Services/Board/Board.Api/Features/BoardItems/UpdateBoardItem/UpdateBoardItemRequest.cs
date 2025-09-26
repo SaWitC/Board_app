@@ -15,7 +15,7 @@ public class UpdateBoardItemRequest
 
     public BoardItemPriorityEnum Priority { get; set; }
     public string AssigneeEmail { get; set; }
-    public DateTime DueDate { get; set; }
+    public DateTime? DueDate { get; set; }
     public TaskTypeEnum TaskType { get; set; }
     public ICollection<TagDto> Tags { get; set; }
 }
