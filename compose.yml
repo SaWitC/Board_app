@@ -8,7 +8,7 @@ services:
       - "3600:8081"
       - "3601:8080"
     networks:
-      - parser-network
+      - board-network
     env_file:
       - .env
     environment:
