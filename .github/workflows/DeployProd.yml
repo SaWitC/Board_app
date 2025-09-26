@@ -1,0 +1,51 @@
+name: Deploy to Prod (main)
+
+on:
+  push:
+    branches:
+      - 'main'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, production]
+
+    env:
+      DEPLOY_PATH: /home/adm28/Board_app
+
+    steps:
+      - name: 1. Checkout to 'main' branch
+        uses: actions/checkout@v4
+        with:
+          ref: 'main'
+          clean: true
+
+      - name: 2. Sync Application Code
+        run: |
+          echo "Syncing code to ${{ env.DEPLOY_PATH }}"
+          mkdir -p ${{ env.DEPLOY_PATH }}
+          rsync -a --delete ./ ${{ env.DEPLOY_PATH }}/
+          echo "Code synced successfully."
+
+      - name: 3. Copy .env file
+        run: |
+          echo "Copying .env file to deployment directory..."
+          cp /home/adm28/env-board-app/.env ${{ env.DEPLOY_PATH }}/.env
+          echo ".env file copied successfully."
+          echo "Verifying files in deployment directory:"
+          ls -la ${{ env.DEPLOY_PATH }}
+
+      - name: 4. Build and Deploy Application
+        working-directory: ${{ env.DEPLOY_PATH }}
+        run: |
+          echo "Starting deployment..."
+          docker compose build --no-cache
+          docker compose up -d
+          echo "Deployment successful!"
+
+      - name: 5. Cleanup Build Cache
+        if: always()
+        run: |
+          echo "🧹 Cleaning up Docker build cache..."
+          docker builder prune -f
+          echo "✅ Cache cleaned up."
