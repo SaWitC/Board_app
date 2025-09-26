@@ -7,11 +7,13 @@ public interface IRepository<T>
         where T : class
 {
     Task<T> AddAsync(T entity, CancellationToken cancellationToken);
+    Task AddRangeAsync(T[] entities, CancellationToken cancellationToken);
 
     Task<T> UpdateAsync(T entity, CancellationToken cancellationToken);
     Task UpdateRangeAsync(T[] entities, CancellationToken cancellationToken);
 
     Task<T> DeleteAsync(T entity, CancellationToken cancellationToken);
+    Task DeleteRangeAsync(T[] entities, CancellationToken cancellationToken);
 
     Task<List<T>> FindAsync(
         string searchTerm,

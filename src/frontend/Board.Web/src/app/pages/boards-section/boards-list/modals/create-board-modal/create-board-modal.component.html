@@ -88,7 +88,7 @@
               </mat-error>
             </mat-form-field>
 
-            <button type="button" class="delete-icon" mat-icon-button color="warn" (click)="removeAdmin(i)">
+            <button type="button" [disabled]="!boardAdmin.enabled" class="delete-icon" mat-icon-button color="warn" (click)="removeAdmin(i)">
                 <mat-icon>delete</mat-icon>
             </button>
           </div>
