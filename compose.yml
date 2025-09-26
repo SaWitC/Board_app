@@ -25,7 +25,7 @@ services:
     environment:
       - POSTGRES_USER=sa
       - POSTGRES_PASSWORD=R331yStrongP@ssw0rd!
-      - POSTGRES_DB=interviews
+      - POSTGRES_DB=InnoDevops
     ports:
       - "5600:5432"
     restart: always
@@ -39,7 +39,7 @@ services:
       context: ./src/frontend/Board.Web
       dockerfile: Dockerfile
     ports:
-      - "4200:80"
+      - "4203:80"
     networks:
       - board-network
     depends_on:
