@@ -162,11 +162,18 @@ export class BoardsListComponent implements OnInit {
   }
 
   onDeleteBoard(boardId: string): void {
-    this.boardApiService.deleteBoard(boardId).subscribe({
-      next: () => {
-        this.loadBoards().subscribe();
-      },
-      error: (err) => {
+    this.dialogService.openConfirmationModal({
+      dialogTitle: 'BOARDS_LIST.DELETE_BOARD',
+      description: 'BOARDS_LIST.DELETE_BOARD_DESCRIPTION'
+    }).subscribe((result) => {
+      if (result) {
+        this.boardApiService.deleteBoard(boardId).subscribe({
+          next: () => {
+            this.loadBoards().subscribe();
+          },
+          error: (err) => {
+          }
+        });
       }
     });
   }
@@ -176,19 +183,6 @@ export class BoardsListComponent implements OnInit {
     this.selectedBoard = board;
   }
 
-  onEditSelected(): void {
-    if (!this.selectedBoard) { return; }
-
-    this.boardApiService.getBoardById(this.selectedBoard.id).subscribe({
-      next: (boardDetails: BoardDetailsDTO) => {
-        this.dialogService.openEditBoardModal(boardDetails).subscribe((result?: BoardModalResult) => {
-          if (result?.success && result?.boards) {
-            this.loadBoards().subscribe();
-          }
-        });
-      }
-    });
-  }
 
   private getCurrentUserRole(board: BoardLookupDTO): UserAccess | null {
     const currentEmail = (this.userService.getCurrentUserEmail() || '').toLowerCase();

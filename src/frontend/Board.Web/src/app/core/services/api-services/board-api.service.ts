@@ -34,7 +34,7 @@ export class BoardApiService {
 		if (request.ownerSearchTerm) {
 		  params['ownerSearchTerm'] = request.ownerSearchTerm;
 		}
-	
+
 		return this.api.get<PagedResult<BoardLookupDTO>>('/boards', params).pipe(
 			map(result => ({
 				...result,
@@ -42,7 +42,7 @@ export class BoardApiService {
 			}))
 		);
 	}
-	  
+
 	public addBoard(board: AddBoardDTO): Observable<BoardDetailsDTO> {
 		const payload = {
 			title: board.title,
@@ -104,9 +104,9 @@ export class BoardApiService {
 			title: source.title,
 			description: source.description,
 			boardUsers: source.boardUsers ?? [],
-			boardColumns: (source.boardColumns ?? []).map((c: any) => ({ id: String(c.id), title: c.title, description: c.description })),
+			boardColumns: source.boardColumns ?? [],
 			modificationDate: new Date(source.modificationDate),
-			IsTemplate: source.IsTemplate,
+			isTemplate: source.IsTemplate,
 			IsActiveTemplate: source.IsActiveTemplate
 		};
 	}

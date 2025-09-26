@@ -34,7 +34,7 @@ public class GetBoardsEndpoint : Endpoint<GetBoardsRequest>
     {
         string email = _currentUserProvider.GetUserEmail();
         bool isGlobalAdmin = _currentUserProvider.IsGlobalAdmin();
-        var predicate = PredicateBuilder.New<Domain.Entities.Board>(true);
+        ExpressionStarter<Domain.Entities.Board> predicate = PredicateBuilder.New<Domain.Entities.Board>(true);
 
         // Apply user access filter
         if (!isGlobalAdmin)
@@ -57,13 +57,12 @@ public class GetBoardsEndpoint : Endpoint<GetBoardsRequest>
             request.PageSize,
             predicate,
             q => q.OrderBy(u => u.Title),
-            cancellationToken, 
-            true, 
-            b => b.BoardColumns, 
+            cancellationToken,
+            true,
             b => b.BoardUsers
         );
 
-        var result = _mapper.Map<PagedResult<BoardDto>>(entities);
+        PagedResult<BoardDto> result = _mapper.Map<PagedResult<BoardDto>>(entities);
 
         await Send.OkAsync(result, cancellationToken);
     }

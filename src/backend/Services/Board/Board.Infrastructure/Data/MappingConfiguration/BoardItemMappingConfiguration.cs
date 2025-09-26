@@ -28,12 +28,12 @@ public class BoardItemMappingConfiguration : IEntityTypeConfiguration<BoardItem>
             .IsRequired();
 
         builder
-            .Property(b => b.AssigneeId)
-            .IsRequired();
+            .Property(b => b.AssigneeEmail)
+            .IsRequired(false);
 
         builder
             .Property(b => b.DueDate)
-            .IsRequired();
+            .IsRequired(false);
 
         builder
             .Property(b => b.CreatedTime)
@@ -44,6 +44,16 @@ public class BoardItemMappingConfiguration : IEntityTypeConfiguration<BoardItem>
             .IsRequired()
             .HasDefaultValue(TaskTypeEnum.UserStory)
             .HasSentinel(TaskTypeEnum.UserStory);
+
+        builder
+            .HasOne(x => x.Assignee)
+            .WithMany(b => b.Items)
+            .HasForeignKey(b => new { b.BoardId, b.AssigneeEmail })
+            .IsRequired(false);
+
+        builder
+            .HasMany(b => b.Tags)
+            .WithMany(t => t.BoardItems);
 
         // Explicitly ignore unconfigured self-referencing navigation to prevent unintended join tables for now
         builder.Ignore(b => b.SubItems);

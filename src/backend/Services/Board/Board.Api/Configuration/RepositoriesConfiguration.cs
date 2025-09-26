@@ -1,5 +1,6 @@
 using Board.Application.Abstractions.Repositories;
 using Board.Infrastructure.Data.Repositories;
+using Board.Infrastructure.Data.UoW;
 
 namespace Board.Api.Configuration;
 
@@ -13,6 +14,7 @@ public static class RepositoriesConfiguration
         services.AddScoped<ITagRepository, TagRepository>();
         services.AddScoped<IBoardTemplateRepository, BoardTemplateRepository>();
         services.AddScoped<IBoardUserRepository, BoardUserRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }

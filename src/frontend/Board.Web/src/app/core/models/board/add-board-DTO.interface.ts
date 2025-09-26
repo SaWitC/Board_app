@@ -1,7 +1,4 @@
-export interface BoardColumnDTO {
-  title: string;
-  description: string;
-}
+import { AddBoardColumnDTO } from "../board-column/add-board-column-DTO.interface";
 
 export interface BoardUserDTO {
   email: string;
@@ -12,5 +9,5 @@ export interface AddBoardDTO {
   title: string;
   description: string;
   boardUsers: BoardUserDTO[];
-  boardColumns: BoardColumnDTO[];
+  boardColumns: AddBoardColumnDTO[];
 }

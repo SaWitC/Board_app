@@ -81,10 +81,13 @@ namespace Board.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("AssigneeId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("AssigneeEmail")
+                        .HasColumnType("character varying(100)");
 
                     b.Property<Guid>("BoardColumnId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BoardId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedTime")
@@ -95,7 +98,7 @@ namespace Board.Infrastructure.Data.Migrations
                         .HasMaxLength(1000000)
                         .HasColumnType("character varying(1000000)");
 
-                    b.Property<DateTime>("DueDate")
+                    b.Property<DateTime?>("DueDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset>("ModificationDate")
@@ -117,6 +120,8 @@ namespace Board.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BoardColumnId");
+
+                    b.HasIndex("BoardId", "AssigneeEmail");
 
                     b.ToTable("BoardItems");
                 });
@@ -173,9 +178,6 @@ namespace Board.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("BoardItemId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Description")
                         .HasMaxLength(10000)
                         .HasColumnType("character varying(10000)");
@@ -187,9 +189,22 @@ namespace Board.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BoardItemId");
-
                     b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("BoardItemTag", b =>
+                {
+                    b.Property<Guid>("BoardItemsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TagsId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("BoardItemsId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("BoardItemTag");
                 });
 
             modelBuilder.Entity("Board.Domain.Entities.BoardColumn", b =>
@@ -206,10 +221,16 @@ namespace Board.Infrastructure.Data.Migrations
             modelBuilder.Entity("Board.Domain.Entities.BoardItem", b =>
                 {
                     b.HasOne("Board.Domain.Entities.BoardColumn", "BoardColumn")
-                        .WithMany("Elements")
+                        .WithMany("Items")
                         .HasForeignKey("BoardColumnId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Board.Domain.Entities.BoardUser", "Assignee")
+                        .WithMany("Items")
+                        .HasForeignKey("BoardId", "AssigneeEmail");
+
+                    b.Navigation("Assignee");
 
                     b.Navigation("BoardColumn");
                 });
@@ -236,11 +257,19 @@ namespace Board.Infrastructure.Data.Migrations
                     b.Navigation("Board");
                 });
 
-            modelBuilder.Entity("Board.Domain.Entities.Tag", b =>
+            modelBuilder.Entity("BoardItemTag", b =>
                 {
                     b.HasOne("Board.Domain.Entities.BoardItem", null)
-                        .WithMany("Tags")
-                        .HasForeignKey("BoardItemId");
+                        .WithMany()
+                        .HasForeignKey("BoardItemsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Board.Domain.Entities.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Board.Domain.Entities.Board", b =>
@@ -254,12 +283,12 @@ namespace Board.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Board.Domain.Entities.BoardColumn", b =>
                 {
-                    b.Navigation("Elements");
+                    b.Navigation("Items");
                 });
 
-            modelBuilder.Entity("Board.Domain.Entities.BoardItem", b =>
+            modelBuilder.Entity("Board.Domain.Entities.BoardUser", b =>
                 {
-                    b.Navigation("Tags");
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

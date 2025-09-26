@@ -29,11 +29,11 @@ public class GetBoardByIdEndpoint : EndpointWithoutRequest
     {
         Guid id = Route<Guid>("boardId");
 
-        Domain.Entities.Board entity = await _repository.GetAsync(x => x.Id == id, cancellationToken, true, x => x.BoardColumns, x => x.BoardUsers, x => x.BoardTemplate);
+        Domain.Entities.Board entity = await _repository.GetAsync(x => x.Id == id, cancellationToken, true, x => x.BoardUsers, x => x.BoardTemplate);
         if (entity == null)
         {
-            			await Send.NotFoundAsync(cancellationToken);
-			return;
+            await Send.NotFoundAsync(cancellationToken);
+            return;
         }
 
         BoardDto response = _mapper.Map<BoardDto>(entity);

@@ -2,15 +2,15 @@
 
 <form [formGroup]="boardForm">
   <mat-dialog-content>
-    <div *ngIf="isNew()">
+    <div *ngIf="isNew">
       <mat-radio-group formControlName="boardType" aria-label="Select an option">
         <mat-radio-button checked value="{{ boardCreationOptions.EMPTY }}">{{ 'BOARD_EDIT.EMPTY_BOARD' | translate }}</mat-radio-button>
         <mat-radio-button value="{{ boardCreationOptions.TEMPLATE }}">{{ 'BOARD_EDIT.BASED_ON_TEMPLATE' | translate}}</mat-radio-button>
       </mat-radio-group>
     </div>
 
-    <div *ngIf="!isNew() && isGlobalAdmin">
-      <button *ngIf="data.board?.IsTemplate; else notTemplate" mat-stroked-button color="primary" class="text-white"
+    <div *ngIf="!isNew && isGlobalAdmin">
+      <button *ngIf="data.board?.isTemplate; else notTemplate" mat-stroked-button color="primary" class="text-white"
         type="button" (click)="createTemplatebasedOnThisBoard()">
         {{ 'BOARD_EDIT.MAKE_IT_TEMPLATE' | translate }}
       </button>
@@ -134,7 +134,7 @@
         <div class="columns-section">
           <div class="columns-header">
             <h3>{{ 'BOARD_EDIT.BOARD_COLUMNS' | translate }}</h3>
-            <button type="button" mat-mini-fab color="primary" (click)="addColumn()">
+            <button type="button" mat-mini-fab color="primary" *ngIf="isNew" (click)="addColumn()">
               <mat-icon>add</mat-icon>
             </button>
           </div>

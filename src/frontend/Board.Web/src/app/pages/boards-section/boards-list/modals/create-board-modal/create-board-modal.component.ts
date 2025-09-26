@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-import { BoardDetailsDTO, UpdateBoardDTO, AddBoardDTO } from 'src/app/core/models';
+import { BoardDetailsDTO, UpdateBoardDTO, AddBoardDTO, BoardColumnDetailsDTO } from 'src/app/core/models';
 import { UserAccess } from 'src/app/core/models/enums/user-access.enum';
 import { UserService } from 'src/app/core/services/auth/user.service';
 import { ToastrService } from 'ngx-toastr';
@@ -24,10 +24,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BoardApiService } from 'src/app/core/services/api-services';
 import { BoardLookupDTO } from 'src/app/core/models/board/board-lookup-DTO.interface';
 import { PagedResult } from 'src/app/core/models/common/paged-result.interface';
+import { DialogService } from 'src/app/core/services/other/dialog.service';
 
 export interface CreateBoardModalData {
   mode: 'create' | 'edit';
   board?: BoardDetailsDTO;
+  boardColumns?: BoardColumnDetailsDTO[];
 }
 
 export interface BoardModalResult {
@@ -59,7 +61,7 @@ export interface BoardModalResult {
 export class CreateBoardModalComponent implements OnInit {
   private static saveButtonTextLocalizationKey: string = 'BOARD_EDIT.CREATE';
   private static editButtonTextLocalizationKey: string = 'BOARD_EDIT.EDIT';
-  
+
   boardForm!: FormGroup;
   dialogTitle = 'Create New Board';
   submitButtonTextLocalizationKey = CreateBoardModalComponent.saveButtonTextLocalizationKey;
@@ -85,17 +87,18 @@ export class CreateBoardModalComponent implements OnInit {
     private boardTemplateServiceApi: BoardTemplateServiceApi,
     private toastr: ToastrService,
     private boardApiService: BoardApiService,
+    private dialogService: DialogService,
     @Inject(MAT_DIALOG_DATA) public data: CreateBoardModalData
   ) { }
 
-  public isNew(): boolean {
+  public get isNew(): boolean {
     return this.data.mode === 'create';
   }
 
   ngOnInit(): void {
     this.initForm();
-    this.initSearchBoardsSubscription();    
-    
+    this.initSearchBoardsSubscription();
+
     this.isGlobalAdmin = this.userService.hasGlobalAdminPermission();
 
     //Edit Mode
@@ -119,7 +122,7 @@ export class CreateBoardModalComponent implements OnInit {
 
       const arr = this.boardForm.get('boardColumns') as FormArray;
       arr.clear();
-      (this.data.board.boardColumns ?? []).forEach(c => {
+      (this.data.boardColumns?.sort((a, b) => a.order - b.order) ?? []).forEach(c => {
         arr.push(this.fb.group({
           id: [c.id || ''],
           columnTitle: [c.title, Validators.required],
@@ -281,7 +284,7 @@ export class CreateBoardModalComponent implements OnInit {
 
   onSubmit(): void {
     if (this.isSubmitting) return;
-    
+
     if (!this.isAllUserEmailsValid()) {
       return;
     }
@@ -392,7 +395,7 @@ export class CreateBoardModalComponent implements OnInit {
 
   //Template configuration
   createTemplatebasedOnThisBoard(): void {
-    if(!this.data.board?.IsTemplate){
+    if(!this.data.board?.isTemplate){
       const dto: AddBoardTemplateDTO = { title: this.data.board?.title + ' Template', description: this.data.board?.description ?? '', isActive: true, boardId: this.data.board?.id ?? ''};
       this.boardTemplateServiceApi.addBoardtTmplate(dto).subscribe();
     }
@@ -438,7 +441,20 @@ export class CreateBoardModalComponent implements OnInit {
   }
 
   public removeColumn(index: number): void {
+
+if(this.data.mode==='edit'){
+    this.dialogService.openConfirmationModal({
+      dialogTitle: 'BOARD_EDIT.REMOVE_COLUMN',
+      description: 'BOARD_EDIT.REMOVE_COLUMN_DESCRIPTION'
+    }).subscribe((result) => {
+      if (result) {
+        (this.boardForm.controls['boardColumns'] as FormArray).removeAt(index);
+      }
+    });
+  }
+  else{
     (this.boardForm.controls['boardColumns'] as FormArray).removeAt(index);
+  }
   }
 
   //Board templates configuration

@@ -9,11 +9,14 @@
     "VALIDATION_TITLE": "Validation Error",
     "VALIDATION_FAILED": "Please check the form and correct the errors.",
     "ERROR_TITLE": "Error",
-    "UNAUTHORIZED_TITLE": "Unauthorized", 
+    "UNAUTHORIZED_TITLE": "Unauthorized",
     "FORBIDDEN_TITLE": "Access Denied",
     "NOT_FOUND_TITLE": "Not Found",
     "SERVER_ERROR_TITLE": "Server Error",
-    "UNEXPECTED_ERROR": "An unexpected error occurred"
+    "UNEXPECTED_ERROR": "An unexpected error occurred",
+    "FIELD_REQUIRED": "Field is required",
+    "FIELD_MIN_LENGTH": "Minimum {min} characters",
+    "FIELD_MAX_LENGTH": "Maximum {max} characters"
   },
   "NAV": {
     "BOARD_APP": "BOARD APP",
@@ -46,7 +49,9 @@
     "FIRST_PAGE": "First page",
     "PREVIOUS_PAGE": "Previous page",
     "NEXT_PAGE": "Next page",
-    "LAST_PAGE": "Last page"
+    "LAST_PAGE": "Last page",
+    "DELETE_BOARD": "Delete board",
+    "DELETE_BOARD_DESCRIPTION": "Are you sure you want to delete this board?"
   },
   "BOARD": {
     "TOTAL_TASKS": "Total tasks:",
@@ -77,6 +82,8 @@
     "USER_LABEL": "Users",
     "USER_EMAIL_PLACEHOLDER": "Enter user email",
     "BOARD_COLUMNS": "Board columns",
+    "REMOVE_COLUMN": "Remove column",
+    "REMOVE_COLUMN_DESCRIPTION": "Are you sure you want to remove this column?",
     "DRAG_TO_REORDER": "Drag to reorder",
     "COLUMN_TITLE": "Column title",
     "COLUMN_TITLE_PLACEHOLDER": "Column title",
@@ -91,11 +98,47 @@
     "DEADLINE":"Deadline",
     "NO_DEADLINE":"No deadline specified"
   },
+  "TASK_MODAL": {
+    "CREATE_TITLE": "Create New Task",
+    "EDIT_TITLE": "Edit Task",
+    "PREVIEW_TITLE": "View Task",
+    "CREATE_BUTTON": "Create",
+    "SAVE_BUTTON": "Save",
+    "TYPE": "Type",
+    "TITLE_PLACEHOLDER": "Title",
+    "TITLE_REQUIRED": "Title is required",
+    "TITLE_MIN_LENGTH": "Minimum 3 characters",
+    "ASSIGNEE": "Assignee",
+    "ASSIGNEE_PLACEHOLDER": "Enter assignee email",
+    "ASSIGNEE_REQUIRED": "Assignee is required",
+    "ASSIGNEE_INVALID": "Select assignee from board users list",
+    "CLEAR_ASSIGNEE": "Clear assignee",
+    "PRIORITY": "Priority",
+    "PRIORITY_LOW": "Low",
+    "PRIORITY_MEDIUM": "Medium",
+    "PRIORITY_HIGH": "High",
+    "PRIORITY_URGENT": "Urgent",
+    "DUE_DATE": "Due date",
+    "DUE_DATE_PLACEHOLDER": "Select date",
+    "DUE_DATE_REQUIRED": "Due date is required",
+    "TAGS": "Tags",
+    "TAGS_PLACEHOLDER": "Enter tags separated by commas",
+    "DESCRIPTION": "Description",
+    "DESCRIPTION_PLACEHOLDER": "Description...",
+    "ATTACHMENTS": "Attachments",
+    "TYPE_BUG": "Bug",
+    "TYPE_HOT_FIX": "Hot Fix",
+    "TYPE_USER_STORY": "User Story",
+    "CLOSE": "Close",
+    "CANCEL": "Cancel"
+  },
   "COMMON": {
     "RETRY": "Retry",
     "EDIT": "Edit",
     "DELETE": "Delete",
-    "SEARCH": "Search"
+    "SEARCH": "Search",
+    "CONFIRM": "Confirm",
+    "CANCEL": "Cancel"
   },
   "GENERAL": {
     "SETTINGS": "Settings",

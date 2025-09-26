@@ -29,9 +29,9 @@
       </span>
     </div>
 
-    <div class="task-assignee" *ngIf="task.assignee">
+    <div class="task-assignee" *ngIf="task.assigneeEmail">
       <i class="material-icons">person</i>
-      <span>{{ task.assignee }}</span>
+      <span>{{ task.assigneeEmail }}</span>
     </div>
 
     <div class="task-due-date" *ngIf="task.dueDate">
@@ -41,6 +41,6 @@
   </div>
 
   <div class="task-tags" *ngIf="task.tags && task.tags.length > 0">
-    <span class="tag" *ngFor="let tag of task.tags">{{ tag }}</span>
+    <span class="tag" *ngFor="let tag of task.tags">{{ tag.title }}</span>
   </div>
 </div>
