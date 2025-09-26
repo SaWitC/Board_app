@@ -1,0 +1,54 @@
+services:
+  board.api:
+    image: ${DOCKER_REGISTRY-}boardapi
+    build:
+      context: .
+      dockerfile: src/backend/Services/Board/Board.Api/Dockerfile
+    ports:
+      - "3600:8081"
+      - "3601:8080"
+    networks:
+      - board-network
+    env_file:
+      - .env
+    environment:
+      - Auth__Authority=${AUTH_AUTHORITY}
+      - Auth__Audience=${AUTH_AUDIENCE}
+      - HRM__CLIENT_ID=${HRM_CLIENT_ID}
+      - HRM__HRM_USERNAME=${HRM_HRM_USERNAME}
+      - HRM__HRM_PASSWORD=${HRM_HRM_PASSWORD}
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=sa
+      - POSTGRES_PASSWORD=R331yStrongP@ssw0rd!
+      - POSTGRES_DB=InnoDevops
+    ports:
+      - "5600:5432"
+    restart: always
+    networks:
+      - board-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  frontend:
+    build:
+      context: ./src/frontend/Board.Web
+      dockerfile: Dockerfile
+    ports:
+      - "4203:80"
+    networks:
+      - board-network
+    depends_on:
+      - board.api
+
+
+networks:
+  board-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

@@ -1,7 +1,7 @@
 # See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
@@ -9,22 +9,27 @@ EXPOSE 8081
 
 
 # This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["BoardAppApi/BoardAppApi.csproj", "BoardAppApi/"]
-RUN dotnet restore "./BoardAppApi/BoardAppApi.csproj"
+COPY ["Directory.Packages.props", "."]
+COPY ["src/backend/Services/Board/Board.Api/Board.Api.csproj", "src/backend/Services/Board/Board.Api/"]
+COPY ["src/backend/Aspire/Board.ServiceDefaults/Board.ServiceDefaults.csproj", "src/backend/Aspire/Board.ServiceDefaults/"]
+COPY ["src/backend/Services/Board/Board.Domain/Board.Domain.csproj", "src/backend/Services/Board/Board.Domain/"]
+COPY ["src/backend/Services/Board/Board.Application/Board.Application.csproj", "src/backend/Services/Board/Board.Application/"]
+COPY ["src/backend/Services/Board/Board.Infrastructure/Board.Infrastructure.csproj", "src/backend/Services/Board/Board.Infrastructure/"]
+RUN dotnet restore "./src/backend/Services/Board/Board.Api/Board.Api.csproj"
 COPY . .
-WORKDIR "/src/BoardAppApi"
-RUN dotnet build "./BoardAppApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/src/backend/Services/Board/Board.Api"
+RUN dotnet build "./Board.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./BoardAppApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Board.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "BoardAppApi.dll"]
+ENTRYPOINT ["dotnet", "Board.Api.dll"]
