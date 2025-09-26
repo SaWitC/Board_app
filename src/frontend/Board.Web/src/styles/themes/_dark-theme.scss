@@ -1,0 +1,170 @@
+@mixin dark-theme {
+  --header-letter: #ffffff;
+  --background: rgb(52, 52, 52);
+  --sidebar-background: rgb(52, 52, 52);
+  --background-secondary: rgb(54, 54, 54);
+  --background-secondary-alpha: rgb(255, 255, 255);
+  --background-tertiary: rgb(29, 29, 29);
+  --background-content: rgb(26, 26, 26);
+  --background-modal: rgb(45, 45, 45);
+  --background-modal-inverse: rgb(255, 255, 255);
+  --background-over-alpha: rgb(29, 29, 29);
+  --background-accent: rgb(51, 146, 248);
+  --background-accent-themed: rgb(102, 174, 249);
+  --background-light-gray: #bbbbbb;
+  --background-accent-tint: rgb(153, 200, 253);
+  --field-background: rgb(242, 244, 245);
+  --background-positive: rgb(50, 208, 88);
+  --background-negative: rgb(204, 54, 48);
+  --background-negative-tint: rgb(126, 65, 61);
+  --background-warning: rgb(154, 89, 1);
+  --box-shadow-color-secondary: #242424;
+  --icon-active-color: #C63031;
+  --brand-color: #C63031;
+  //TEXT
+  --text-color: #e2e7f7;
+  --text-color-secondary: #aaaaaa;
+  --text-color-during-hover: rgb(52, 52, 52);
+  --text-color-negative: rgb(252, 62, 46);
+  --text-color-accent: rgb(255, 163, 163);
+  // BORDERS
+  --border-color-negative: #e57373;
+  --border-color-accent: #5b9dff;
+  --border-color-negative-tint: #ffb3b3;
+  // ICONS
+  --icon-color-negative: #e57373;
+  --icon-color-accent: #5b9dff;
+  --icon-color-negative-tint: #ffb3b3;
+  // PRIORITY
+  --priority-color-low: #81c784;
+  --priority-color-medium: #ffb74d;
+  --priority-color-high: #ff8a65;
+  --priority-color-urgent: #e57373;
+  //BOARD
+  --board-background-color: #2a2a2a;
+  --board-header-background-color: #393939;
+  //BOARD COLUMN
+  --board-column-background-color: #393939;
+  //BOARD ITEM
+  --board-task-background-color: #3f3f3f;
+  --bs-custom-btn-color: #e2e7f7 !important;
+  --bs-custom-btn-bg: #da7b3c !important;
+  --bs-custom-btn-border-color: #da8248 !important;
+  --bs-custom-btn-hover-bg: #777 !important;
+  --bs-custom-btn-hover-border-color: #888;
+  --bs-border-color: #666666;
+  --bs-heading-color: var(--text-color);
+
+  .btn-primary {
+    --bs-btn-color: var(--bs-custom-btn-color) !important;
+    --bs-btn-bg: var(--bs-custom-btn-bg) !important;
+    --bs-btn-border-color: var(--bs-custom-btn-border-color) !important;
+    --bs-btn-hover-bg: var(--bs-custom-btn-hover-bg) !important;
+    --bs-btn-hover-border-color: var(--bs-custom-btn-hover-border-color);
+  }
+
+  .mat-mdc-option {
+    color: var(--text-color);
+  }
+
+  .mat-mdc-mini-fab.mat-primary { //Add Participant butotn
+    background-color: #bebebe;
+  }
+
+  .mat-mdc-mini-fab.mat-primary mat-icon {
+    color: #363636;
+  }
+
+  .mat-mdc-button { // Cancel button
+    color: #e6e6e6;
+    background-color: #575757
+  }
+
+  mat-dialog-actions .mat-mdc-raised-button.mat-primary { // Create button
+    background-color: #4caf50;
+    color: white;
+  }
+
+  mat-dialog-actions .mat-mdc-raised-button.mat-primary:disabled { // Create button
+    background-color: #555555;
+    color: rgb(124, 124, 124);
+  }
+  //#c63031
+
+  --input-background: rgb(43, 42, 42);
+  --input-border-active: rgb(51, 146, 248);
+  --input-text: #e2e7f7;
+  --input-bg-active: rgb(35, 35, 35);
+  /* Slightly lighter */
+  --ng-select-background: rgb(43, 42, 42);
+  /* Very dark gray background */
+  --ng-select-text-color: #e2e7f7;
+  /* White text */
+  --ng-select-border-color: var(--bs-border-color);
+  /* Dark gray border */
+  --ng-select-hover-background: #333333;
+  /* Darker gray for hover effect */
+  --ng-select-option-background: #282828;
+  /* Default background for options */
+  --ng-select-option-hover-background: #444444;
+  /* Darker gray for option hover */
+  --ng-select-disabled-option-color: #666666;
+  /* Disabled options in medium gray */
+  --ng-select-placeholder-color: #b0b0b0;
+  /* Light gray for placeholder text */
+
+
+
+  --ng-select-disabled-background: #777676;
+  --side-menu-active: #3F3F3F;
+  --mat-standard-button-toggle-divider-color: #444444;
+  --mat-standard-button-toggle-selected-state-text-color: #e2e7f7;
+  --mat-table-even-row: #3F3F3F;
+  --mat-table-odd-row: #3A3A3A;
+  --mat-table-background-color: rgb(51, 51, 51);
+  --mat-table-row-hover-background-color: rgb(69, 69, 69);
+  --mat-table-row-item-label-text-color: #e2e7f7;
+  --mat-table-row-item-outline-color: var(--ng-select-border-color);
+  --mat-table-header-headline-color: var(--text-color);
+  --mat-paginator-container-background-color: #2d2d2d;
+  --mat-paginator-container-text-color: var(--text-color);
+  --mat-sys-on-surface: var(--text-color);
+  --mdc-dialog-container-color: var(--board-column-background-color);
+  --mdc-text-button-label-text-color: #d2cb5c;
+  --mat-select-panel-background-color: #444;
+  --mat-option-selected-state-label-text-color: var(--text-color);
+  --mat-option-selected-state-layer-color: #333;
+  --mat-datepicker-calendar-date-text-color: var(--text-color);
+  --mdc-filled-text-field-container-color: var(--input-background);
+  --mat-datepicker-calendar-container-background-color: var(--input-background);
+  --mat-datepicker-calendar-header-text-color: var(--text-color);
+  --mat-datepicker-calendar-period-button-text-color: var(--text-color);
+  --mat-paginator-enabled-icon-color: var(--ng-select-text-color);
+  --mat-paginator-disabled-icon-color: var(--ng-select-disabled-option-color);
+  --mdc-outlined-text-field-label-text-color: var(--text-color);
+  --mat-icon-color: var(--text-color);
+  --mdc-outlined-text-field-input-text-placeholder-color: var(--text-color);
+
+  --mat-sys-surface-container: var(--background-modal);
+  --mat-autocomplete-background-color: var(--background-modal);
+
+  --mdc-outlined-text-field-caret-color : var(--brand-color);
+  --mdc-outlined-text-field-input-text-color : var(--text-color);
+  //Mat menu
+  --mat-menu-container-color: var(--background-modal);
+  /* Light theme scrollbar styles */
+  --scrollbar-bg: #393939;
+  /* Light track background */
+  --scrollbar-thumb: #a9a9a9;
+  /* Light thumb color */
+  --scrollbar-thumb-hover: #555;
+  /* Thumb hover color */
+  --mat-sys-primary: var(--background-accent-themed);
+  --mat-sys-on-secondary-container: var(--background-secondary);
+  --mat-sys-on-error: var(--text-color);
+  --mat-sys-on-primary: var(--text-color);
+  --mat-sys-on-error-container: var(--text-color-negative);
+  --mat-sys-background: var(--background);
+  --mat-sys-error: var(--text-color-negative);
+  --mat-sys-error-container: var(--background-negative-tint);
+}

@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="$(MSBuildThisFileDirectory)../../../../../shared/shared.csproj" />
+	<ItemGroup>
+	  <Compile Remove="HRM\**" />
+	  <EmbeddedResource Remove="HRM\**" />
+	  <None Remove="HRM\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+    <ProjectReference Include="..\Board.Domain\Board.Domain.csproj" />
+    <ProjectReference Include="..\Board.Application\Board.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>

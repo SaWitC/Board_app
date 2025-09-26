@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:17048;http://localhost:15222",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development",
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21085",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22224",
+        "DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS": "false"
+      }
+    },
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:15222",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development",
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19272",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20093",
+        "DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS": "false",
+        "ASPIRE_ALLOW_UNSECURED_TRANSPORT": "true",
+        "Logging__LogLevel__Default": "Information",
+        "Logging__LogLevel__Microsoft": "Information",
+        "Serilog__MinimumLevel__Default": "Information"
+      }
+    }
+  }
+}

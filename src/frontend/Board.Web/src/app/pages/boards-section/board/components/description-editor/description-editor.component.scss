@@ -1,0 +1,116 @@
+.editor-menu {
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+    background-color: var(--background-secondary);
+
+    ::ng-deep .NgxEditor__MenuBar {
+      background-color: var(--background-secondary);
+    }
+
+    ::ng-deep .NgxEditor__MenuItem {
+      color: var(--text-color);
+      background-color: transparent;
+      border: none;
+      border-radius: 4px;
+      transition: all 0.1s ease;
+
+      &:hover {
+        color: var(--text-color-during-hover);
+      }
+    }
+
+    ::ng-deep .NgxEditor__MenuBar {
+      border-radius: 8px 8px 8px 8px;
+    }
+
+    ::ng-deep .NgxEditor__MenuDivider {
+      background-color: var(--bs-border-color);
+    }
+
+    ::ng-deep .NgxEditor__Popup {
+      background-color: var(--background-secondary);
+    }
+
+    ::ng-deep .NgxEditor__Dropdown * {
+      background-color: var(--background-secondary) !important;
+      color: var(--text-color) !important;
+    }
+
+    ::ng-deep .NgxEditor__Dropdown--Item {
+      cursor: pointer;
+      transition: all 0.1s ease;
+
+      &:hover {
+        background-color: var(--background-tertiary) !important;
+        color: var(--text-color) !important;
+      }
+    }
+
+    ::ng-deep .NgxEditor__Dropdown--Item--hover {
+      background-color: var(--background-tertiary) !important;
+      color: var(--text-color) !important;
+    }
+
+    ::ng-deep .NgxEditor__Dropdown .NgxEditor__MenuItem {
+      cursor: pointer;
+      transition: all 0.1s ease;
+
+      &:hover {
+        background-color: var(--background-tertiary) !important;
+        color: var(--text-color) !important;
+      }
+    }
+
+    ::ng-deep .NgxEditor__Color {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .editor-container {
+    border-radius: 8px 8px 8px 8px;
+    overflow: hidden;
+    height: 35em;
+    display: flex;
+    flex-direction: column;
+    margin: 1em 0em 1em 0em;
+    background-color: var(--input-background);
+    border: 1px solid var(--bs-border-color);
+    border-top: none;
+  }
+
+  ngx-editor.description {
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto;
+    display: block;
+    flex: 1;
+
+    ::ng-deep .NgxEditor {
+      height: 100% !important;
+      min-height: 100% !important;
+      max-height: 100% !important;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    ::ng-deep .NgxEditor__Content {
+      height: 100% !important;
+      min-height: 100% !important;
+      max-height: 100% !important;
+      overflow-y: auto;
+      flex: 1;
+      background-color: var(--input-background);
+      color: var(--input-text);
+      padding: 12px;
+    }
+
+    ::ng-deep .NgxEditor {
+      background-color: var(--input-background);
+      color: var(--input-text);
+    }
+  }

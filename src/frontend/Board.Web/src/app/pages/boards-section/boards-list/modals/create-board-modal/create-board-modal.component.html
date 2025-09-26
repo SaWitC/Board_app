@@ -1,0 +1,198 @@
+<h2 mat-dialog-title>{{ dialogTitle }}</h2>
+
+<form [formGroup]="boardForm">
+  <mat-dialog-content>
+    <div *ngIf="isNew">
+      <mat-radio-group formControlName="boardType" aria-label="Select an option">
+        <mat-radio-button checked value="{{ boardCreationOptions.EMPTY }}">{{ 'BOARD_EDIT.EMPTY_BOARD' | translate }}</mat-radio-button>
+        <mat-radio-button value="{{ boardCreationOptions.TEMPLATE }}">{{ 'BOARD_EDIT.BASED_ON_TEMPLATE' | translate}}</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div *ngIf="!isNew && isGlobalAdmin">
+      <button *ngIf="data.board?.isTemplate; else notTemplate" mat-stroked-button color="primary" class="text-white"
+        type="button" (click)="createTemplatebasedOnThisBoard()">
+        {{ 'BOARD_EDIT.MAKE_IT_TEMPLATE' | translate }}
+      </button>
+
+      <ng-template #notTemplate>
+        <mat-checkbox (change)="onChangeTemplateActive($event)" class="example-margin">{{ 'BOARD_EDIT.IS_TEMPLATE_ACTIVE' | translate }}</mat-checkbox>
+      </ng-template>
+    </div>
+    <div class="form-container">
+      <div class="mb-2" *ngIf="
+          boardForm.get('boardType')?.value == boardCreationOptions.TEMPLATE
+        ">
+        <ng-select formControlName="boardTemplateId" [items]="boardTemplates$ | async" bindLabel="title" bindValue="id"
+          [searchable]="true" [clearable]="false" [typeahead]="searchTerm$" (search)="onSearch($event)"
+          placeholder="{{ 'BOARD_EDIT.SELECT_TEMPLATE_PLACEHOLDER' | translate }}" class="w-100">
+          <ng-template ng-option-tmp let-item="item">
+            {{ item.title }}
+          </ng-template>
+        </ng-select>
+      </div>
+
+      <label class="form-label">{{ 'BOARD_EDIT.BOARD_TITLE' | translate }} *</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="boardTitle" placeholder="{{ 'BOARD_EDIT.BOARD_TITLE_PLACEHOLDER' | translate}}" />
+        <mat-error *ngIf="boardForm.get('boardTitle')?.hasError('required')">
+          {{ 'BOARD_EDIT.TITLE_REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <div class="mt-2">
+        <label class="form-label">{{ 'BOARD_EDIT.BOARD_DESCRIPTION' | translate }} *</label>
+        <mat-form-field appearance="outline" class="full-width">
+          <textarea matInput formControlName="boardDescription" placeholder="{{ 'BOARD_EDIT.BOARD_DESCRIPTION_PLACEHOLDER' | translate }}"
+            rows="3"></textarea>
+          <mat-error *ngIf="boardForm.get('boardDescription')?.hasError('required')">
+            {{ 'BOARD_EDIT.DESCRIPTION_REQUIRED' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Owner selector start -->
+      <div class="user-form" *ngIf="isGlobalAdmin">
+        <label class="form-label">{{ 'BOARD_EDIT.OWNER' | translate }}</label>
+        <div class="user-form-row mt-2">
+          <mat-form-field appearance="outline" class="user-form-field">
+            <mat-label>{{ 'BOARD_EDIT.OWNER_LABEL' | translate }}</mat-label>
+            <input matInput formControlName="boardOwner"
+              placeholder="{{ 'BOARD_EDIT.OWNER_EMAIL_PLACEHOLDER' | translate }}" />
+
+            <mat-error class="mt-0" *ngIf="boardForm.get('boardOwner')?.hasError('email')">
+              {{ 'BOARD_EDIT.INVALID_EMAIL' | translate }}
+            </mat-error>
+            <mat-error class="mt-0" *ngIf="boardForm.get('boardOwner')?.hasError('required')">
+              {{ 'BOARD_EDIT.OWNER_REQUIRED' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <!-- Owner selector end -->
+
+      <!-- Admins selector start -->
+      <div class="user-form">
+        <label class="form-label">{{ 'BOARD_EDIT.ADMINS' | translate }}</label>
+        <div formArrayName="boardAdmins">
+          <div class="user-form-row mt-2"
+              *ngFor="let boardAdmin of boardAdmins.controls; let i = index;"
+              [formGroupName]="i">
+            <mat-form-field appearance="outline" class="user-form-field">
+              <mat-label>{{ 'BOARD_EDIT.ADMIN_LABEL' | translate }}</mat-label>
+              <input matInput formControlName="adminEmail"
+                placeholder="{{ 'BOARD_EDIT.ADMIN_EMAIL_PLACEHOLDER' | translate }}" />
+
+              <mat-error class="mt-0" *ngIf="boardAdmin.get('adminEmail')?.hasError('email')">
+                {{ 'BOARD_EDIT.INVALID_EMAIL' | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <button type="button" [disabled]="!boardAdmin.enabled" class="delete-icon" mat-icon-button color="warn" (click)="removeAdmin(i)">
+                <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <button type="button" mat-mini-fab color="primary" (click)="addAdmin()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <!-- Admins selector end -->
+
+      <!-- Users selector start -->
+      <div class="user-form">
+        <label class="form-label">{{ 'BOARD_EDIT.USERS' | translate }}</label>
+        <div formArrayName="boardUsers">
+          <div class="user-form-row mt-2"
+              *ngFor="let boardUser of boardUsers.controls; let i = index;"
+              [formGroupName]="i">
+            <mat-form-field appearance="outline" class="user-form-field">
+              <mat-label>{{ 'BOARD_EDIT.USER_LABEL' | translate }}</mat-label>
+              <input matInput formControlName="userEmail"
+                placeholder="{{ 'BOARD_EDIT.USER_EMAIL_PLACEHOLDER' | translate }}" />
+
+              <mat-error class="mt-0" *ngIf="boardUser.get('userEmail')?.hasError('email')">
+                {{ 'BOARD_EDIT.INVALID_EMAIL' | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <button type="button" class="delete-icon" mat-icon-button color="warn" (click)="removeUser(i)">
+                <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <button type="button" mat-mini-fab color="primary" (click)="addUser()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <!-- Users selector end -->
+
+      <!-- Empty board columns configuration start -->
+      <div *ngIf="boardForm.get('boardType')?.value == boardCreationOptions.EMPTY">
+        <div class="columns-section">
+          <div class="columns-header">
+            <h3>{{ 'BOARD_EDIT.BOARD_COLUMNS' | translate }}</h3>
+            <button type="button" mat-mini-fab color="primary" *ngIf="isNew" (click)="addColumn()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+
+          <div formArrayName="boardColumns" class="columns-list">
+            <div *ngFor="let column of boardColumnsArray.controls; let i = index" [formGroupName]="i">
+              <div class="column-item"
+                   [class.drag-over]="draggedIndex !== null && draggedIndex !== i"
+                   [class.dragging]="draggedIndex === i"
+                   (dragover)="onDragOver($event, i)"
+                   (dragenter)="onDragEnter($event)"
+                   (dragstart)="onDragStart($event, i)"
+                   (dragend)="onDragEnd($event)"
+                   (drop)="onDrop($event, i)"
+                   draggable="true">
+                <div class="column-form-row">
+                  <div class="drag-handle"
+                       title="{{ 'BOARD_EDIT.DRAG_TO_REORDER' | translate }}">
+                    <mat-icon>drag_indicator</mat-icon>
+                  </div>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>{{ 'BOARD_EDIT.COLUMN_TITLE' | translate }}</mat-label>
+                    <input matInput formControlName="columnTitle" placeholder="{{ 'BOARD_EDIT.COLUMN_TITLE_PLACEHOLDER' | translate }}" />
+                    <mat-error *ngIf="column.get('columnTitle')?.hasError('required')">
+                      {{ 'BOARD_EDIT.TITLE_REQUIRED' | translate }}
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>{{ 'BOARD_EDIT.COLUMN_DESCRIPTION' | translate }}</mat-label>
+                    <input matInput formControlName="columnDescription" placeholder="{{ 'BOARD_EDIT.COLUMN_DESCRIPTION_PLACEHOLDER' | translate }}" />
+                    <mat-error *ngIf="column.get('columnDescription')?.hasError('required')">
+                      {{ 'BOARD_EDIT.DESCRIPTION_REQUIRED' | translate }}
+                    </mat-error>
+                  </mat-form-field>
+
+                  <button type="button" class="delete-icon" mat-icon-button color="warn" (click)="removeColumn(i)"
+                    [disabled]="boardColumnsArray.length <= 1">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+              </div>
+              </div>
+              <hr *ngIf="hoveredIndex !== null && hoveredIndex === i" class="order-line">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Empty board columns configuration end -->
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <div class="pe-4">
+      <button mat-button type="button" (click)="onClose()">{{ 'BOARD_EDIT.CANCEL' | translate }}</button>
+      <button mat-raised-button color="primary" type="submit" (click)="onSubmit()" [disabled]="!isFormValid">
+        {{ submitButtonTextLocalizationKey | translate}}
+      </button>
+    </div>
+  </mat-dialog-actions>
+</form>

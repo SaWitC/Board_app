@@ -1,0 +1,14 @@
+<div>
+    <ngx-editor-menu [editor]="editor"
+                    [toolbar]="toolbar"
+                    class="editor-menu">
+    </ngx-editor-menu>
+    <div class="editor-container">
+        <ngx-editor [placeholder]="placeholder"
+                    [editor]="editor"
+                    [ngModel]="value"
+                    (ngModelChange)="onContentChange($event)"
+                    class="description">
+        </ngx-editor>
+    </div>
+</div>

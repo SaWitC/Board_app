@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Sdk Name="Aspire.AppHost.Sdk" Version="9.4.2" />
+	<Import Project="$(MSBuildThisFileDirectory)../../../../shared/shared.csproj" />
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<UserSecretsId>d537a698-3857-49d1-9c67-ece506f60bfc</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Aspire.Hosting.AppHost" />
+        <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+        <PackageReference Include="Aspire.Hosting.NodeJS" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\frontend\Board.Web\Board.Web.csproj" />
+	  <ProjectReference Include="..\..\Services\Board\Board.Api\Board.Api.csproj" />
+	  <ProjectReference Include="..\..\Services\Migrators\BoardDb.MigrationService\BoardDb.MigrationService.csproj" />
+	</ItemGroup>
+</Project>

@@ -1,0 +1,131 @@
+
+:host {
+  display: block;
+  // height: auto;
+  height: -webkit-fill-available;
+}
+
+.board-column {
+  width: 300px;
+  min-height: 100%;
+  background: var(--board-column-background-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  border-top: 2px solid var(--bs-border-color);
+  transition: all 0.2s ease;
+
+  &.drag-over {
+    background-color: var(--background-secondary);
+    box-shadow: 0 4px 12px rgba(0, 118, 248, 0.3);
+  }
+
+  .column-header {
+    padding: 8px;
+    border-bottom: 1px solid var(--bs-border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .column-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      i {
+        color: var(--text-color);
+        opacity: 0.7;
+        font-size: 20px;
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-color);
+      }
+
+      .task-count {
+        background: var(--background-light-gray);
+        color: var(--btn-primary-text);
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+        min-width: 20px;
+        text-align: center;
+      }
+    }
+
+    .btn-add-task {
+      background: var(--background-accent-themed);
+      color: var(--btn-primary-text);
+      border: none;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: var(--bs-custom-btn-hover-bg);
+        transform: scale(1.1);
+      }
+
+      i {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .column-content {
+    flex: 1;
+    padding: 8px;
+    height: 100%;
+    overflow-y: auto;
+
+    .tasks-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 240px;
+
+      justify-content: center;
+      text-align: center;
+      color: var(--text-color);
+      opacity: 0.5;
+
+      i {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+      }
+
+      .btn-add-empty {
+        background: var(--background-secondary);
+        border: 1px solid var(--bs-border-color);
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        color: var(--text-color);
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: var(--background-tertiary);
+          color: var(--text-color);
+        }
+      }
+    }
+  }
+}

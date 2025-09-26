@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+    <Import Project="$(MSBuildThisFileDirectory)../../../../../shared/shared.csproj" />
+
+    <PropertyGroup>
+        <UserSecretsId>dotnet-BoardDb.MigrationService-aace02e5-a333-4a7d-a0c0-fa26382df0be</UserSecretsId>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Hosting" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="Microsoft.Data.SqlClient" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Aspire\Board.ServiceDefaults\Board.ServiceDefaults.csproj" />
+      <ProjectReference Include="..\..\Board\Board.Api\Board.Api.csproj" />
+    </ItemGroup>
+
+</Project>

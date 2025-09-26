@@ -1,0 +1,53 @@
+using Board.Application.Abstractions.Repositories;
+using Board.Application.DTOs;
+using Board.Domain.Contracts.Enums;
+using Board.Domain.Contracts.Security;
+using Board.Domain.Security;
+using FastEndpoints;
+
+namespace Board.Api.Features.BoardColumn.CreateBoardColumn;
+
+public class CreateBoardColumnEndpoint : Endpoint<CreateBoardItemRequest>
+{
+    private readonly IBoardColumnRepository _columnRepository;
+    private readonly IBoardRepository _boardRepository;
+
+    public CreateBoardColumnEndpoint(IBoardColumnRepository columnRepository, IBoardRepository boardRepository)
+    {
+        _columnRepository = columnRepository;
+        _boardRepository = boardRepository;
+    }
+    public override void Configure()
+    {
+        Post("/api/boards/{boardId}/columns");
+        Policies(Auth.BuildPermissionPolicy(Permission.ManageBoard, Context.BoardColumn, "boardId"));
+    }
+
+    public override async Task HandleAsync(CreateBoardItemRequest request, CancellationToken cancellationToken)
+    {
+        Guid boardId = Route<Guid>("boardId");
+
+        Domain.Entities.Board board = await _boardRepository.GetAsync(b => b.Id == boardId, cancellationToken, true, b => b.BoardColumns)
+            ?? throw new InvalidOperationException("Board not found");
+        Domain.Entities.BoardColumn entity = new()
+        {
+            Id = Guid.NewGuid(),
+            Title = request.Title,
+            Description = request.Description
+        };
+
+        board.BoardColumns.Add(entity);
+        await _columnRepository.AddAsync(entity, cancellationToken);
+        await _boardRepository.UpdateAsync(board, cancellationToken);
+
+        BoardColumnDto response = new()
+        {
+            Order = entity.Order,
+            Id = entity.Id,
+            Title = entity.Title,
+            Description = entity.Description
+        };
+
+        await Send.OkAsync(response, cancellationToken);
+    }
+}
