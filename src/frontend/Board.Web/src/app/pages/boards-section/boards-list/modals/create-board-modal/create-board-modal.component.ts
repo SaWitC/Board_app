@@ -415,6 +415,7 @@ export class CreateBoardModalComponent implements OnInit {
 
   removeUser(index: number): void {
     this.boardUsers.removeAt(index);
+    this.boardUsers.markAsDirty();
   }
 
 
@@ -428,6 +429,7 @@ export class CreateBoardModalComponent implements OnInit {
 
   removeAdmin(index: number): void {
     this.boardAdmins.removeAt(index);
+    this.boardAdmins.markAsDirty();
   }
 
   //Empty board columns configuration
