@@ -1,4 +1,5 @@
 using Board.ServiceDefaults;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 

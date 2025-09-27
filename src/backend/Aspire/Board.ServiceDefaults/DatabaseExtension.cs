@@ -30,8 +30,8 @@ public static class DatabaseExtension
     {
         services.AddDbContext<TContext>((serviceProvider, optionsBuilder) =>
         {
-            var options = serviceProvider.GetRequiredService<IOptions<TOptions>>().Value;
-            var connectionString = connectionStringSelector(options);
+            TOptions options = serviceProvider.GetRequiredService<IOptions<TOptions>>().Value;
+            string connectionString = connectionStringSelector(options);
 
             optionsBuilder.UseNpgsql(connectionString, o =>
             {

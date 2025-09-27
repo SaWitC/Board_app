@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="$(MSBuildThisFileDirectory)../../../../shared/shared.csproj" />
-
 	<PropertyGroup>
-		<IsAspireSharedProject>true</IsAspireSharedProject>
-	</PropertyGroup>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <IsAspireSharedProject>true</IsAspireSharedProject>
+        <TargetFramework>net9.0</TargetFramework>
+    </PropertyGroup>
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />

@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
 using Board.Domain.Options;
 using Board.Domain.Options.Validators;
@@ -89,7 +92,7 @@ public static class Extensions
 
     private static TBuilder AddOpenTelemetryExporters<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-        var useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
+        bool useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
 
         if (useOtlpExporter)
         {
@@ -149,12 +152,12 @@ public static class Extensions
 
     public static void AddSharedAppSettings(this IHostApplicationBuilder builder, string[] args)
     {
-        var env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ??
+        string env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ??
                   Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        var sharedAppSettingPath = Path.Combine(AppContext.BaseDirectory, "appsettings.shared.json");
-        var sharedAppSettingEnvSpecificPath = Path.Combine(AppContext.BaseDirectory, $"appsettings.shared.{env}.json");
-        var appSettingPath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
-        var appSettingEnvSpecificPath = Path.Combine(AppContext.BaseDirectory, $"appsettings.{env}.json");
+        string sharedAppSettingPath = Path.Combine(AppContext.BaseDirectory, "appsettings.shared.json");
+        string sharedAppSettingEnvSpecificPath = Path.Combine(AppContext.BaseDirectory, $"appsettings.shared.{env}.json");
+        string appSettingPath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
+        string appSettingEnvSpecificPath = Path.Combine(AppContext.BaseDirectory, $"appsettings.{env}.json");
         builder.Configuration.AddJsonFile(sharedAppSettingPath, optional: false, reloadOnChange: true);
         builder.Configuration.AddJsonFile(sharedAppSettingEnvSpecificPath, optional: true, reloadOnChange: true);
         builder.Configuration.AddJsonFile(appSettingPath, optional: false, reloadOnChange: true);
@@ -190,7 +193,7 @@ public static class Extensions
 
     private static LoggerConfiguration GetBaseLoggerConfiguration(this IHostApplicationBuilder builder)
     {
-        var logBuilder = new LoggerConfiguration()
+        LoggerConfiguration logBuilder = new LoggerConfiguration()
             .ReadFrom.Configuration(builder.Configuration,
                 new ConfigurationReaderOptions(default(DependencyContext)) { SectionName = "Serilog" })
             .Enrich.FromLogContext()

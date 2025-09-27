@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
-    <Import Project="$(MSBuildThisFileDirectory)../../../../../shared/shared.csproj" />
-
     <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
         <UserSecretsId>dotnet-BoardDb.MigrationService-aace02e5-a333-4a7d-a0c0-fa26382df0be</UserSecretsId>
     </PropertyGroup>
 

@@ -5,41 +5,41 @@ namespace Board.Api.Configuration;
 
 public static class StatusCodePagesExtensions
 {
-	public static IApplicationBuilder UseProblemDetailsForStatusCodes(this IApplicationBuilder app)
-	{
-		app.UseStatusCodePages(async context =>
-		{
-			var httpContext = context.HttpContext;
-			var response = httpContext.Response;
+    public static IApplicationBuilder UseProblemDetailsForStatusCodes(this IApplicationBuilder app)
+    {
+        app.UseStatusCodePages(async context =>
+        {
+            HttpContext httpContext = context.HttpContext;
+            HttpResponse response = httpContext.Response;
 
-			if (response.HasStarted)
-			{
-				return;
-			}
+            if (response.HasStarted)
+            {
+                return;
+            }
 
-			if (response.StatusCode == StatusCodes.Status204NoContent || response.StatusCode == StatusCodes.Status304NotModified)
-			{
-				return;
-			}
+            if (response.StatusCode == StatusCodes.Status204NoContent || response.StatusCode == StatusCodes.Status304NotModified)
+            {
+                return;
+            }
 
-			var problemDetailsService = httpContext.RequestServices.GetRequiredService<IProblemDetailsService>();
+            IProblemDetailsService problemDetailsService = httpContext.RequestServices.GetRequiredService<IProblemDetailsService>();
 
-			var pd = new ProblemDetails
-			{
-				Status = response.StatusCode,
-				Title = ReasonPhrases.GetReasonPhrase(response.StatusCode),
-				Type = "about:blank",
-				Instance = httpContext.Request.Path
-			};
+            ProblemDetails pd = new ProblemDetails
+            {
+                Status = response.StatusCode,
+                Title = ReasonPhrases.GetReasonPhrase(response.StatusCode),
+                Type = "about:blank",
+                Instance = httpContext.Request.Path
+            };
 
-			response.ContentType = "application/problem+json";
-			await problemDetailsService.WriteAsync(new ProblemDetailsContext
-			{
-				HttpContext = httpContext,
-				ProblemDetails = pd
-			});
-		});
+            response.ContentType = "application/problem+json";
+            await problemDetailsService.WriteAsync(new ProblemDetailsContext
+            {
+                HttpContext = httpContext,
+                ProblemDetails = pd
+            });
+        });
 
-		return app;
-	}
-} 
+        return app;
+    }
+}

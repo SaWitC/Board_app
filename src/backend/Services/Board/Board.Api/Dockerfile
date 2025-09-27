@@ -13,12 +13,11 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Directory.Packages.props", "."]
-COPY ["src/backend/Services/Board/Board.Api/Board.Api.csproj", "src/backend/Services/Board/Board.Api/"]
-COPY ["src/backend/Aspire/Board.ServiceDefaults/Board.ServiceDefaults.csproj", "src/backend/Aspire/Board.ServiceDefaults/"]
-COPY ["src/backend/Services/Board/Board.Domain/Board.Domain.csproj", "src/backend/Services/Board/Board.Domain/"]
-COPY ["src/backend/Services/Board/Board.Application/Board.Application.csproj", "src/backend/Services/Board/Board.Application/"]
-COPY ["src/backend/Services/Board/Board.Infrastructure/Board.Infrastructure.csproj", "src/backend/Services/Board/Board.Infrastructure/"]
-RUN dotnet restore "./src/backend/Services/Board/Board.Api/Board.Api.csproj"
+COPY ["src/backend/Services/Board/Board.Api/Board.Api.csproj", "Board/Board.Api/"]
+COPY ["src/backend/Services/Board/Board.Domain/Board.Domain.csproj", "Board/Board.Domain/"]
+COPY ["src/backend/Services/Board/Board.Application/Board.Application.csproj", "Board/Board.Application/"]
+COPY ["src/backend/Services/Board/Board.Infrastructure/Board.Infrastructure.csproj", "Board/Board.Infrastructure/"]
+RUN dotnet restore "Board/Board.Api/Board.Api.csproj"
 COPY . .
 WORKDIR "/src/src/backend/Services/Board/Board.Api"
 RUN dotnet build "./Board.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build

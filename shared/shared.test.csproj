@@ -1,8 +1,0 @@
-<Project>
-    <Import Project="shared.csproj" />
-    <PropertyGroup>
-        <IsPackable>false</IsPackable>
-        <IsTestProject>true</IsTestProject>
-        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-    </PropertyGroup>
-</Project>
