@@ -1,9 +1,11 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 import { TaskTypeIconComponent } from "src/app/components/shared/story-icon/task-type-icon.component";
 import { BoardItemLookupDTO } from "src/app/core/models";
 import { TaskPriority } from "src/app/core/models/enums/task-priority.enum";
 import { TaskType } from "src/app/core/models/enums/task-type.enum";
+import { DialogService } from "src/app/core/services/other/dialog.service";
 
 
 @Component({
@@ -18,6 +20,12 @@ export class TaskCardComponent {
   @Output() editTask = new EventEmitter<BoardItemLookupDTO>();
   @Output() deleteTask = new EventEmitter<string>();
   @Output() moveTask = new EventEmitter<{ taskId: string, toColumnId: string }>();
+
+
+  constructor(
+    private dialogService: DialogService,
+    private translate: TranslateService
+  ) {}
 
   public taskTypes = TaskType;
   public priorities = Object.values(TaskPriority);
@@ -66,9 +74,14 @@ export class TaskCardComponent {
 
   onDelete(event:any): void {
     event.stopPropagation();
-    if (confirm('Вы уверены, что хотите удалить эту задачу?')) {
-      this.deleteTask.emit(this.task.id);
-    }
+    this.dialogService.openConfirmationModal({
+      dialogTitle: this.translate.instant('BOARD_ITEM.DELETE_TASK_CONFIRMATION_TITLE'),
+      description: this.translate.instant('BOARD_ITEM.DELETE_TASK_CONFIRMATION')
+    }).subscribe((result) => {
+      if (result) {
+        this.deleteTask.emit(this.task.id);
+      }
+    }); 
   }
 
   onMoveTask(toColumnId: string): void {

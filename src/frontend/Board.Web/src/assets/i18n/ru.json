@@ -99,7 +99,9 @@
   "BOARD_ITEM":{
     "PRIORITY":"Приоритет",
     "DEADLINE":"Дедлайн",
-    "NO_DEADLINE":"Дедлайн не установлен"
+    "NO_DEADLINE":"Дедлайн не установлен",
+    "DELETE_TASK_CONFIRMATION_TITLE": "Удалить задачу",
+    "DELETE_TASK_CONFIRMATION": "Вы уверены, что хотите удалить эту задачу?"
   },
   "TASK_MODAL": {
     "CREATE_TITLE": "Создать новую задачу",
