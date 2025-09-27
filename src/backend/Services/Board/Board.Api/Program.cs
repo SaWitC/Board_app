@@ -1,5 +1,5 @@
-using Board.Api.Authorization;
 using Board.Api.Configuration;
+using Board.Api.Extensions;
 using Board.Api.Features.Board.CreateBoard;
 using Board.Application.DI;
 using Board.Application.Mapping;
@@ -10,7 +10,6 @@ using Board.ServiceDefaults;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -52,10 +51,9 @@ services.ConfigureAuth(authOptions)
 services.AddProblemDetails();
 services.AddExceptionHandler<GlobalExceptionHandler>();
 
-services.AddSingleton<IAuthorizationPolicyProvider, BoardPermissionPolicyProvider>();
-services.AddScoped<IAuthorizationHandler, BoardPermissionHandler>();
-
 WebApplication app = builder.Build();
+
+app.MigrateDatabase();
 
 var supportedCultures = new[] { "en-US", "ru-RU" };
 var localizationOptions = new RequestLocalizationOptions()

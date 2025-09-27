@@ -1,6 +1,8 @@
+using Board.Api.Authorization;
 using Board.Domain.Options;
 using Board.Domain.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Board.Api.Configuration;
 
@@ -29,6 +31,9 @@ public static class AuthConfiguration
                     .RequireClaim(Auth.Claims.Permissions, Auth.Roles.GlobalAdmin))
                 .AddPolicy(Auth.Policies.AuthenticatedUser, p => p
                     .RequireAuthenticatedUser());
+
+        services.AddSingleton<IAuthorizationPolicyProvider, BoardPermissionPolicyProvider>();
+        services.AddScoped<IAuthorizationHandler, BoardPermissionHandler>();
 
         return services;
     }
